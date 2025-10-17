@@ -7,6 +7,7 @@ const { hostname } = require("node:os");
 const { server: wisp, logging } = require("@mercuryworkshop/wisp-js/server");
 const Fastify = require("fastify");
 const fastifyStatic = require("@fastify/static");
+const fastifyCompress = require("@fastify/compress");
 const cheerio = require("cheerio");
 const { epoxyPath } = require("@mercuryworkshop/epoxy-transport");
 const { baremuxPath } = require("@mercuryworkshop/bare-mux/node");
@@ -16,13 +17,19 @@ const { Console } = require("node:console");
 
 logging.set_level(logging.NONE);
 
-
-
 Object.assign(wisp.options, {
   allow_udp_streams: false,
-   hostname_blacklist: [/example\.com/],
   dns_servers: ["94.140.14.14"],
 });
+
+
+const NodeCache = require("node-cache");
+const apiCache = new NodeCache({ stdTTL: 300, checkperiod: 60 }); 
+
+const http = require("node:http");
+const https = require("node:https");
+const httpAgent = new http.Agent({ keepAlive: true, maxSockets: 50 });
+const httpsAgent = new https.Agent({ keepAlive: true, maxSockets: 50 });
 
 const fastify = Fastify({
 	serverFactory: (handler) => {
@@ -36,6 +43,18 @@ const fastify = Fastify({
 			});
 	},
 });
+
+// Register compression plugin for faster responses
+fastify.register(fastifyCompress, {
+	global: true,
+	encodings: ['gzip', 'deflate'],
+	threshold: 1024, // Compress responses larger than 1KB
+});
+
+// Server optimizations
+fastify.server.keepAliveTimeout = 65000; // 65 seconds
+fastify.server.headersTimeout = 66000; // Slightly higher than keepAliveTimeout
+fastify.server.requestTimeout = 30000; // 30 second request timeout
 
 fastify.register(fastifyStatic, {
     root: join(__dirname, 'public'),
@@ -57,22 +76,86 @@ fastify.register(fastifyStatic, {
 let plugins = [];
 let plugin_code = {};
 
-console.log("Fetching plugins from github...");
-fetch("https://raw.githubusercontent.com/Axiom-Proxy/Axiom-Plugins-Directory/refs/heads/main/plugins.json").then((response) => response.json()).then((data) => {
-    console.log("Fetched plugins from github!");
-    plugins = data;
-    plugin_code = {};
+// Optimized plugin loading with caching and async processing
+const pluginCache = new NodeCache({ stdTTL: 3600, checkperiod: 300 }); // 1 hour cache
 
-    plugins.forEach(plugin => {
-        //https://raw.githubusercontent.com/Axiom-Proxy/Axiom-Plugins-Directory/refs/heads/main/
+async function loadPlugins() {
+    console.log("Loading plugins from github...");
 
-        // debug
+    try {
+        // Check cache first
+        const cachedPlugins = pluginCache.get('plugins_list');
+        const cachedPluginCode = pluginCache.get('plugin_code') || {};
 
-        fetch(`https://raw.githubusercontent.com/Axiom-Proxy/Axiom-Plugins-Directory/refs/heads/main/${plugin.src}`).then((response) => response.text()).then((data) => {
-            plugin_code[plugin.name] = data;
-        })
-    });
-})
+        if (cachedPlugins) {
+            plugins = cachedPlugins;
+            plugin_code = cachedPluginCode;
+            console.log("Loaded plugins from cache!");
+            return;
+        }
+
+        // Fetch plugins list
+        const response = await fetch("https://raw.githubusercontent.com/Axiom-Proxy/Axiom-Plugins-Directory/refs/heads/main/plugins.json", {
+            agent: httpsAgent,
+            timeout: 5000
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch plugins list');
+        }
+
+        const data = await response.json();
+        plugins = data;
+        plugin_code = {};
+
+        console.log(`Fetching ${plugins.length} plugin files...`);
+
+        // Load plugin code concurrently with limit
+        const concurrentLimit = 10;
+        for (let i = 0; i < plugins.length; i += concurrentLimit) {
+            const batch = plugins.slice(i, i + concurrentLimit);
+            await Promise.all(batch.map(async (plugin) => {
+                try {
+                    // Check if already cached
+                    if (cachedPluginCode[plugin.name]) {
+                        plugin_code[plugin.name] = cachedPluginCode[plugin.name];
+                        return;
+                    }
+
+                    const pluginResponse = await fetch(`https://raw.githubusercontent.com/Axiom-Proxy/Axiom-Plugins-Directory/refs/heads/main/${plugin.src}`, {
+                        agent: httpsAgent,
+                        timeout: 3000
+                    });
+
+                    if (pluginResponse.ok) {
+                        plugin_code[plugin.name] = await pluginResponse.text();
+                    }
+                } catch (error) {
+                    console.error(`Failed to load plugin ${plugin.name}:`, error.message);
+                }
+            }));
+        }
+
+        // Cache the loaded plugins
+        pluginCache.set('plugins_list', plugins);
+        pluginCache.set('plugin_code', plugin_code);
+
+        console.log(`Successfully loaded ${Object.keys(plugin_code).length} plugins!`);
+    } catch (error) {
+        console.error("Plugin loading failed:", error.message);
+        // Use cached version if available
+        const cachedPlugins = pluginCache.get('plugins_list');
+        const cachedPluginCode = pluginCache.get('plugin_code');
+        if (cachedPlugins) {
+            plugins = cachedPlugins;
+            plugin_code = cachedPluginCode || {};
+            console.log("Using cached plugins due to loading failure");
+        }
+    }
+}
+
+// Load plugins asynchronously without blocking server startup
+loadPlugins().catch(console.error);
 
 fastify.get("/api/plugins", (request, reply) => {
     reply.send(plugins);
@@ -90,12 +173,26 @@ fastify.register(fastifyStatic, {
   decorateReply: false,
 });
 
-fastify.get("/ran", (request, reply) => {
-    fetch("https://random-image-pepebigotes.vercel.app/api/random-image").then((response) => response).then((data) => {
-        reply.send(data);
-    })
+// Optimized random image endpoint with timeout
+fastify.get("/ran", async (request, reply) => {
+    try {
+        const response = await fetch("https://random-image-pepebigotes.vercel.app/api/random-image", {
+            agent: httpsAgent,
+            timeout: 3000
+        });
+
+        if (response.ok) {
+            reply.send(response);
+        } else {
+            reply.code(503).send({ error: 'Random image service unavailable' });
+        }
+    } catch (error) {
+        console.error('Random image error:', error);
+        reply.code(503).send({ error: 'Random image service unavailable' });
+    }
 })
 
+// Optimized YouTube search with caching
 fastify.get("/api/youtube/search", async (request, reply) => {
     try {
         const { query } = request.query;
@@ -104,8 +201,17 @@ fastify.get("/api/youtube/search", async (request, reply) => {
             return reply.code(400).send({ error: "Query parameter is required" });
         }
 
+        // Check cache first
+        const cacheKey = `youtube_${query.toLowerCase().trim()}`;
+        const cachedResult = apiCache.get(cacheKey);
+        if (cachedResult) {
+            return reply.send(cachedResult);
+        }
+
         const invidiousUrl = `https://inv.nadeko.net/search?q=${encodeURIComponent(query)}`;
         const response = await fetch(invidiousUrl, {
+            agent: httpsAgent,
+            timeout: 8000,
             headers: {
                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
@@ -180,10 +286,22 @@ fastify.get("/api/youtube/search", async (request, reply) => {
             };
         }).get().filter(video => video !== null);
 
-        reply.send({ videos });
+        const result = { videos };
+
+        // Cache successful results for 10 minutes
+        apiCache.set(cacheKey, result, 600);
+
+        reply.send(result);
 
     } catch (error) {
         console.error('YouTube search error:', error);
+
+        // Check for cached result on error
+        const cachedResult = apiCache.get(cacheKey);
+        if (cachedResult) {
+            return reply.send(cachedResult);
+        }
+
         reply.code(500).send({ error: 'YouTube search failed' });
     }
 })
@@ -207,9 +325,29 @@ fastify.get("/api/movies/search", async (request, reply) => {
     if (!query.trim()) {
         return reply.code(400).send({ error: 'Query parameter is required' });
     }
-    const movieResponse = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${query}`);
-    const tvResponse = await fetch(`https://api.themoviedb.org/3/search/tv?api_key=${apiKey}&query=${query}`);
-    const animeResponse = await fetch(`https://api.themoviedb.org/3/search/collection?api_key=${apiKey}&query=${query}`); 
+
+    // Check cache first
+    const cacheKey = `movies_${query.toLowerCase().trim()}`;
+    const cachedResult = apiCache.get(cacheKey);
+    if (cachedResult) {
+        return reply.send(cachedResult);
+    }
+
+    // Make concurrent requests with connection pooling and timeouts
+    const [movieResponse, tvResponse, animeResponse] = await Promise.all([
+        fetch(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(query)}`, {
+            agent: httpsAgent,
+            timeout: 5000
+        }),
+        fetch(`https://api.themoviedb.org/3/search/tv?api_key=${apiKey}&query=${encodeURIComponent(query)}`, {
+            agent: httpsAgent,
+            timeout: 5000
+        }),
+        fetch(`https://api.themoviedb.org/3/search/collection?api_key=${apiKey}&query=${encodeURIComponent(query)}`, {
+            agent: httpsAgent,
+            timeout: 5000
+        })
+    ]);
 
     let movieData = await movieResponse.json();
     let tvData = await tvResponse.json();
@@ -222,7 +360,12 @@ fastify.get("/api/movies/search", async (request, reply) => {
 
     // merge and send the results
     const results = [...movieData.results, ...tvData.results, ...animeData.results];
-    reply.send({ results });
+    const responseData = { results };
+
+    // Cache successful results for 30 minutes (movies don't change often)
+    apiCache.set(cacheKey, responseData, 1800);
+
+    reply.send(responseData);
 })
 
 const endpoint = "https://api.groq.com/openai/v1/chat/completions";
@@ -231,9 +374,21 @@ const api_key = "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"; // n
 fastify.post("/openai/v1/chat/completions", async (request, reply) => {
     try {
         const data = request.body;
-        
+
+        // Create cache key for non-streaming requests (avoid caching streams)
+        let cacheKey = null;
+        if (!data.stream) {
+            cacheKey = `ai_${JSON.stringify(data).slice(0, 200)}`; // Use first 200 chars as key
+            const cachedResult = apiCache.get(cacheKey);
+            if (cachedResult) {
+                return reply.send(cachedResult);
+            }
+        }
+
         const response = await fetch(endpoint, {
             method: 'POST',
+            agent: httpsAgent,
+            timeout: 30000, // 30 second timeout for AI requests
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${api_key}`
@@ -259,11 +414,26 @@ fastify.post("/openai/v1/chat/completions", async (request, reply) => {
             reply.raw.end();
         } else {
             const json = await response.json();
+
+            // Cache non-streaming responses for 5 minutes
+            if (cacheKey && json.choices && json.choices.length > 0) {
+                apiCache.set(cacheKey, json, 300);
+            }
+
             reply.send(json);
         }
-        
+
     } catch (err) {
         console.error('AI endpoint error:', err);
+
+        // Return cached result if available on error
+        if (cacheKey) {
+            const cachedResult = apiCache.get(cacheKey);
+            if (cachedResult) {
+                return reply.send(cachedResult);
+            }
+        }
+
         reply.code(500).send({ error: 'Internal Server Error' });
     }
 });

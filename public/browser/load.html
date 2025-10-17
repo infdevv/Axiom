@@ -143,7 +143,7 @@
 
 <body>
 
-<img src="assets/sakuya.gif" alt="sakuya" style="width: 100px; height: 100px; position: fixed; bottom: 20px; left: 20px; z-index: 9999;">
+<img id="funny" style="position: fixed; bottom: 20px; left: 20px; z-index: 9999; border: none;">
 
 <div id="app">
 
@@ -169,6 +169,15 @@
     </div>
 
     <script>
+
+        if (localStorage.getItem("axiomTheme") == "lumi"){
+            document.getElementById("funny").style.width = "250px";
+            document.getElementById("funny").src = "./assets/sakuya.gif"
+        }
+        if (localStorage.getItem("axiomTheme") == "pipipipi"){
+            document.body.style.backgroundColor = "#fcb4ff";
+            document.getElementById("funny").src = "./assets/spinning-zako.gif"
+        }
 
 
         setInterval(() => {

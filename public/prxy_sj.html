@@ -63,24 +63,48 @@
             }
 
             setInterval(() => {
-                let title = document.getElementById("frame").contentDocument.title;
-                if (title !== document.title) {
-                    document.title = title;
-                }
-                // get content
-                let content = document.getElementById("frame").contentDocument.body.innerHTML;
-                // remove html tags
-                content = content.replace(/<[^>]+>/g, '');
-                content = content.replace(/&nbsp;/g, ' ');
-                // remove tabs
-                content = content.replace("/t", ' ');
-                content = content.replace(/\n/g, ' ');
-                // remove one word lines
-                content = content.replace(/\n\s*\n/g, '\n');
-                // remove leading and trailing spaces
-                content = content.trim();
-                localStorage.setItem("content", content);
+                try {
+                    let frameDoc = document.getElementById("frame").contentDocument;
+                    if (!frameDoc) return;
 
+                    let title = frameDoc.title;
+                    let frameUrl = "";
+
+                    // Try to get the current URL from the iframe
+                    try {
+                        frameUrl = frameDoc.location.href;
+                        // Decode Scramjet URL if it's encoded
+                        if (frameUrl && scramjet && typeof scramjet.decodeUrl === 'function') {
+                            frameUrl = scramjet.decodeUrl(frameUrl);
+                        }
+                    } catch (e) {
+                        // If we can't access the URL, use the original URL
+                        frameUrl = getUrl();
+                    }
+
+                    // Format title as: (page title)|A|(actual url)
+                    let formattedTitle = title + "|A|" + frameUrl;
+                    if (formattedTitle !== document.title) {
+                        document.title = formattedTitle;
+                    }
+
+                    // get content
+                    let content = frameDoc.body.innerHTML;
+                    // remove html tags
+                    content = content.replace(/<[^>]+>/g, '');
+                    content = content.replace(/&nbsp;/g, ' ');
+                    // remove tabs
+                    content = content.replace(/\t/g, ' ');
+                    content = content.replace(/\n/g, ' ');
+                    // remove one word lines
+                    content = content.replace(/\n\s*\n/g, '\n');
+                    // remove leading and trailing spaces
+                    content = content.trim();
+                    localStorage.setItem("content", content);
+                } catch (e) {
+                    // Cross-origin error handling
+                    console.debug('Could not access iframe content:', e);
+                }
             }, 100);
 
             const url = search(getUrl());
