@@ -169,7 +169,7 @@ fastify.get("/api/plugin/", (request, reply) => {
 
 fastify.register(fastifyStatic, {
   root: scramjetPath,
-  prefix: "/scram/",
+  prefix: "/ultralightbeam/",
   decorateReply: false,
 });
 
