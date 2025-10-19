@@ -110,8 +110,8 @@
             const url = search(getUrl());
 
             let frame = document.getElementById("frame");
-            let wispUrl = "wss://anura.pro"
-            
+            let wispUrl = (location.protocol === "https:" ? "wss://" : "ws://") + location.host + "/wisp/";
+
             await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
             
             frame.src = scramjet.encodeUrl(url);
