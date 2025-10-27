@@ -78,7 +78,7 @@ async function loadProxyPage() {
   const frame = document.getElementById("iframe");
 
   // Setup wisp connection
-  let wispUrl = (location.protocol === "https:" ? "wss://" : "ws://") + location.host + "/wisp/";
+  let wispUrl =  "wss://anura.pro/";
   await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
 
   // Load URL through UV (only after SW is ready)
