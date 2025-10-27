@@ -1,0 +1,361 @@
+let draggedTab = null;
+let tabs = {};
+let urlBarFocused = false;
+
+function resolveAxiomUrl(url) {
+  if (url.startsWith("axiom://")) {
+    const pageName = url.substring(8); // Remove 'axiom://'
+    const fileName = pageName + ".html";
+
+    return "/" + fileName;
+  }
+  return url;
+}
+
+// Add event listeners for tabs
+document.querySelectorAll(".tab").forEach((tab) => {
+  setupDragEvents(tab);
+});
+function setupDragEvents(tab) {
+  tab.addEventListener("dragstart", handleDragStart);
+  tab.addEventListener("dragover", handleDragOver);
+  tab.addEventListener("dragenter", handleDragEnter);
+  tab.addEventListener("dragleave", handleDragLeave);
+  tab.addEventListener("drop", handleDrop);
+  tab.addEventListener("dragend", handleDragEnd);
+}
+function handleDragStart(e) {
+  draggedTab = this;
+  // Set opacity for visual feedback
+  this.style.opacity = "0.75";
+  e.dataTransfer.effectAllowed = "move";
+  // Use a simple data transfer (optional)
+  e.dataTransfer.setData("text/html", this.innerHTML);
+}
+function handleDragOver(e) {
+  e.preventDefault(); // Necessary to allow drop
+  e.dataTransfer.dropEffect = "move";
+  this.classList.add("drag-over");
+  return false;
+}
+function handleDragEnter(e) {
+  e.preventDefault();
+  // Highlight the tab being dragged over
+  this.classList.add("drag-over");
+}
+function handleDragLeave() {
+  this.classList.remove("drag-over");
+}
+function handleDrop(e) {
+  e.stopPropagation(); // Stops some browsers from redirecting.
+  if (draggedTab !== this) {
+    // Get the index of the dragged tab and the drop target
+    const draggedIndex = Array.from(this.parentNode.children).indexOf(
+      draggedTab
+    );
+    const dropIndex = Array.from(this.parentNode.children).indexOf(this);
+    // Reorder elements if they're not the same position
+    if (draggedIndex !== dropIndex) {
+      // Remove dragged element from its current position
+      this.parentNode.removeChild(draggedTab);
+      // Insert at new position (before the drop target)
+      this.parentNode.insertBefore(draggedTab, this);
+      // Reattach event listeners to the newly positioned tab
+      setupDragEvents(draggedTab);
+    }
+  }
+  // Remove highlight from all tabs
+  document.querySelectorAll(".tab").forEach((tab) => {
+    tab.classList.remove("drag-over");
+  });
+  return false;
+}
+function handleDragEnd() {
+  // Reset styles
+  this.style.opacity = "1";
+  // Remove highlight from all tabs
+  document.querySelectorAll(".tab").forEach((tab) => {
+    tab.classList.remove("drag-over");
+  });
+}
+document.getElementById("addTab").onclick = function () {
+  const newTab = document.createElement("div");
+  let id = btoa(Date.now());
+  newTab.className = "tab";
+  newTab.draggable = true; // Enable dragging for new tabs
+  newTab.id = id;
+  newTab.setAttribute("name", "surface"); // Add theme attribute for inactive tabs
+  newTab.innerHTML = `New Tab
+                <span onclick="closeTab('${id}', event)">
+                    <span class="material-symbols-outlined" style="font-size: 16px; cursor: pointer;">
+                        close
+                    </span>
+                </span>`;
+  newTab.onclick = function (e) {
+    console.log("Tab clicked:", id, "Target:", e.target);
+    if (e.target.closest('span[onclick*="closeTab"]')) {
+      console.log("Close button clicked, ignoring");
+      return;
+    }
+    switchToTab(id);
+  };
+  setupDragEvents(newTab);
+  tabs[id] = {
+    title: "New Tab",
+    url: "axiom://start",
+    element: newTab,
+  };
+  createFrameForTab(id, "axiom://start");
+  document
+    .getElementById("tabs")
+    .insertBefore(newTab, document.getElementById("addTab"));
+
+  newTab.click();
+};
+function switchToTab(tabId) {
+  console.log("Switching to tab:", tabId);
+  // Hide all iframes and remove active class
+  document.querySelectorAll("#frames iframe").forEach((iframe) => {
+    iframe.classList.remove("active");
+  });
+  document.querySelectorAll(".tab").forEach((tab) => {
+    tab.classList.remove("active");
+    tab.setAttribute("name", "surface"); // Set inactive tabs to surface color
+  });
+  // Show selected iframe and activate tab
+  const frame = document.getElementById(`frame-${tabId}`);
+  if (frame) {
+    frame.classList.add("active");
+    console.log("Frame activated:", `frame-${tabId}`);
+  } else {
+    console.log("Frame not found:", `frame-${tabId}`);
+  }
+  const tab = document.getElementById(tabId);
+  if (tab) {
+    tab.classList.add("active");
+    tab.setAttribute("name", "quaternary"); // Set active tab to quaternary color
+    console.log("Tab activated:", tabId);
+  } else {
+    console.log("Tab not found:", tabId);
+  }
+
+  // Update URL bar with current tab's URL
+  if (tabs[tabId]) {
+    document.getElementById("urlBar").value = tabs[tabId].url || "";
+  }
+}
+function getActiveTabId() {
+  const activeTab = document.querySelector(".tab.active");
+  return activeTab ? activeTab.id : null;
+}
+function navigateToUrl(url) {
+  const activeTabId = getActiveTabId();
+  if (!activeTabId) return;
+
+  // Store the original URL (for display purposes)
+  const displayUrl = url;
+
+  // Handle axiom:// protocol
+  if (url.startsWith("axiom://")) {
+    const resolvedUrl = resolveAxiomUrl(url);
+    url = resolvedUrl;
+  }
+  // Add https:// if no protocol specified
+  else if (
+    !url.match(/^https?:\/\//i) &&
+    !url.startsWith("about:") &&
+    !url.startsWith("/")
+  ) {
+    url = "https://" + url;
+  }
+
+  const frame = document.getElementById(`frame-${activeTabId}`);
+  if (frame) {
+    if (!url.includes(window.origin) && !url.includes("load.html")) {
+      frame.src = "load.html?url=" + url;
+    }
+    // Store the display URL (axiom://) not the resolved path
+    tabs[activeTabId].url = displayUrl;
+  }
+}
+function handleUrlKeypress(event) {
+  if (event.key === "Enter") {
+    const url = event.target.value;
+    navigateToUrl(url);
+  }
+}
+function goBack() {
+  const activeTabId = getActiveTabId();
+  if (!activeTabId) return;
+
+  const frame = document.getElementById(`frame-${activeTabId}`);
+  if (frame && frame.contentWindow) {
+    frame.contentWindow.history.back();
+  }
+}
+function goForward() {
+  const activeTabId = getActiveTabId();
+  if (!activeTabId) return;
+
+  const frame = document.getElementById(`frame-${activeTabId}`);
+  if (frame && frame.contentWindow) {
+    frame.contentWindow.history.forward();
+  }
+}
+function refreshPage() {
+  const activeTabId = getActiveTabId();
+  if (!activeTabId) return;
+
+  const frame = document.getElementById(`frame-${activeTabId}`);
+  if (frame) {
+    frame.src = frame.src;
+  }
+}
+function createFrameForTab(tabId, url = "about:blank") {
+  console.log("Creating frame for tab:", tabId, "URL:", url);
+  const framesContainer = document.getElementById("frames");
+  const iframe = document.createElement("iframe");
+  iframe.id = `frame-${tabId}`;
+
+  // Handle axiom:// protocol specially
+  if (url.startsWith("axiom://")) {
+    const resolvedUrl = resolveAxiomUrl(url);
+    iframe.src = resolvedUrl; // Set the iframe src to the resolved local path
+  } else if (url === "about:blank") {
+    iframe.src = "about:blank";
+  } else {
+    iframe.src = "load.html?url=" + btoa(url);
+  }
+
+  // Setup monitoring for this iframe
+  setupIframeMonitoring(iframe);
+
+  framesContainer.appendChild(iframe);
+  console.log("Frame appended, calling switchToTab");
+  // Switch to the new tab (this will add the active class)
+  switchToTab(tabId);
+}
+function closeTab(tabId, event) {
+  event.stopPropagation(); // Prevent tab click event from firing
+
+  const tab = document.getElementById(tabId);
+  const frame = document.getElementById(`frame-${tabId}`);
+
+  if (!tab) return;
+
+  // Remove from tabs object
+  delete tabs[tabId];
+
+  // Remove the iframe
+  if (frame) {
+    frame.remove();
+  }
+
+  // If this was the active tab, switch to another tab
+  const wasActive = tab.classList.contains("active");
+  tab.remove();
+
+  if (wasActive) {
+    // Get remaining tabs
+    const remainingTabs = document.querySelectorAll(".tab");
+    if (remainingTabs.length > 0) {
+      // Switch to the last remaining tab
+      const lastTab = remainingTabs[remainingTabs.length - 1];
+      switchToTab(lastTab.id);
+    }
+  }
+}
+// Track URL bar focus state
+const urlBar = document.getElementById("urlBar");
+urlBar.addEventListener("focus", () => {
+  urlBarFocused = true;
+});
+urlBar.addEventListener("blur", () => {
+  urlBarFocused = false;
+});
+
+// Function to decode URL from iframe src
+function decodeIframeUrl(iframeSrc) {
+  try {
+    // Check if it's a load.html URL
+    if (iframeSrc.includes("load.html?url=")) {
+      const urlParam = new URL(iframeSrc, window.location.origin).searchParams.get("url");
+      if (!urlParam) return null;
+
+      // Check if it's base64 encoded
+      const base64RegExp = /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{4})$/;
+      let decodedUrl = urlParam;
+
+      if (base64RegExp.test(urlParam)) {
+        decodedUrl = atob(urlParam);
+      }
+
+      decodedUrl = decodeURIComponent(decodedUrl.replace(/\+/g, " "));
+      return decodedUrl;
+    }
+    return null;
+  } catch (error) {
+    console.error("Error decoding iframe URL:", error);
+    return null;
+  }
+}
+
+// Function to update URL bar from active iframe
+function updateUrlBarFromIframe() {
+  if (urlBarFocused) return; // Don't update if user is typing
+
+  const activeTabId = getActiveTabId();
+  if (!activeTabId) return;
+
+  const frame = document.getElementById(`frame-${activeTabId}`);
+  if (!frame) return;
+
+  try {
+    // Get the current iframe src
+    const iframeSrc = frame.src;
+
+    // Try to decode the URL
+    const decodedUrl = decodeIframeUrl(iframeSrc);
+
+    if (decodedUrl) {
+      // Update the URL bar
+      urlBar.value = decodedUrl;
+      // Also update the tabs object
+      if (tabs[activeTabId]) {
+        tabs[activeTabId].url = decodedUrl;
+      }
+    } else if (iframeSrc.startsWith(window.location.origin)) {
+      // It's a local page - convert back to axiom:// format if possible
+      const path = iframeSrc.replace(window.location.origin, "");
+      if (path.startsWith("/") && path.endsWith(".html")) {
+        const pageName = path.substring(1, path.length - 5); // Remove leading / and .html
+        const axiomUrl = `axiom://${pageName}`;
+        urlBar.value = axiomUrl;
+        if (tabs[activeTabId]) {
+          tabs[activeTabId].url = axiomUrl;
+        }
+      }
+    }
+  } catch (error) {
+    // Cross-origin iframe access blocked, which is expected
+    // Just keep the stored URL in tabs
+    if (tabs[activeTabId]) {
+      urlBar.value = tabs[activeTabId].url || "";
+    }
+  }
+}
+
+// Monitor iframe load events to update URL bar
+function setupIframeMonitoring(iframe) {
+  iframe.addEventListener("load", () => {
+    updateUrlBarFromIframe();
+  });
+}
+
+// Start periodic URL bar updates (as a fallback)
+setInterval(updateUrlBarFromIframe, 500);
+
+// Initialize the initial tab
+document.addEventListener("DOMContentLoaded", function () {
+  document.getElementById("addTab").click();
+});

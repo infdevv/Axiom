@@ -1,0 +1,104 @@
+* {
+  margin: 5px;
+  margin-bottom: 15px;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+button {
+    padding: 8px;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+button:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+}
+
+body {
+  font-family: "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
+  background-color: #121212;
+  color: white;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  min-width: 100vw;
+}
+
+
+
+h1 {
+    font-size: 55px;
+}
+
+center {
+    background-color: #141414;
+    width: 90%;
+    left: 5%;
+    position: fixed;
+    height: 90%;
+    border-radius: 8px;
+}
+
+.setting {
+    margin: 20px 0;
+}
+
+.theme-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.theme-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 25px;
+    background-color: #1e1e1e;
+    color: white;
+    border: 2px solid #333;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.theme-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border-color: #555;
+}
+
+.theme-button.active {
+    border-color: #4CAF50;
+    background-color: #252525;
+    box-shadow: 0 0 15px rgba(76, 175, 80, 0.3);
+}
+
+.color-preview {
+    width: 80px;
+    height: 60px;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+
+a {
+    color: #4CAF50;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+a:hover {
+    text-decoration: underline;
+    transition: all 0.2s ease;
+}

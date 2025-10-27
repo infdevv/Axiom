@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Axiom Presents: Goats 🐐</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+            color: white;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite ease-in-out alternate;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.3; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .main-title {
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            font-weight: 800;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient-shift 3s ease-in-out infinite;
+            margin-bottom: 30px;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes gradient-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .goat-section {
+            margin: 60px 0;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .section-title {
+            font-size: clamp(1.5rem, 4vw, 2.2rem);
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: #4ecdc4;
+        }
+
+        .goat-img {
+            width: clamp(250px, 40vw, 350px);
+            height: clamp(200px, 32vw, 280px);
+            object-fit: cover;
+            border-radius: 15px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            margin: 20px;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .goat-img:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(78, 205, 196, 0.3);
+            border-color: #4ecdc4;
+        }
+
+        .contributors {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin: 40px 0;
+        }
+
+        .contributor {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .contributor:hover {
+            transform: translateY(-5px);
+        }
+
+        .contributor::after {
+            content: '';
+            position: absolute;
+            inset: -5px;
+            border-radius: 20px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .contributor:hover::after {
+            opacity: 0.7;
+        }
+
+        .memorial {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(147, 51, 234, 0.1));
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            margin-top: 50px;
+        }
+
+        .freaky-text {
+            font-size: 1.3rem;
+            font-weight: 500;
+            background: linear-gradient(45deg, #ff6b6b, #9333ea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .subtitle {
+            font-size: clamp(1rem, 3vw, 1.4rem);
+            color: rgba(255, 255, 255, 0.8);
+            margin: 20px 0;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .contributors {
+                gap: 20px;
+            }
+            .goat-section {
+                padding: 20px;
+                margin: 30px 0;
+            }
+        }
+
+        .glow-effect {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 200px;
+            height: 200px;
+            transform: translate(-50%, -50%);
+            animation: glow-pulse 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes glow-pulse {
+            0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.5); }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars"></div>
+    
+    <div class="container">
+        <div class="glow-effect"></div>
+        
+        <h1 class="main-title floating">🐐 AXIOM PRESENTS: GOATS 🐐</h1>
+        
+        <div class="goat-section">
+            <img class="goat-img pulse" src="/assets/media/icons/goat.jpg" alt="Actual goat"/>
+            <p class="subtitle">... wrong type of goat sorry</p>
+        </div>
+
+        <div class="goat-section">
+            <h2 class="section-title">The Real G.O.A.T.s</h2>
+            <p class="subtitle">Greatest Of All Time - The goats who made Axiom possible</p>
+            
+            <div class="contributors">
+                <div class="contributor">
+                    <img class="goat-img" src="/assets/media/icons/infamy.png" alt="Infamy"/>
+                    <h3>Infamy</h3>
+                </div>
+                <div class="contributor">
+                    <img class="goat-img" src="/assets/media/icons/zhara.gif" alt="Zhara ( also known as GalaxyDuhh )"/>
+                    <h3>Zhara (AKA GalaxyDuhh) ( goat of art )</h3>
+                </div>
+                <div class="contributor">
+                    <img class="goat-img" src="/assets/media/icons/zen.webp" alt="Zenith"/>
+                    <h3>Zenith ( tf is this pfp :sob: )</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="goat-section memorial">
+            <p class="freaky-text">The god of being ✨ 𝓯𝓻𝓮𝓪𝓴𝔂 ✨</p>
+            <p class="subtitle">Rest in peace u/ok_criticism 🕊️</p>
+            <p class="subtitle">???-2024</p>
+            <img class="goat-img pulse" src="/assets/media/icons/crit.png" alt="Critical Legend"/> 
+        </div>
+    </div>
+
+    <script>
+        function createStars() {
+            const starsContainer = document.querySelector('.stars');
+            const starCount = 50;
+
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.width = Math.random() * 3 + 1 + 'px';
+                star.style.height = star.style.width;
+                star.style.animationDelay = Math.random() * 2 + 's';
+                star.style.animationDuration = (Math.random() * 3 + 1) + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        document.querySelectorAll('.goat-img').forEach(img => {
+            img.addEventListener('click', () => {
+                img.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    img.style.transform = '';
+                }, 150);
+            });
+        });
+
+        createStars();
+    </script>
+    <script src="scripts/global.js" type="module"></script>
+</body>
+</html>

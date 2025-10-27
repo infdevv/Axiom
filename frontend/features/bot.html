@@ -1,0 +1,130 @@
+<!-- Life of the Party -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>New Tab</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .message {
+      padding: 10px;
+      margin: 10px;
+      border-radius: 10px;
+      text-align: left;
+      width: fit-content;
+      margin-left: auto;
+    }
+
+    .message.bot {
+      text-align: left;
+      margin-left: 0px;
+      margin-right: auto;
+    }
+
+    .container {
+      overflow-y: auto;
+      height: 90vh;
+      width: 60%;
+    }
+
+    .container::-webkit-scrollbar {
+      display: none;
+    }
+
+    #chat-input {
+      padding: 8px;
+      border-radius: 14px;
+      border: 1px solid #333;
+      font-size: 14px;
+      position: fixed;
+      bottom: 10px;
+      width: 60%;
+      left: calc(50% - 30%);
+    }
+  </style>
+</head>
+
+<body name="primary">
+  <center>
+    <div class="container">
+
+      <div class="message" name="secondary">
+        hello john
+      </div>
+      <div class="message bot" name="quaternary">
+        man fuck you im a ai and i aint named john kys
+      </div>
+
+
+    </div>
+  </center>
+  <input type="text" id="chat-input" name="tertiary" autocomplete="off" placeholder="Type a message..." />
+
+
+  <script src="../scripts/global.js" type="module"></script>
+  <script>
+    let chat = []
+    let currentPageText = null;
+    setInterval(function () {
+      // update current text support
+      let pageHTML = sessionStorage.getItem("pageCode")
+
+      pageHTML = pageHTML.replaceAll(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "").replaceAll(/<[^>]*>/g, "")
+
+
+      currentPageText = pageHTML // cleaned up
+
+    },500)
+
+    function generateResponse(chat) {
+
+      fetch("/api/ai", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          messages: chat
+        })
+      }).then(res => res.text()).then(text => {
+        // we get a raw text response back
+        const message = document.createElement("div");
+        message.classList.add("message");
+        message.classList.add("bot");
+        message.setAttribute("name", "tertiary");
+        message.textContent = text;
+        document.querySelector(".container").appendChild(message);
+        chat.push({ "content": text, "role": "assistant" });
+      })
+
+    }
+
+    document.getElementById("chat-input").addEventListener("keydown", function (event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        const message = document.createElement("div");
+        message.classList.add("message");
+        message.setAttribute("name", "secondary")
+        const userMessage = document.getElementById("chat-input").value;
+        message.textContent = userMessage;
+        document.querySelector(".container").appendChild(message);
+        document.getElementById("chat-input").value = "";
+        chat.push({ "content": userMessage, "role": "user" })
+        generateResponse(chat)
+      }
+    })
+  </script>
+</body>
+
+</html>
