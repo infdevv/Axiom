@@ -81,7 +81,6 @@ async function loadProxyPage() {
   await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
   frame.src = __uv$config.prefix + __uv$config.encodeUrl(url);
 
-  // Hide loader with multiple fallback mechanisms
   const hideLoader = () => {
     if (loader && loader.parentNode) {
       loader.style.transition = "opacity 0.3s ease";
@@ -113,24 +112,20 @@ async function loadProxyPage() {
 
       frameUrl = url; 
 
+
       let formattedTitle = title + "|A|" + frameUrl;
       if (formattedTitle !== document.title) {
         document.title = formattedTitle;
       }
 
-      // Store content for potential use
       let content = frameDoc.body.innerHTML;
-      // Remove html tags
       content = content.replace(/<[^>]+>/g, '');
       content = content.replace(/&nbsp;/g, ' ');
-      // Remove tabs
       content = content.replace(/\t/g, ' ');
       content = content.replace(/\n/g, ' ');
-      // Remove one word lines
       content = content.replace(/\n\s*\n/g, '\n');
-      // Remove leading and trailing spaces
       content = content.trim();
-      localStorage.setItem("content", content);
+      sessionStorage.setItem("content", content);
     } catch (e) {
       // Cross-origin error handling
       console.debug('Could not access iframe content:', e);

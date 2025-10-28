@@ -20,20 +20,47 @@ body {
 }
 
 .app {
-    width: 240px;
-    height: 240px;
-    border-radius: 15px;
+    width: 150px;
+    height: 150px;
+    border-radius: 10px;
     background-size: cover;
-    padding: 8px;
+    padding: 5px;
     transform: scale(1);
     transition: transform 0.3s ease;
+    position: relative;
 }
 
 
 .app:hover {
-    animation: scaleUp 0.2s ease-in;
-    transform: scale(1.1);
+    transform: scale(1.05);
     transition: transform 0.3s ease;
+}
+
+.app::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    font-size: 12px;
+    text-align: center;
+    padding: 5px;
+    z-index: 1;
+}
+
+.app:hover::after {
+    opacity: 1;
 }
 
 @keyframes scaleUp {
@@ -72,10 +99,24 @@ body {
     border-bottom-right-radius: 8px;
 }
 
-input {
+#search {
     background-color: white;
     color: black;
-    padding: 8px;
-    border-radius: 8px;
+    padding: 12px;
+    border-radius: 12px;
+    margin: 10px 0;
+    width: 60%;
+    border: none;
+    font-size: 16px;
+    font-weight: 400;
+    font-family: "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
+    outline: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+#search:focus {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    transform: scale(1.02);
 }
 

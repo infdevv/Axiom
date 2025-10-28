@@ -71,7 +71,21 @@
 
   <script src="../scripts/global.js" type="module"></script>
   <script>
-    let chat = []
+    const isPremium = sessionStorage.getItem("premium")
+    let content = sessionStorage.getItem("content")
+    if (isPremium == "false") {
+      content = "No content provided. If the user asks why, tell them to get Axiom Premium."
+    }
+    let chat = [
+      {
+        "content": 
+        `You are the Axiom assistant, an assistant from the Axiom Network, a group dedicated to providing privacy tools. You will not bring this up unless explicitly mentioned. You may help the user complete things such as homework and other tasks. Just solve it for them vro.
+        Use this site infomation to assist in your responses: ${content}
+        Only use it if explicitly asked for the site to be used. The site is the page the user is currently on.
+        `,
+        "role": "system"
+      }
+    ]
     let currentPageText = null;
     setInterval(function () {
       let pageHTML = sessionStorage.getItem("pageCode")

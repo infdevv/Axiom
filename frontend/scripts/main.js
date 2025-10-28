@@ -3,7 +3,10 @@ let activeWindows = [];
 let windowOffsetCounter = 0;
 
 function addWindowFunctionality(windowElement, header) {
-  let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  let pos1 = 0,
+    pos2 = 0,
+    pos3 = 0,
+    pos4 = 0;
   let isDragging = false;
 
   const startDrag = (clientX, clientY) => {
@@ -23,8 +26,10 @@ function addWindowFunctionality(windowElement, header) {
     pos4 = clientY;
 
     // Get current position - force reflow to ensure accurate values
-    const currentLeft = parseInt(windowElement.style.left) || windowElement.offsetLeft;
-    const currentTop = parseInt(windowElement.style.top) || windowElement.offsetTop;
+    const currentLeft =
+      parseInt(windowElement.style.left) || windowElement.offsetLeft;
+    const currentTop =
+      parseInt(windowElement.style.top) || windowElement.offsetTop;
 
     // Calculate new position
     let newLeft = currentLeft - pos1;
@@ -51,32 +56,30 @@ function addWindowFunctionality(windowElement, header) {
     isDragging = false;
   };
 
-  
   const onMouseDown = (e) => {
-    
-    if (e.target.closest('.controls') && !e.target.closest('.drag-handle')) return;
+    if (e.target.closest(".controls") && !e.target.closest(".drag-handle"))
+      return;
     e.preventDefault();
     startDrag(e.clientX, e.clientY);
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
+    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseup", onMouseUp);
   };
 
   const onMouseMove = (e) => drag(e.clientX, e.clientY);
   const onMouseUp = () => {
     stopDrag();
-    document.removeEventListener('mousemove', onMouseMove);
-    document.removeEventListener('mouseup', onMouseUp);
+    document.removeEventListener("mousemove", onMouseMove);
+    document.removeEventListener("mouseup", onMouseUp);
   };
 
-  
   const onTouchStart = (e) => {
-    
-    if (e.target.closest('.controls') && !e.target.closest('.drag-handle')) return;
+    if (e.target.closest(".controls") && !e.target.closest(".drag-handle"))
+      return;
     e.preventDefault();
     const touch = e.touches[0];
     startDrag(touch.clientX, touch.clientY);
-    document.addEventListener('touchmove', onTouchMove, { passive: false });
-    document.addEventListener('touchend', onTouchEnd);
+    document.addEventListener("touchmove", onTouchMove, { passive: false });
+    document.addEventListener("touchend", onTouchEnd);
   };
 
   const onTouchMove = (e) => {
@@ -86,13 +89,14 @@ function addWindowFunctionality(windowElement, header) {
 
   const onTouchEnd = () => {
     stopDrag();
-    document.removeEventListener('touchmove', onTouchMove);
-    document.removeEventListener('touchend', onTouchEnd);
+    document.removeEventListener("touchmove", onTouchMove);
+    document.removeEventListener("touchend", onTouchEnd);
   };
 
-  
-  (header || windowElement).addEventListener('mousedown', onMouseDown);
-  (header || windowElement).addEventListener('touchstart', onTouchStart, { passive: false });
+  (header || windowElement).addEventListener("mousedown", onMouseDown);
+  (header || windowElement).addEventListener("touchstart", onTouchStart, {
+    passive: false,
+  });
 }
 
 function bringWindowToFront(windowElement) {
@@ -120,7 +124,6 @@ function maximizeWindow(btn) {
     icon.textContent = "filter_none";
   }
 }
-
 
 function createWindow(name, url, noTitle = false) {
   const windowElement = document.createElement("div");
@@ -150,26 +153,22 @@ function createWindow(name, url, noTitle = false) {
     `;
   }
 
-
-
   document.getElementById("main").appendChild(windowElement);
 
   // Set initial position - all windows start at the same position
   windowElement.style.left = `50px`;
   windowElement.style.top = `50px`;
 
-
-  windowElement.addEventListener("mousedown", function() {
+  windowElement.addEventListener("mousedown", function () {
     bringWindowToFront(windowElement);
   });
 
-
-  const header = noTitle ? windowElement.querySelector(".drag-handle") : windowElement.querySelector(".window-top");
+  const header = noTitle
+    ? windowElement.querySelector(".drag-handle")
+    : windowElement.querySelector(".window-top");
   addWindowFunctionality(windowElement, header);
 
-
   windowElement.style.zIndex = (++zIndexCounter).toString();
-
 
   activeWindows.push({ name: name, element: windowElement });
 
@@ -178,7 +177,7 @@ function createWindow(name, url, noTitle = false) {
 
 function closeWindow(btn) {
   const windowElement = btn.closest(".window");
-  const index = activeWindows.findIndex(w => w.element === windowElement);
+  const index = activeWindows.findIndex((w) => w.element === windowElement);
   if (index > -1) {
     activeWindows.splice(index, 1);
   }
@@ -186,16 +185,15 @@ function closeWindow(btn) {
   updateActiveWindowsToolbar();
 }
 
-function updateItems(){
-      const now = new Date();
-      const hours = now.getHours() % 12;
-      const hoursStr = hours ? hours.toString().padStart(2, "0") : "12";
-      const minutes = now.getMinutes().toString().padStart(2, "0");
-      const ampm = now.getHours() >= 12 ? "PM" : "AM";
-      document.getElementById(
-        "time-counter"
-      ).innerHTML = `${hoursStr}:${minutes} ${ampm}`;
-    
+function updateItems() {
+  const now = new Date();
+  const hours = now.getHours() % 12;
+  const hoursStr = hours ? hours.toString().padStart(2, "0") : "12";
+  const minutes = now.getMinutes().toString().padStart(2, "0");
+  const ampm = now.getHours() >= 12 ? "PM" : "AM";
+  document.getElementById(
+    "time-counter"
+  ).innerHTML = `${hoursStr}:${minutes} ${ampm}`;
 }
 
 // Expose functions to global scope for inline onclick handlers
@@ -204,12 +202,16 @@ window.maximizeWindow = maximizeWindow;
 window.minimizeWindow = minimizeWindow;
 
 document.addEventListener("DOMContentLoaded", function () {
-
-  if (localStorage.getItem("axiomTheme") != null){
-    document.body.style.setProperty("background-image", `url(/assets/media/backgrounds/${localStorage.getItem("axiomTheme")}.jpg)`);
-  }
-  else {
-    document.body.style.setProperty("background-image", `url(/assets/media/backgrounds/default.jpg)`);
+  if (localStorage.getItem("axiomTheme") != null) {
+    document.body.style.setProperty(
+      "background-image",
+      `url(/assets/media/backgrounds/${localStorage.getItem("axiomTheme")}.jpg)`
+    );
+  } else {
+    document.body.style.setProperty(
+      "background-image",
+      `url(/assets/media/backgrounds/default.jpg)`
+    );
   }
 
   updateItems();
@@ -224,27 +226,26 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-
 document.onclick = hideMenu;
-        document.oncontextmenu = rightClick;
+document.oncontextmenu = rightClick;
 
-        function hideMenu() {
-            document.getElementById(
-                "contextMenu").style.display = "none"
-        }
+function hideMenu() {
+  document.getElementById("contextMenu").style.display = "none";
+}
 
-        function rightClick(e) {
-            e.preventDefault();
+function rightClick(e) {
+  e.preventDefault();
 
-            if (document.getElementById(
-                "contextMenu").style.display == "block")
-                hideMenu();
-            else {
-                let menu = document
-                    .getElementById("contextMenu")
+  if (document.getElementById("contextMenu").style.display == "block")
+    hideMenu();
+  else {
+    let menu = document.getElementById("contextMenu");
 
-                menu.style.display = 'block';
-                menu.style.left = e.pageX + "px";
-                menu.style.top = e.pageY + "px";
-            }
-        }
+    menu.style.display = "block";
+    menu.style.left = e.pageX + "px";
+    menu.style.top = e.pageY + "px";
+  }
+}
+
+
+// Welcome to devlabs!

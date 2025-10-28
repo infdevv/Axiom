@@ -150,4 +150,34 @@ class ThemeManager {
 
 window.themeManager = new ThemeManager();
 
-// nothing else for now
+// FUCK VERCELLLLLLLLL
+
+
+
+if (localStorage.getItem("premiumKey")){
+    await fetch("/api/check-premium", {method: "GET", headers: {key: localStorage.getItem("premiumKey")}})
+    .then(res => function(res){
+        if (res.success){
+            sessionStorage.setItem("premium", "true")
+        }
+        else {
+            sessionStorage.setItem("premium", "false")
+        }
+    })
+}
+
+let currentTitle 
+let currentURL 
+
+if (!(window.location.href).includes("main.html")){
+
+setInterval(function(){
+    if (currentTitle === document.title && currentURL === (window.location.href).replace(window.origin + "/", "")){
+        return
+    }
+    currentTitle = document.title
+    currentURL = (window.location.href).replace(window.origin + "/", "").replace(".html","")
+    document.title = `${document.title}|A|axiom://${(window.location.href).replace(window.origin + "/", "").replace(".html","")}`
+}, 500)
+
+}
