@@ -46,7 +46,6 @@ function buildSearchUrl(input, searchEngine) {
   return url;
 }
 
-// UV3 with baremux and wisp
 async function loadProxyPage() {
   const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
 
@@ -76,13 +75,31 @@ async function loadProxyPage() {
   console.log("Loading URL:", url);
 
   const frame = document.getElementById("iframe");
+  const loader = document.getElementById("loader");
 
-  // Setup wisp connection
   let wispUrl =  "wss://anura.pro/";
   await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
-
-  // Load URL through UV (only after SW is ready)
   frame.src = __uv$config.prefix + __uv$config.encodeUrl(url);
+
+  // Hide loader with multiple fallback mechanisms
+  const hideLoader = () => {
+    if (loader && loader.parentNode) {
+      loader.style.transition = "opacity 0.3s ease";
+      loader.style.opacity = "0";
+      setTimeout(() => {
+        if (loader.parentNode) {
+          loader.remove();
+        }
+      }, 300);
+    }
+  };
+
+  // Try to detect when iframe is loaded
+  frame.onload = hideLoader;
+
+  // Fallback timeout to hide loader after 5 seconds regardless
+  setTimeout(hideLoader, 5000);
+
   frame.style.display = "block";
 
 
@@ -95,7 +112,7 @@ async function loadProxyPage() {
       let frameUrl = "";
 
       frameUrl = url; 
-      
+
       let formattedTitle = title + "|A|" + frameUrl;
       if (formattedTitle !== document.title) {
         document.title = formattedTitle;

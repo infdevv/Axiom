@@ -59,11 +59,8 @@
   <center>
     <div class="container">
 
-      <div class="message" name="secondary">
-        hello john
-      </div>
       <div class="message bot" name="quaternary">
-        man fuck you im a ai and i aint named john kys
+        Ask anything!
       </div>
 
 
@@ -77,7 +74,6 @@
     let chat = []
     let currentPageText = null;
     setInterval(function () {
-      // update current text support
       let pageHTML = sessionStorage.getItem("pageCode")
 
       pageHTML = pageHTML.replaceAll(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "").replaceAll(/<[^>]*>/g, "")
