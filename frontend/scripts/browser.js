@@ -302,46 +302,62 @@ function decodeIframeUrl(iframeSrc) {
 
 // Function to update URL bar from active iframe
 function updateUrlBarFromIframe() {
-  if (urlBarFocused) return; // Don't update if user is typing
-
   const activeTabId = getActiveTabId();
   if (!activeTabId) return;
 
   const frame = document.getElementById(`frame-${activeTabId}`);
   if (!frame) return;
 
+  const tab = document.getElementById(activeTabId);
+  if (!tab) return;
+
+  let currentUrl = "";
+  let title = "";
   try {
-    // Get the current iframe src
-    const iframeSrc = frame.src;
+    title = frame.contentDocument ? frame.contentDocument.title : frame.contentWindow.document.title;
+  } catch (error) {
+    // cross-origin
+  }
 
-    // Try to decode the URL
-    const decodedUrl = decodeIframeUrl(iframeSrc);
-
-    if (decodedUrl) {
-      // Update the URL bar
-      urlBar.value = decodedUrl;
-      // Also update the tabs object
-      if (tabs[activeTabId]) {
-        tabs[activeTabId].url = decodedUrl;
+  if (title && title.includes('|A|')) {
+    const parts = title.split('|A|');
+    if (parts.length === 2) {
+      const pageTitle = parts[0].trim();
+      console.log("Page title:", pageTitle);
+      currentUrl = parts[1].trim();
+      console.log("Current URL:", currentUrl);
+      // Update tab title to page title
+      const textNode = tab.firstChild;
+      if (textNode && textNode.nodeType === Node.TEXT_NODE) {
+        textNode.textContent = pageTitle;
       }
-    } else if (iframeSrc.startsWith(window.location.origin)) {
-      // It's a local page - convert back to axiom:// format if possible
-      const path = iframeSrc.replace(window.location.origin, "");
-      if (path.startsWith("/") && path.endsWith(".html")) {
-        const pageName = path.substring(1, path.length - 5); // Remove leading / and .html
-        const axiomUrl = `axiom://${pageName}`;
-        urlBar.value = axiomUrl;
-        if (tabs[activeTabId]) {
-          tabs[activeTabId].url = axiomUrl;
+      tabs[activeTabId].title = pageTitle;
+    }
+  }
+
+  if (!currentUrl) {
+    try {
+      const iframeSrc = frame.src;
+      const decodedUrl = decodeIframeUrl(iframeSrc);
+      if (decodedUrl) {
+        currentUrl = decodedUrl;
+      } else if (iframeSrc.startsWith(window.location.origin)) {
+        const path = iframeSrc.replace(window.location.origin, "");
+        if (path.startsWith("/") && path.endsWith(".html")) {
+          const pageName = path.substring(1, path.length - 5);
+          currentUrl = `axiom://${pageName}`;
         }
       }
+    } catch (error) {
+      if (tabs[activeTabId]) {
+        currentUrl = tabs[activeTabId].url || "";
+      }
     }
-  } catch (error) {
-    // Cross-origin iframe access blocked, which is expected
-    // Just keep the stored URL in tabs
-    if (tabs[activeTabId]) {
-      urlBar.value = tabs[activeTabId].url || "";
-    }
+  }
+
+  if (currentUrl) {
+    urlBar.value = currentUrl;
+    tabs[activeTabId].url = currentUrl;
   }
 }
 
@@ -350,6 +366,27 @@ function setupIframeMonitoring(iframe) {
   iframe.addEventListener("load", () => {
     updateUrlBarFromIframe();
   });
+
+  // Monitor title changes within the iframe
+  const titleObserver = new MutationObserver(() => {
+    updateUrlBarFromIframe();
+  });
+
+  const observeTitle = () => {
+    try {
+      if (iframe.contentDocument && iframe.contentDocument.head) {
+        const titleElement = iframe.contentDocument.querySelector('title');
+        if (titleElement) {
+          titleObserver.observe(titleElement, { childList: true, subtree: true });
+        }
+      }
+    } catch (e) {
+      // Cross-origin, ignore
+    }
+  };
+
+  // Check periodically for title element availability
+  setInterval(observeTitle, 100);
 }
 
 // Start periodic URL bar updates (as a fallback)

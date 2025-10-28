@@ -85,7 +85,7 @@ async function loadProxyPage() {
   frame.src = __uv$config.prefix + __uv$config.encodeUrl(url);
   frame.style.display = "block";
 
-  // Monitor iframe for title and URL changes
+
   setInterval(() => {
     try {
       let frameDoc = frame.contentDocument;
@@ -94,19 +94,8 @@ async function loadProxyPage() {
       let title = frameDoc.title;
       let frameUrl = "";
 
-      // Try to get the current URL from the iframe
-      try {
-        frameUrl = frameDoc.location.href;
-        // Decode Ultraviolet URL if it's encoded
-        if (frameUrl && typeof __uv$config !== 'undefined' && __uv$config.decodeUrl) {
-          frameUrl = __uv$config.decodeUrl(frameUrl);
-        }
-      } catch (e) {
-        // If we can't access the URL, use the original URL
-        frameUrl = url;
-      }
-
-      // Format title as: (page title)|A|(actual url)
+      frameUrl = url; 
+      
       let formattedTitle = title + "|A|" + frameUrl;
       if (formattedTitle !== document.title) {
         document.title = formattedTitle;
