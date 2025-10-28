@@ -102,3 +102,24 @@ a:hover {
     text-decoration: underline;
     transition: all 0.2s ease;
 }
+
+input {    
+    background-color: white;
+    color: black;
+    padding: 12px;
+    border-radius: 12px;
+    margin: 10px 0;
+    width: 60%;
+    border: none;
+    font-size: 16px;
+    font-weight: 400;
+    font-family: "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
+    outline: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+input:focus {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    transform: scale(1.02);
+}

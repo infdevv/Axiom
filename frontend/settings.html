@@ -23,6 +23,17 @@
             <button name="tertiary" style="padding: 8px; border-radius: 8px;" onclick="localStorage.clear()">Reset Everything</button>
         </div>
 
+        <div class="setting" name="secondary">
+            <h4>Premium Key (Get in the Discord)</h4>
+        </div>
+
+        <div style="display: flex;">
+            <p id="status">Unregistered</p>
+            <br>
+            <input type="text" id="premiumKey" name="tertiary" value="Put your key here!">
+            <button name="tertiary" style="padding: 8px; border-radius: 8px;" onclick="setPremiumKey(document.getElementById('premiumKey').value)">Set</button>
+        </div>
+
         <a href="/goats.html">Visit hall of G.O.A.TS ( lebron isn't one of them )</a>
 
     </center>

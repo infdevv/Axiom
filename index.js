@@ -40,13 +40,16 @@ fastify.register(fastifyStatic, {
   decorateReply: false,
 });
 
+const activeKeys = process.env.ACTIVE_KEYS?.split(",") || [];
+
 fastify.get("/api/check-premium", async (request, reply) => {
-    if (process.env.ACTIVE_KEYS.includes(request.query.key)) {
+    const key = request.headers['key'];
+    if (activeKeys.includes(key)) {
         reply.send({ success: true });
     } else {
         reply.send({ success: false });
     }
-})
+});
 
 fastify.post("/api/ai", async (request, reply) => {
   try {

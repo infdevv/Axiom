@@ -93,3 +93,23 @@ class SettingsManager {
 document.addEventListener('DOMContentLoaded', () => {
     window.settingsManager = new SettingsManager();
 });
+
+
+async function setPremiumKey(key) {
+    // check key 
+    await fetch("/api/check-premium", {method: "GET", headers: {key: key}}).then(res => res.json()).then(res => {
+        if (!res.success){
+            alert("Invalid Key");
+            return;
+        }
+        else {
+            localStorage.setItem("premiumKey", key);
+            location.reload();
+        }
+    }) 
+}
+
+if (localStorage.getItem("premiumKey")){
+    document.getElementById("premiumKey").value = localStorage.getItem("premiumKey")
+    document.getElementById("status").textContent = "Premium activated!";
+}
