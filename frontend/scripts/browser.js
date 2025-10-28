@@ -326,12 +326,26 @@ function updateUrlBarFromIframe() {
       console.log("Page title:", pageTitle);
       currentUrl = parts[1].trim();
       console.log("Current URL:", currentUrl);
-      // Update tab title to page title
-      const textNode = tab.firstChild;
-      if (textNode && textNode.nodeType === Node.TEXT_NODE) {
-        textNode.textContent = pageTitle;
+
+      // Update tab title and URL bar only if they have changed
+      const currentTabTitle = tabs[activeTabId].title;
+      const currentTabUrl = tabs[activeTabId].url;
+
+      if (pageTitle !== currentTabTitle) {
+        // Update tab title to page title
+        const textNode = tab.firstChild;
+        if (textNode && textNode.nodeType === Node.TEXT_NODE) {
+          textNode.textContent = pageTitle;
+        }
+        tabs[activeTabId].title = pageTitle;
       }
-      tabs[activeTabId].title = pageTitle;
+
+      if (currentUrl !== currentTabUrl) {
+        if (!urlBarFocused) {
+          urlBar.value = currentUrl;
+        }
+        tabs[activeTabId].url = currentUrl;
+      }
     }
   }
 
