@@ -7,36 +7,32 @@
     <link rel="stylesheet" href="styles/settings.css">
 </head>
 <body name="primary">
-
-    <!-- No, I won't stop using <center> I don't care if its deprecated -->
-    <center name="secondary">
+    <div class="settings-container">
 
         <h2>Settings</h2>
 
-        <br>
-
-        <div class="setting" name="secondary">
+        <div class="setting">
             <h4>Pick Theme</h4>
         </div>
 
-        <div class="setting" name="secondary">
-            <button name="tertiary" style="padding: 8px; border-radius: 8px;" onclick="localStorage.clear()">Reset Everything</button>
+        <div class="setting">
+            <button class="reset-btn" onclick="localStorage.clear()">Reset Everything</button>
         </div>
 
-        <div class="setting" name="secondary">
+        <div class="setting">
             <h4>Premium Key (Get in the Discord)</h4>
         </div>
 
-        <div style="display: flex;">
+        <div class="premium-input-group">
             <p id="status">Unregistered</p>
-            <br>
-            <input type="text" id="premiumKey" name="tertiary" value="Put your key here!">
-            <button name="tertiary" style="padding: 8px; border-radius: 8px;" onclick="setPremiumKey(document.getElementById('premiumKey').value)">Set</button>
+            <input type="text" id="premiumKey" value="Put your key here!">
+            <button class="set-btn" onclick="setPremiumKey(document.getElementById('premiumKey').value)">Set</button>
         </div>
 
-        <a href="/goats.html">Visit hall of G.O.A.TS ( lebron isn't one of them )</a>
+        <button class="toggle-btn" onclick="localStorage.setItem('axiomAds', !localStorage.getItem('axiomAds') || false)">Toggle Ads</button>
 
-    </center>
+        <a href="/goats.html">Visit hall of G.O.A.TS ( lebron isn't one of them )</a>
+    </div>
 
     <script src="scripts/settings.js"></script>
     <script src="scripts/global.js" type="module"></script>
