@@ -177,9 +177,6 @@ let currentURL
 
 if (!(window.location.href).includes("main.html")){
 
-if (localStorage.getItem("axiomAds") === "false") {
-    document.getElementById("info").remove()
-}
 
 setInterval(function(){
     if (currentTitle === document.title && currentURL === (window.location.href).replace(window.origin + "/", "")){
