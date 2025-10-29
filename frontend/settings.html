@@ -1,40 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Axiom Settings</title>
-    <link rel="stylesheet" href="styles/settings.css">
-</head>
-<body name="primary">
-    <div class="settings-container">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EP8214CHBW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
-        <h2>Settings</h2>
-
-        <div class="setting">
-            <h4>Pick Theme</h4>
-        </div>
-
-        <div class="setting">
-            <button class="reset-btn" onclick="localStorage.clear()">Reset Everything</button>
-        </div>
-
-        <div class="setting">
-            <h4>Premium Key (Get in the Discord)</h4>
-        </div>
-
-        <div class="premium-input-group">
-            <p id="status">Unregistered</p>
-            <input type="text" id="premiumKey" value="Put your key here!">
-            <button class="set-btn" onclick="setPremiumKey(document.getElementById('premiumKey').value)">Set</button>
-        </div>
-
-        <button class="toggle-btn" onclick="localStorage.setItem('axiomAds', !localStorage.getItem('axiomAds') || false)">Toggle Ads</button>
-
-        <a href="/goats.html">Visit hall of G.O.A.TS ( lebron isn't one of them )</a>
-    </div>
-
-    <script src="scripts/settings.js"></script>
-    <script src="scripts/global.js" type="module"></script>
-</body>
-</html>
+  gtag('config', 'G-EP8214CHBW');
+</script>

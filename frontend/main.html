@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Axiom Network</title>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
-        <link rel="stylesheet" href="/styles/main.css">
+    <title>Axiom OS</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+    <link rel="stylesheet" href="/styles/main.css">
 </head>
+
 <body>
     <div id="main"></div>
 
@@ -19,13 +21,13 @@
             <button class="item" data-name="VS Code" data-url="load.html?url=https://vscode.dev">
                 <img src="assets/os-assets/vscode.png" alt="VS Code">
             </button>
-            <button class="item"  data-name="Discord" data-url="load.html?url=https://discord.com/app">
+            <button class="item" data-name="Discord" data-url="load.html?url=https://discord.com/app">
                 <img src="assets/os-assets/discord.jpg" alt="Discord">
             </button>
-            <button class="item"  data-name="Twitch" data-url="load.html?url=https://twitch.tv">
+            <button class="item" data-name="Twitch" data-url="load.html?url=https://twitch.tv">
                 <img src="assets/os-assets/twitch.png" alt="Twitch">
             </button>
-            <button class="item"  data-name="Terminal" data-url="/features/terminal.html" id="terminal_item">
+            <button class="item" data-name="Terminal" data-url="/features/terminal.html" id="terminal_item">
                 <img src="assets/os-assets/terminal.png" alt="Terminal">
             </button>
             <button class="item" data-name="ChatGPT" data-url="/features/bot.html">
@@ -38,7 +40,7 @@
         </div>
     </div>
 
-        <div id="contextMenu" class="context-menu" style="display:none">
+    <div id="contextMenu" class="context-menu" style="display:none">
         <ul>
             <li><a onclick="document.getElementById('browser_item').click()">Open Browser</a></li>
             <li><a onclick="document.getElementById('terminal_item').click()">Open Browser</a></li>
@@ -46,8 +48,18 @@
 
         </ul>
     </div>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EP8214CHBW"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-EP8214CHBW');
+    </script>
 
     <script src="scripts/main.js" type="module"></script>
     <script src="scripts/global.js" type="module"></script>
 </body>
+
 </html>
