@@ -309,25 +309,28 @@ function updateUrlBarFromIframe() {
 
   let currentUrl = "";
   let title = "";
+  let hasValidTitle = false;
+
   try {
     title = frame.contentDocument ? frame.contentDocument.title : frame.contentWindow.document.title;
   } catch (error) {
-    // cross-origin
+    // cross-origin - can't access title
   }
 
   if (title && title.includes('|A|')) {
     const parts = title.split('|A|');
     if (parts.length === 2) {
       const pageTitle = parts[0].trim();
-      console.log("Page title:", pageTitle);
       currentUrl = parts[1].trim();
-      console.log("Current URL:", currentUrl);
+      hasValidTitle = true;
+
+      console.log("Parsed title - Page:", pageTitle, "URL:", currentUrl);
 
       // Update tab title and URL bar only if they have changed
       const currentTabTitle = tabs[activeTabId].title;
       const currentTabUrl = tabs[activeTabId].url;
 
-      if (pageTitle !== currentTabTitle) {
+      if (pageTitle && pageTitle !== currentTabTitle && pageTitle !== "Loading...") {
         // Update tab title to page title
         const textNode = tab.firstChild;
         if (textNode && textNode.nodeType === Node.TEXT_NODE) {
@@ -336,7 +339,7 @@ function updateUrlBarFromIframe() {
         tabs[activeTabId].title = pageTitle;
       }
 
-      if (currentUrl !== currentTabUrl) {
+      if (currentUrl && currentUrl !== currentTabUrl) {
         if (!urlBarFocused) {
           urlBar.value = currentUrl;
         }
@@ -345,7 +348,8 @@ function updateUrlBarFromIframe() {
     }
   }
 
-  if (!currentUrl) {
+  // Only use fallback logic if we didn't get a URL from the title
+  if (!currentUrl && !hasValidTitle) {
     try {
       const iframeSrc = frame.src;
       const decodedUrl = decodeIframeUrl(iframeSrc);
@@ -355,7 +359,20 @@ function updateUrlBarFromIframe() {
         const path = iframeSrc.replace(window.location.origin, "");
         if (path.startsWith("/") && path.endsWith(".html")) {
           const pageName = path.substring(1, path.length - 5);
-          currentUrl = `axiom://${pageName}`;
+          // Don't override with axiom:// if it's load.html or if we already have a stored URL
+          if (pageName === "load") {
+            // For load.html, keep the existing stored URL
+            if (tabs[activeTabId] && tabs[activeTabId].url && tabs[activeTabId].url !== "axiom://start") {
+              currentUrl = tabs[activeTabId].url;
+            }
+          } else {
+            currentUrl = `axiom://${pageName}`;
+          }
+        }
+      } else {
+        // Fall back to stored URL
+        if (tabs[activeTabId] && tabs[activeTabId].url) {
+          currentUrl = tabs[activeTabId].url;
         }
       }
     } catch (error) {
@@ -365,9 +382,12 @@ function updateUrlBarFromIframe() {
     }
   }
 
-  if (currentUrl) {
+  // Only update the URL bar if we have a valid URL and the user isn't focused on it
+  if (currentUrl && !urlBarFocused) {
     urlBar.value = currentUrl;
-    tabs[activeTabId].url = currentUrl;
+    if (tabs[activeTabId]) {
+      tabs[activeTabId].url = currentUrl;
+    }
   }
 }
 
