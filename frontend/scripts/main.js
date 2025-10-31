@@ -8,22 +8,34 @@ function addWindowFunctionality(windowElement, header) {
     pos3 = 0,
     pos4 = 0;
   let isDragging = false;
+  let animationFrameId = null;
+  let pendingX = null;
+  let pendingY = null;
 
   const startDrag = (clientX, clientY) => {
     isDragging = true;
     windowElement.style.zIndex = (++zIndexCounter).toString();
     pos3 = clientX;
     pos4 = clientY;
+
+    // Disable pointer events on iframe to prevent it from capturing mouse events during drag
+    const iframe = windowElement.querySelector('iframe');
+    if (iframe) {
+      iframe.style.pointerEvents = 'none';
+    }
   };
 
-  const drag = (clientX, clientY) => {
-    if (!isDragging) return;
+  const updatePosition = () => {
+    if (!isDragging || pendingX === null || pendingY === null) {
+      animationFrameId = null;
+      return;
+    }
 
     // Calculate movement delta
-    pos1 = pos3 - clientX;
-    pos2 = pos4 - clientY;
-    pos3 = clientX;
-    pos4 = clientY;
+    pos1 = pos3 - pendingX;
+    pos2 = pos4 - pendingY;
+    pos3 = pendingX;
+    pos4 = pendingY;
 
     // Get current position - force reflow to ensure accurate values
     const currentLeft =
@@ -38,22 +50,53 @@ function addWindowFunctionality(windowElement, header) {
     const winWidth = windowElement.offsetWidth;
     const winHeight = windowElement.offsetHeight;
 
-    // Allow some negative values to prevent windows from getting stuck
-    // but keep at least 100px visible
-    const minLeft = -(winWidth - 100);
-    const maxLeft = window.innerWidth - 100;
+    // Toolbar height at the bottom
+    const toolbarHeight = 50;
+
+    // Constrain window to stay completely within document bounds
+    // Don't allow any part to go outside or overlap with toolbar
+    const minLeft = 0;
+    const maxLeft = window.innerWidth - winWidth;
     const minTop = 0;
-    const maxTop = window.innerHeight - 50; // Keep title bar visible
+    const maxTop = window.innerHeight - toolbarHeight - winHeight;
 
     newLeft = Math.max(minLeft, Math.min(newLeft, maxLeft));
     newTop = Math.max(minTop, Math.min(newTop, maxTop));
 
     windowElement.style.left = `${newLeft}px`;
     windowElement.style.top = `${newTop}px`;
+
+    pendingX = null;
+    pendingY = null;
+    animationFrameId = null;
+  };
+
+  const drag = (clientX, clientY) => {
+    if (!isDragging) return;
+
+    pendingX = clientX;
+    pendingY = clientY;
+
+    // Use requestAnimationFrame to throttle updates and prevent choppiness
+    if (animationFrameId === null) {
+      animationFrameId = requestAnimationFrame(updatePosition);
+    }
   };
 
   const stopDrag = () => {
     isDragging = false;
+    pendingX = null;
+    pendingY = null;
+    if (animationFrameId !== null) {
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = null;
+    }
+
+    // Re-enable pointer events on iframe after drag ends
+    const iframe = windowElement.querySelector('iframe');
+    if (iframe) {
+      iframe.style.pointerEvents = 'auto';
+    }
   };
 
   const onMouseDown = (e) => {
@@ -61,15 +104,21 @@ function addWindowFunctionality(windowElement, header) {
       return;
     e.preventDefault();
     startDrag(e.clientX, e.clientY);
-    document.addEventListener("mousemove", onMouseMove);
-    document.addEventListener("mouseup", onMouseUp);
+    // Use window instead of document to catch events even when cursor leaves browser
+    window.addEventListener("mousemove", onMouseMove, true);
+    window.addEventListener("mouseup", onMouseUp, true);
   };
 
-  const onMouseMove = (e) => drag(e.clientX, e.clientY);
-  const onMouseUp = () => {
+  const onMouseMove = (e) => {
+    e.preventDefault();
+    drag(e.clientX, e.clientY);
+  };
+
+  const onMouseUp = (e) => {
+    e.preventDefault();
     stopDrag();
-    document.removeEventListener("mousemove", onMouseMove);
-    document.removeEventListener("mouseup", onMouseUp);
+    window.removeEventListener("mousemove", onMouseMove, true);
+    window.removeEventListener("mouseup", onMouseUp, true);
   };
 
   const onTouchStart = (e) => {
@@ -78,19 +127,21 @@ function addWindowFunctionality(windowElement, header) {
     e.preventDefault();
     const touch = e.touches[0];
     startDrag(touch.clientX, touch.clientY);
-    document.addEventListener("touchmove", onTouchMove, { passive: false });
-    document.addEventListener("touchend", onTouchEnd);
+    window.addEventListener("touchmove", onTouchMove, { passive: false, capture: true });
+    window.addEventListener("touchend", onTouchEnd, { capture: true });
   };
 
   const onTouchMove = (e) => {
+    e.preventDefault();
     const touch = e.touches[0];
     drag(touch.clientX, touch.clientY);
   };
 
-  const onTouchEnd = () => {
+  const onTouchEnd = (e) => {
+    e.preventDefault();
     stopDrag();
-    document.removeEventListener("touchmove", onTouchMove);
-    document.removeEventListener("touchend", onTouchEnd);
+    window.removeEventListener("touchmove", onTouchMove, true);
+    window.removeEventListener("touchend", onTouchEnd, true);
   };
 
   (header || windowElement).addEventListener("mousedown", onMouseDown);
@@ -128,12 +179,11 @@ function maximizeWindow(btn) {
 function createWindow(name, url, noTitle = false) {
   const windowElement = document.createElement("div");
   windowElement.className = "window";
-  windowElement.setAttribute("name", "secondary");
 
   if (noTitle) {
     windowElement.classList.add("no-title");
     windowElement.innerHTML = `
-      <div class="controls controls-overlay" name="tertiary">
+      <div class="controls controls-overlay">
         <div class="drag-handle" name="quaternary"><span class="material-symbols-outlined">drag_indicator</span></div>
         <div class="maximize" name="quaternary" onclick="maximizeWindow(this)"><span class="material-symbols-outlined">crop_square</span></div>
         <div class="close" name="quaternary" onclick="closeWindow(this)"><span class="material-symbols-outlined">close</span></div>
@@ -142,7 +192,7 @@ function createWindow(name, url, noTitle = false) {
     `;
   } else {
     windowElement.innerHTML = `
-      <div class="window-top" name="tertiary">
+      <div class="window-top">
         <span class="window-title">${name}</span>
         <div class="controls">
           <div class="maximize" onclick="maximizeWindow(this)"><span class="material-symbols-outlined">crop_square</span></div>
@@ -202,17 +252,24 @@ window.maximizeWindow = maximizeWindow;
 window.minimizeWindow = minimizeWindow;
 
 document.addEventListener("DOMContentLoaded", function () {
+  let currentBackground = "null"; // it can be null so we just use a string so theres no chance of a match
+  setInterval(function(){
+  if (localStorage.getItem("axiomTheme") != currentBackground) {
   if (localStorage.getItem("axiomTheme") != null) {
     document.body.style.setProperty(
       "background-image",
       `url(/assets/media/backgrounds/${localStorage.getItem("axiomTheme")}.jpg)`
     );
+    currentBackground = localStorage.getItem("axiomTheme");
   } else {
     document.body.style.setProperty(
       "background-image",
       `url(/assets/media/backgrounds/default.jpg)`
     );
+    currentBackground = "default";
   }
+  }
+  }, 500)
 
   updateItems();
   const toolbarButtons = document.querySelectorAll(".item[data-name]");

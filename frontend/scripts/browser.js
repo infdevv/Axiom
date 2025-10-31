@@ -26,10 +26,8 @@ function setupDragEvents(tab) {
 }
 function handleDragStart(e) {
   draggedTab = this;
-  // Set opacity for visual feedback
   this.style.opacity = "0.75";
   e.dataTransfer.effectAllowed = "move";
-  // Use a simple data transfer (optional)
   e.dataTransfer.setData("text/html", this.innerHTML);
 }
 function handleDragOver(e) {
@@ -82,9 +80,9 @@ document.getElementById("addTab").onclick = function () {
   const newTab = document.createElement("div");
   let id = btoa(Date.now());
   newTab.className = "tab";
+  newTab.setAttribute("name", "tertiary");
   newTab.draggable = true; // Enable dragging for new tabs
   newTab.id = id;
-  newTab.setAttribute("name", "surface"); // Add theme attribute for inactive tabs
   newTab.innerHTML = `New Tab
                 <span onclick="closeTab('${id}', event)">
                     <span class="material-symbols-outlined" style="font-size: 16px; cursor: pointer;">
@@ -120,7 +118,6 @@ function switchToTab(tabId) {
   });
   document.querySelectorAll(".tab").forEach((tab) => {
     tab.classList.remove("active");
-    tab.setAttribute("name", "surface"); // Set inactive tabs to surface color
   });
   // Show selected iframe and activate tab
   const frame = document.getElementById(`frame-${tabId}`);
@@ -133,7 +130,6 @@ function switchToTab(tabId) {
   const tab = document.getElementById(tabId);
   if (tab) {
     tab.classList.add("active");
-    tab.setAttribute("name", "quaternary"); // Set active tab to quaternary color
     console.log("Tab activated:", tabId);
   } else {
     console.log("Tab not found:", tabId);

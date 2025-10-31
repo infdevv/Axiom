@@ -16,9 +16,10 @@
 
 button, .reset-btn, .set-btn, .toggle-btn {
     padding: 12px 20px;
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: var(--border-radius);
-    background-color: var(--tertiary-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     color: var(--text-color);
     cursor: pointer;
     transition: var(--transition);
@@ -30,12 +31,14 @@ button, .reset-btn, .set-btn, .toggle-btn {
 button:hover, .reset-btn:hover, .set-btn:hover, .toggle-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    background-color: #333;
+    opacity: 0.9;
 }
 
 body {
   font-family: "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
-  background-color: var(--primary-bg);
+  background: transparent;
+  background-size: cover;
+  background-repeat: no-repeat;
   color: var(--text-color);
   display: flex;
   justify-content: center;
@@ -43,17 +46,23 @@ body {
   min-height: 100vh;
   padding: 20px;
   box-sizing: border-box;
+  overflow: hidden;
+  margin: 0;
 }
 
 
 
 .settings-container {
-  background-color: var(--secondary-bg);
+  backdrop-filter: blur(15px) saturate(150%) brightness(0.9);
+  -webkit-backdrop-filter: blur(15px) saturate(150%) brightness(0.9);
   width: 100%;
   max-width: 600px;
   padding: 40px;
   border-radius: var(--border-radius);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+    0 1px 2px rgba(255, 255, 255, 0.1) inset;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -86,9 +95,10 @@ h2 {
     align-items: center;
     gap: 10px;
     padding: 15px 25px;
-    background-color: var(--tertiary-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     color: var(--text-color);
-    border: 2px solid #333;
+    border: 2px solid rgba(255, 255, 255, 0.1);
     border-radius: var(--border-radius);
     cursor: pointer;
     transition: var(--transition);
@@ -100,13 +110,13 @@ h2 {
 .theme-button:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    border-color: #555;
-    background-color: #2a2a2a;
+    border-color: rgba(255, 255, 255, 0.2);
+    opacity: 0.9;
 }
 
 .theme-button.active {
     border-color: var(--accent-color);
-    background-color: #2a2a2a;
+    opacity: 1;
     box-shadow: 0 0 15px rgba(76, 175, 80, 0.3);
 }
 
@@ -153,14 +163,15 @@ a:hover {
 }
 
 input {
-    background-color: var(--tertiary-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     color: var(--text-color);
     padding: 12px;
     border-radius: var(--border-radius);
     margin: 10px 0;
     width: 100%;
     max-width: 300px;
-    border: 1px solid #333;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     font-size: 16px;
     font-weight: 400;
     font-family: inherit;
@@ -171,7 +182,8 @@ input {
 
 input:focus {
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
-    border-color: var(--accent-color);
+    border-color: rgba(76, 175, 80, 0.5);
+    opacity: 0.9;
 }
 
 .premium-input-group {

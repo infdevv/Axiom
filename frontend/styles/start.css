@@ -4,7 +4,7 @@
   box-sizing: border-box;
 }
 
-body[name="primary"] {
+body {
   font-family: "Inter", sans-serif;
   display: flex;
   flex-direction: column;
@@ -13,9 +13,8 @@ body[name="primary"] {
   min-height: 100vh;
   padding: 1.5rem;
   text-align: center;
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
-  background-size: 24px 24px;
-  background-attachment: fixed;
+  background: transparent !important;
+  color: white !important;
 }
 
 .container {
@@ -45,13 +44,13 @@ body[name="primary"] {
   font-size: 0.95rem;
 }
 
-.search-container[name="secondary"] {
+.search-container{
   position: relative;
   display: flex;
   align-items: center;
   border-radius: 28px;
   padding: 0.65rem 1.1rem;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.01);
   transition: all 0.25s ease;
   width: 100%;
   border: 1px solid transparent;
@@ -118,6 +117,7 @@ body[name="primary"] {
   justify-content: center;
   margin-bottom: 0.5rem;
   border-radius: 16px;
+  background-color: rgba(44, 44, 44, 0.5);
   transition: all 0.2s ease;
   border: 1px solid transparent;
 }
@@ -152,4 +152,36 @@ body[name="primary"] {
     width: 56px;
     font-size: 0.8rem;
   }
+}
+
+#currentTime {
+  position: fixed;
+  right: 30px;
+  top: 20px;
+  border-radius: 6px;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+
+.morning {
+  background: linear-gradient(to right, #4bebd0, #45b7d1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.afternoon {
+  background: linear-gradient(to right, #5f68e9, #07d8bc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.evening {
+  background: linear-gradient(to right, #e92f2f, #ea3333);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }

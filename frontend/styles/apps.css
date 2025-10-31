@@ -5,11 +5,13 @@
 }
 body {
   font-family: "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
-  background-color: #121212;
   color: white;
   align-items: center;
   justify-content: center;
   margin-top: 30px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  overflow: hidden;
 }
 
 #apps {
@@ -82,41 +84,60 @@ body {
 }
 
 #control1, #control2, #control3, #control4 {
-    background-color: white;
     cursor: pointer;
-    color: black;
+    color: white;
     padding: 8px;
     margin: 0;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: background-color 0.2s ease;
+}
+
+#control2, #control3 {
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#control3 {
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 #control1 {
     border-top-left-radius: 8px;
     border-bottom-left-radius: 8px;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#control1:hover, #control2:hover, #control3:hover, #control4:hover {
+    opacity: 0.9;
 }
 
 #control4 {
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 #search {
-    background-color: white;
-    color: black;
+    color: white;
     padding: 12px;
     border-radius: 12px;
     margin: 10px 0;
     width: 60%;
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     font-size: 16px;
     font-weight: 400;
     font-family: "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
     outline: none;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.3s ease, transform 0.2s ease;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: box-shadow 0.3s ease, transform 0.2s ease, background-color 0.2s ease;
 }
 
 #search:focus {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
     transform: scale(1.02);
+    opacity: 0.9;
 }
 

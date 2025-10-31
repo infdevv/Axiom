@@ -12,7 +12,7 @@
 <body>
     <div id="main"></div>
 
-    <div id="toolbar">
+    <div id="toolbar" name="secondary">
         <div id="toolbar-apps">
 
             <button class="item" data-name="Axiom" id="browser_item" data-url="browser.html" data-no-title="true">
@@ -35,12 +35,12 @@
             </button>
         </div>
 
-        <div id="time">
+        <div id="time" name="tertiary">
             <span id="time-counter"></span>
         </div>
     </div>
 
-    <div id="contextMenu" class="context-menu" style="display:none">
+    <div id="contextMenu" class="context-menu" name="secondary" style="display:none">
         <ul>
             <li><a onclick="document.getElementById('browser_item').click()">Open Browser</a></li>
             <li><a onclick="document.getElementById('terminal_item').click()">Open Browser</a></li>

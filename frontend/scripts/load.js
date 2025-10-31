@@ -46,26 +46,77 @@ function buildSearchUrl(input, searchEngine) {
   return url;
 }
 
-async function loadProxyPage() {
-  const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
+async function initializeServiceWorker() {
+  if (!("serviceWorker" in navigator)) {
+    throw new Error("Service workers are not supported in this browser");
+  }
 
-  // Register service worker and wait for it to be ready
-  if ("serviceWorker" in navigator) {
+  try {
+    // Register the service worker
     const registration = await navigator.serviceWorker.register("/sw.js", {
-      scope: "/"
+      scope: "/",
+      updateViaCache: "none"
     });
+
+    console.log("Service worker registered:", registration);
 
     // Wait for the service worker to be ready
     await navigator.serviceWorker.ready;
+    console.log("Service worker is ready");
 
-    // If there's no active controller, wait for it
+    // If there's no active controller, we need to wait for it or reload
     if (!navigator.serviceWorker.controller) {
-      await new Promise((resolve) => {
-        navigator.serviceWorker.addEventListener('controllerchange', resolve, { once: true });
+      console.log("No active controller, waiting for controllerchange...");
+
+      // Set up a promise to wait for controller
+      const controllerPromise = new Promise((resolve) => {
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          console.log("Controller changed");
+          resolve();
+        }, { once: true });
       });
+
+      // If the service worker is installing/waiting, trigger skipWaiting
+      if (registration.waiting) {
+        console.log("Service worker waiting, sending skipWaiting message");
+        registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+      } else if (registration.installing) {
+        console.log("Service worker installing, waiting for state change");
+        registration.installing.addEventListener('statechange', (e) => {
+          if (e.target.state === 'installed') {
+            console.log("Service worker installed, sending skipWaiting message");
+            registration.waiting?.postMessage({ type: 'SKIP_WAITING' });
+          }
+        });
+      }
+
+      // Wait for controller with timeout
+      await Promise.race([
+        controllerPromise,
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("Timeout waiting for service worker controller")), 10000)
+        )
+      ]);
     }
 
     console.log("Service worker is ready and controlling the page");
+    return registration;
+  } catch (error) {
+    console.error("Failed to initialize service worker:", error);
+    throw error;
+  }
+}
+
+async function loadProxyPage() {
+  const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
+
+  // Initialize service worker with proper error handling
+  try {
+    await initializeServiceWorker();
+  } catch (error) {
+    console.error("Service worker initialization failed:", error);
+    alert("Failed to initialize proxy service. Please refresh the page.");
+    return;
   }
 
   const urlParam = getURLParameter("url");

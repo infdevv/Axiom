@@ -371,10 +371,16 @@
   {
     "name": "Taisei Project",
     "link": "https://play.taisei-project.org/",
-    "image": "/assets/media/icons//taisei.jpg",
+    "image": "/assets/media/icons/taisei.jpg",
     "categories": [
       "all",
       "game"
     ]
+  },
+  {
+    "name": "Touhou Mother",
+    "link": "https://truffled.lol/games/touhoumother/index.html",
+    "image" : "/assets/media/icons/touhoumother.png",
+    "categories": ["all", "game"]
   }
 ]

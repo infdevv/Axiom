@@ -58,7 +58,7 @@ fastify.post("/api/ai", async (request, reply) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(request.body.messages),
+      body: JSON.stringify(request.body),
     });
 
     const data = await response.json();

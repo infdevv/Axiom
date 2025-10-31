@@ -105,6 +105,30 @@ class ThemeManager {
         return this.theme;
     }
 
+    makeTranslucent(color, alpha = 0.3) {
+        // If already rgba with alpha, return as is
+        if (color.startsWith('rgba') && color.includes(',', color.lastIndexOf(','))) {
+            return color;
+        }
+
+        // Convert hex to rgba
+        if (color.startsWith('#')) {
+            const hex = color.replace('#', '');
+            const r = parseInt(hex.substring(0, 2), 16);
+            const g = parseInt(hex.substring(2, 4), 16);
+            const b = parseInt(hex.substring(4, 6), 16);
+            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        }
+
+        // Convert rgb to rgba
+        if (color.startsWith('rgb(')) {
+            return color.replace('rgb(', 'rgba(').replace(')', `, ${alpha})`);
+        }
+
+        // Return as is if format not recognized
+        return color;
+    }
+
     load() {
         if (!this.themes) return;
 
@@ -135,13 +159,17 @@ class ThemeManager {
 
             elements.forEach(element => {
                 if (key.startsWith('text')) {
-                    
+
                     element.style.setProperty('color', colorProp, 'important');
                 } else {
-                    
-                    element.style.setProperty('background-color', colorProp, 'important');
+                    // Convert solid colors to translucent rgba
+                    const translucent = this.makeTranslucent(colorProp);
+
+                    element.style.setProperty('background-color', translucent, 'important');
                     element.style.setProperty('border-color', borderColor, 'important');
                     element.style.setProperty('color', textColor, 'important');
+                    element.style.setProperty('backdrop-filter', 'blur(10px)', 'important');
+                    element.style.setProperty('-webkit-backdrop-filter', 'blur(10px)', 'important');
                 }
             });
         }

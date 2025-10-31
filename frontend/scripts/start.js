@@ -10,16 +10,15 @@ function updateTime() {
     day: "numeric",
   });
 
-  document.getElementById("currentTime").textContent = timeString;
-  document.getElementById("currentDate").textContent = dateString;
+  document.getElementById("currentTime").textContent = dateString + " " + timeString;
 }
 
 function getGreeting() {
   const hour = new Date().getHours();
-  if (hour < 6) return "Good... night?";
-  if (hour < 12) return "Good morning";
-  if (hour < 18) return "Good afternoon";
-  return "Good evening";
+  if (hour < 6) return { text: "night?", class: "evening" };
+  if (hour < 12) return { text: "morning", class: "morning" };
+  if (hour < 18) return { text: "afternoon", class: "afternoon" };
+  return { text: "evening", class: "evening" };
 }
 
 function updateGreeting() {
@@ -30,7 +29,7 @@ function updateGreeting() {
     localStorage.setItem("firstVisit", "false");
   }
 
-  document.getElementById("greetingText").textContent = greeting;
+  document.getElementById("greetingText").innerHTML = `Good <span class="${greeting.class}">${greeting.text}</span>`;
   document.getElementById("welcomeMessage").textContent = isFirstVisit
     ? "Welcome to Axiom"
     : "Welcome back to Axiom";

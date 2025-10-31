@@ -9,33 +9,33 @@
     <link rel="stylesheet" href="styles/browser.css">
 </head>
 
-<body name="primary">
-    <div id="tabs" name="tertiary">
-        <div id="addTab" name="quaternary" draggable="false">
+<body>
+    <div id="tabs" name="secondary">
+        <div id="addTab" draggable="false">
             <span class="material-symbols-outlined" name="textSecondary">
                 add
             </span>
         </div>
     </div>
     <div id="navbar" name="secondary">
-        <button class="nav-btn" id="backBtn" onclick="goBack()">
+        <button class="nav-btn" name="tertiary" id="backBtn" onclick="goBack()">
             <span class="material-symbols-outlined">arrow_back</span>
         </button>
-        <button class="nav-btn" id="forwardBtn" onclick="goForward()">
+        <button class="nav-btn" name="tertiary" id="forwardBtn" onclick="goForward()">
             <span class="material-symbols-outlined">arrow_forward</span>
         </button>
-        <button class="nav-btn" id="refreshBtn" onclick="refreshPage()">
+        <button class="nav-btn" name="tertiary" id="refreshBtn" onclick="refreshPage()">
             <span class="material-symbols-outlined">refresh</span>
         </button>
-        <input type="text" name="tertiary" id="urlBar" placeholder="Enter URL..." onkeypress="handleUrlKeypress(event)">
+        <input type="text" id="urlBar" name="tertiary" placeholder="Enter URL..." onkeypress="handleUrlKeypress(event)">
         <div class="left-controls">
-            <button class="nav-btn" id="dropdownButton" style="display: none;">
+            <button class="nav-btn" name="tertiary" id="dropdownButton" style="display: none;">
                 <span class="material-symbols-outlined">menu</span>
             </button>
         </div>
 
     </div>
-    <div id="frames" name="primary">
+    <div id="frames">
     </div>
     <script src="scripts/browser.js"></script>
     <script src="scripts/global.js" type="module"></script>

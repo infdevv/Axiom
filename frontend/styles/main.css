@@ -1,13 +1,9 @@
 :root {
-    --win11-bg: #202020;
-    --win11-accent: #0067c0;
-    --win11-hover: rgba(255, 255, 255, 0.1);
-    --win11-close-hover: #c42b1c;
-    --win11-border: rgba(255, 255, 255, 0.08);
+    --main-hover: rgba(255, 255, 255, 0.1);
+    --border: rgba(255, 255, 255, 0.08);
 }
 
 body {
-    background-image: url("../Mount-Pumori.jpg"), linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
     background-size: cover;
     margin: 0;
     padding: 0;
@@ -21,7 +17,6 @@ body {
 
 
 #toolbar {
-    background: rgba(32, 32, 32, 0.5);
     width: 100%;
     z-index: 500000;
     height: 50px;
@@ -37,46 +32,6 @@ body {
         inset 0 1px 0 rgba(255, 255, 255, 0.08),
         inset 0 -1px 0 rgba(0, 0, 0, 0.2);
     padding: 0 16px;
-}
-
-#active-windows {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    justify-content: flex-start;
-    grid-column: 1;
-    overflow-x: auto;
-    padding: 0 8px;
-}
-
-#active-windows::-webkit-scrollbar {
-    height: 0px;
-}
-
-.window-toolbar-item {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--win11-border);
-    padding: 6px 12px;
-    cursor: pointer;
-    border-radius: 6px;
-    transition: all 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 11px;
-    font-weight: 400;
-    white-space: nowrap;
-    letter-spacing: 0.3px;
-    display: flex;
-    align-items: center;
-    height: 32px;
-}
-
-.window-toolbar-item:hover {
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.window-toolbar-item:active {
-    background: rgba(255, 255, 255, 0.05);
-    transform: scale(0.95);
 }
 
 #toolbar-apps {
@@ -144,7 +99,7 @@ body {
 }
 
 #time:hover {
-    background-color: var(--win11-hover);
+    background-color: var(--main-hover);
 }
 
 #time-counter {
@@ -156,9 +111,7 @@ body {
 
 
 .window {
-    background: rgba(32, 32, 32, 0.75);
-    backdrop-filter: blur(60px) saturate(200%) brightness(1.05);
-    -webkit-backdrop-filter: blur(60px) saturate(200%) brightness(1.05);
+    background-color: transparent;
     position: absolute;
     top: 50px;
     left: 50px;
@@ -166,8 +119,11 @@ body {
     height: 600px;
     min-height: 300px;
     min-width: 400px;
-    border-radius: 12px;
-    border: 1px solid var(--win11-border);
+    border-radius: 8px;
+    z-index: 500000;
+    backdrop-filter: blur(15px) saturate(150%) brightness(0.9);
+    -webkit-backdrop-filter: blur(15px) saturate(150%) brightness(0.9);
+    padding: 2px 8px 8px 8px;
     resize: both;
     box-shadow:
         0 12px 40px rgba(0, 0, 0, 0.7),
@@ -177,7 +133,7 @@ body {
     color: white;
     display: flex;
     flex-direction: column;
-    transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.2s; 
+    border-width: 2px;
 }
 
 .window.maximized {
@@ -193,17 +149,16 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 16px;
+    padding: 5px;
     height: 40px;
-    background: rgba(45, 45, 45, 0.8);
-    border-bottom: 1px solid var(--win11-border);
+    border-bottom: 1px solid var(--border);
     user-select: none;
     cursor: move;
     flex-shrink: 0;
 }
 
 .window-title {
-    font-size: 12px;
+    font-size: 15px;
     font-weight: 400;
     color: rgba(255, 255, 255, 0.9);
     letter-spacing: 0.3px;
@@ -215,8 +170,8 @@ body {
 }
 
 .controls > div {
-    width: 46px;
-    height: 39px;
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -235,22 +190,22 @@ body {
 }
 
 .minimize:hover {
-    background-color: var(--win11-hover);
+    background-color: var(--main-hover);
 }
 
 .maximize:hover {
-    background-color: var(--win11-hover);
+    background-color: var(--main-hover);
 }
 
 .close:hover {
-    background-color: var(--win11-close-hover);
+    background-color: var(--main-hover);
 }
 
 .content {
-    background-color: #1e1e1e;
     flex: 1;
     width: 100%;
     height: 100%;
+    border-radius: 4px;
     min-height: 0;
     border: none;
     color: rgba(255, 255, 255, 0.7);
@@ -266,15 +221,12 @@ body {
     top: 0;
     right: 0;
     z-index: 1000;
+    border-bottom-left-radius: 4px;
     display: flex;
     gap: 0;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border-bottom-left-radius: 8px;
-    border-width: 1px;
-    border-style: solid;
-    border-top: none;
-    border-right: none;
+    border: none;
 }
 
 .controls-overlay .drag-handle {
@@ -315,7 +267,6 @@ body {
        .context-menu {
             position: absolute;
             text-align: center;
-                background: rgba(32, 32, 32, 0.5);
     z-index: 500000;
     backdrop-filter: blur(15px) saturate(150%) brightness(0.9);
     -webkit-backdrop-filter: blur(15px) saturate(150%) brightness(0.9);

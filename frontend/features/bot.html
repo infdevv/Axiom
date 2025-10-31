@@ -13,8 +13,12 @@
   <style>
     body {
       margin: 0;
+      color: white;
       padding: 0;
       font-family: 'Inter', sans-serif;
+      background-size: cover;
+      background-repeat: no-repeat;
+      overflow: hidden;
     }
 
     .message {
@@ -24,12 +28,17 @@
       text-align: left;
       width: fit-content;
       margin-left: auto;
+      background: rgba(42, 42, 42, 0.5);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .message.bot {
       text-align: left;
       margin-left: 0px;
       margin-right: auto;
+      background: rgba(255, 255, 255, 0.1);
     }
 
     .container {
@@ -45,12 +54,23 @@
     #chat-input {
       padding: 8px;
       border-radius: 14px;
-      border: 1px solid #333;
+      border: 1px solid rgba(255, 255, 255, 0.1);
       font-size: 14px;
       position: fixed;
       bottom: 10px;
       width: 60%;
       left: calc(50% - 30%);
+      background: rgba(42, 42, 42, 0.3);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: white;
+      outline: none;
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+    #chat-input:focus {
+      background: rgba(42, 42, 42, 0.4);
+      border-color: rgba(255, 255, 255, 0.2);
     }
   </style>
 </head>
@@ -59,14 +79,14 @@
   <center>
     <div class="container">
 
-      <div class="message bot" name="quaternary">
+      <div class="message bot">
         Ask anything!
       </div>
 
 
     </div>
   </center>
-  <input type="text" id="chat-input" name="tertiary" autocomplete="off" placeholder="Type a message..." />
+  <input type="text" id="chat-input" autocomplete="off" placeholder="Type a message..." />
 
 
   <script src="../scripts/global.js" type="module"></script>
@@ -112,7 +132,6 @@
         const message = document.createElement("div");
         message.classList.add("message");
         message.classList.add("bot");
-        message.setAttribute("name", "tertiary");
         message.textContent = text;
         document.querySelector(".container").appendChild(message);
         chat.push({ "content": text, "role": "assistant" });
@@ -125,7 +144,6 @@
         event.preventDefault();
         const message = document.createElement("div");
         message.classList.add("message");
-        message.setAttribute("name", "secondary")
         const userMessage = document.getElementById("chat-input").value;
         message.textContent = userMessage;
         document.querySelector(".container").appendChild(message);
