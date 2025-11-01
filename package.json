@@ -13,8 +13,12 @@
     "fastify": "^5.4.0",
     "node-cache": "^5.1.2"
   },
+  "devDependencies": {
+    "javascript-obfuscator": "^4.1.1"
+  },
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "build:eta": "node build-eta.js"
   },
   "author": "",
   "license": "ISC",

@@ -33,9 +33,9 @@ self.__uv$config = {
 			return url;
 		}
 	},
-	handler: "/eta/handler.js",
-	client: "/eta/client.js",
-	bundle: "/eta/bundle.js",
-	config: "/eta/config.js",
-	sw: "/eta/sw.js",
+	handler: "/eta/aa.js",
+	client: "/eta/ab.js",
+	bundle: "/eta/ac.js",
+	config: "/eta/ac2.js",
+	sw: "/eta/ae.js",
 };

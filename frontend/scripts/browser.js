@@ -269,7 +269,13 @@ urlBar.addEventListener("blur", () => {
   urlBarFocused = false;
 });
 
-// Function to decode URL from iframe src
+function truncate(text) {
+  if (text.length > 20) {
+    return text.slice(0, 16) + "...";
+  }
+  return text;
+}
+
 function decodeIframeUrl(iframeSrc) {
   try {
     // Check if it's a load.html URL
@@ -325,8 +331,7 @@ function updateUrlBarFromIframe() {
 
       console.log("Parsed title - Page:", pageTitle, "URL:", currentUrl);
 
-      // Update tab title and URL bar only if they have changed
-      const currentTabTitle = tabs[activeTabId].title;
+      const currentTabTitle = truncate(tabs[activeTabId].title);
       const currentTabUrl = tabs[activeTabId].url;
 
       if (pageTitle && pageTitle !== currentTabTitle && pageTitle !== "Loading...") {
@@ -335,7 +340,7 @@ function updateUrlBarFromIframe() {
         if (textNode && textNode.nodeType === Node.TEXT_NODE) {
           textNode.textContent = pageTitle;
         }
-        tabs[activeTabId].title = pageTitle;
+        tabs[activeTabId].title = truncate(pageTitle);
       }
 
       if (currentUrl && currentUrl !== currentTabUrl) {

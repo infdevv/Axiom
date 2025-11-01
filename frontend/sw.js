@@ -1,6 +1,6 @@
-importScripts("/eta/bundle.js");
-importScripts("/eta/config.js");
-importScripts(__uv$config.sw || "/eta/sw.js");
+importScripts("/eta/ac.js");
+importScripts("/eta/ac2.js");
+importScripts(__uv$config.sw);
 
 const uv = new UVServiceWorker();
 

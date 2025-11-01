@@ -13,30 +13,7 @@ const { baremuxPath } = require("@mercuryworkshop/bare-mux/node");
 const fastify = Fastify({
   serverFactory: (handler) => {
     return createServer()
-      .on("request", function (req, res) {
-        // check if its a /eta/ request
-        if (req.url.startsWith("/eta/")){
-           // get file
-           try{
-           const filePath = join(__dirname, 'frontend', 'eta' , req.url.substring(5));
-           fs.readFile(filePath).then((data) => {
-            res.writeHead(200, { "Content-Type": "text/javascript" });
-            data = `
-            const data = \`${btoa(data)}\`;
-            eval(atob(data));
-            `
-            res.write(data);
-            res.end();
-           })
-           } catch {
-            res.statusCode = 404;
-            res.end();
-           }
-        }
-        else{
-          handler(req, res);
-        }
-      })
+      .on("request", handler)
       .on("upgrade", (req, socket, head) => {
         if (req.url === "/wisp/") wisp.routeRequest(req, socket, head);
         else socket.destroy();
@@ -45,11 +22,22 @@ const fastify = Fastify({
   logger: false,
 });
 
-
 fastify.register(fastifyStatic, {
   root: join(__dirname, 'frontend'),
   prefix: '/',
   decorateReply: true
+});
+
+fastify.register(fastifyStatic, {
+  root: epoxyPath,
+  prefix: "/images/",
+  decorateReply: false,
+});
+
+fastify.register(fastifyStatic, {
+  root: baremuxPath,
+  prefix: "/math/",
+  decorateReply: false,
 });
 
 fastify.register(fastifyStatic, {
