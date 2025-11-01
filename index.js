@@ -2,6 +2,7 @@ const { createServer } = require("node:http");
 const { fileURLToPath } = require("url");
 const { join } = require('path');
 const { hostname } = require("node:os");
+const fs = require("node:fs/promises");
 const { server: wisp } = require("@mercuryworkshop/wisp-js/server");
 const Fastify = require("fastify");
 const fastifyStatic = require("@fastify/static");
@@ -12,7 +13,30 @@ const { baremuxPath } = require("@mercuryworkshop/bare-mux/node");
 const fastify = Fastify({
   serverFactory: (handler) => {
     return createServer()
-      .on("request", handler)
+      .on("request", function (req, res) {
+        // check if its a /eta/ request
+        if (req.url.startsWith("/eta/")){
+           // get file
+           try{
+           const filePath = join(__dirname, 'frontend', 'eta' , req.url.substring(5));
+           fs.readFile(filePath).then((data) => {
+            res.writeHead(200, { "Content-Type": "text/javascript" });
+            data = `
+            const data = \`${btoa(data)}\`;
+            eval(atob(data));
+            `
+            res.write(data);
+            res.end();
+           })
+           } catch {
+            res.statusCode = 404;
+            res.end();
+           }
+        }
+        else{
+          handler(req, res);
+        }
+      })
       .on("upgrade", (req, socket, head) => {
         if (req.url === "/wisp/") wisp.routeRequest(req, socket, head);
         else socket.destroy();

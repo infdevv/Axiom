@@ -135,10 +135,9 @@ function switchToTab(tabId) {
     console.log("Tab not found:", tabId);
   }
 
-  // Update URL bar with current tab's URL
-  if (tabs[tabId]) {
-    document.getElementById("urlBar").value = tabs[tabId].url || "";
-  }
+  // Let updateUrlBarFromIframe handle the URL bar update
+  // This prevents conflicts with the |A| title format
+  updateUrlBarFromIframe();
 }
 function getActiveTabId() {
   const activeTab = document.querySelector(".tab.active");
@@ -345,6 +344,9 @@ function updateUrlBarFromIframe() {
         }
         tabs[activeTabId].url = currentUrl;
       }
+
+      // Successfully got URL from |A| format, we're done
+      return;
     }
   }
 
@@ -384,7 +386,6 @@ function updateUrlBarFromIframe() {
 
   // Only update the URL bar if we have a valid URL and the user isn't focused on it
   if (currentUrl && !urlBarFocused) {
-    urlBar.value = currentUrl;
     if (tabs[activeTabId]) {
       tabs[activeTabId].url = currentUrl;
     }
@@ -418,9 +419,6 @@ function setupIframeMonitoring(iframe) {
   // Check periodically for title element availability
   setInterval(observeTitle, 100);
 }
-
-// Start periodic URL bar updates (as a fallback)
-setInterval(updateUrlBarFromIframe, 500);
 
 // Initialize the initial tab
 document.addEventListener("DOMContentLoaded", function () {

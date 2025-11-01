@@ -167,6 +167,7 @@ function maximizeWindow(btn) {
   const windowElement = btn.closest(".window");
   const icon = btn.querySelector(".material-symbols-outlined");
 
+
   if (windowElement.classList.contains("maximized")) {
     windowElement.classList.remove("maximized");
     icon.textContent = "crop_square";

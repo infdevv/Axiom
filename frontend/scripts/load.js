@@ -161,7 +161,18 @@ async function loadProxyPage() {
       let title = frameDoc.title;
       let frameUrl = "";
 
-      frameUrl = url; 
+      // Get the actual current URL from the iframe, decode it from the UV encoding
+      try {
+        const currentSrc = frame.src;
+        if (currentSrc && currentSrc.includes(__uv$config.prefix)) {
+          const encodedUrl = currentSrc.substring(currentSrc.indexOf(__uv$config.prefix) + __uv$config.prefix.length);
+          frameUrl = __uv$config.decodeUrl(encodedUrl);
+        } else {
+          frameUrl = url;
+        }
+      } catch (e) {
+        frameUrl = url;
+      }
 
 
       let formattedTitle = title + "|A|" + frameUrl;
