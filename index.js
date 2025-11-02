@@ -9,18 +9,30 @@ const fastifyStatic = require("@fastify/static");
 const { epoxyPath } = require("@mercuryworkshop/epoxy-transport");
 const { baremuxPath } = require("@mercuryworkshop/bare-mux/node");
 
-
-const fastify = Fastify({
-  serverFactory: (handler) => {
-    return createServer()
-      .on("request", handler)
-      .on("upgrade", (req, socket, head) => {
-        // No local WebSocket handling needed - relying on anura.pro
-        socket.destroy();
-      });
-  },
-  logger: false,
+Object.assign(wisp.options, {
+  allow_udp_streams: false,
+  dns_servers: ["1.1.1.3", "1.0.0.3"],
+  stream_limit_per_host: 500,
+  stream_limit_total: 1000
 });
+const fastify = Fastify({
+	serverFactory: (handler) => {
+		return createServer()
+			.on("request", (req, res) => {
+				res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+				res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+				handler(req, res);
+			})
+			.on("upgrade", (req, socket, head) => {
+				if (req.url.startsWith('/wisp/')) {
+					wisp.routeRequest(req, socket, head);
+				} else {
+					socket.end();
+				}
+			});
+	},
+});
+
 
 fastify.register(fastifyStatic, {
   root: join(__dirname, 'frontend'),
