@@ -15,8 +15,8 @@ const fastify = Fastify({
     return createServer()
       .on("request", handler)
       .on("upgrade", (req, socket, head) => {
-        if (req.url.startsWith("/wisp")) wisp.routeRequest(req, socket, head);
-        else socket.destroy();
+        // No local WebSocket handling needed - relying on anura.pro
+        socket.destroy();
       });
   },
   logger: false,
