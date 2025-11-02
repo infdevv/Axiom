@@ -15,7 +15,7 @@ const fastify = Fastify({
     return createServer()
       .on("request", handler)
       .on("upgrade", (req, socket, head) => {
-        if (req.url === "/wisp/") wisp.routeRequest(req, socket, head);
+        if (req.url.startsWith("/wisp")) wisp.routeRequest(req, socket, head);
         else socket.destroy();
       });
   },
