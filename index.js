@@ -1,20 +1,13 @@
-const { createServer } = require("node:http");
-const { fileURLToPath } = require("url");
-const { join } = require('path');
-const { hostname } = require("node:os");
-const fs = require("node:fs/promises");
-const { server: wisp } = require("@mercuryworkshop/wisp-js/server");
-const Fastify = require("fastify");
-const fastifyStatic = require("@fastify/static");
-const { epoxyPath } = require("@mercuryworkshop/epoxy-transport");
-const { baremuxPath } = require("@mercuryworkshop/bare-mux/node");
+import { createServer } from "node:http";
+import path, { join } from "node:path";
+import { hostname } from "node:os";
+import { server as wisp } from '@mercuryworkshop/wisp-js/server';
+import Fastify from "fastify";
+import fastifyStatic from "@fastify/static";
 
-Object.assign(wisp.options, {
-  allow_udp_streams: false,
-  dns_servers: ["1.1.1.3", "1.0.0.3"],
-  stream_limit_per_host: 500,
-  stream_limit_total: 1000
-});
+import { epoxyPath } from "@mercuryworkshop/epoxy-transport";
+import { baremuxPath } from "@mercuryworkshop/bare-mux/node";
+
 const fastify = Fastify({
 	serverFactory: (handler) => {
 		return createServer()
@@ -24,45 +17,43 @@ const fastify = Fastify({
 				handler(req, res);
 			})
 			.on("upgrade", (req, socket, head) => {
-				if (req.url.startsWith('/wisp/')) {
-					wisp.routeRequest(req, socket, head);
-				} else {
-					socket.end();
-				}
+				if (req.url.endsWith("/wisp/")) wisp.routeRequest(req, socket, head);
+				else socket.end();
 			});
 	},
 });
 
-
 fastify.register(fastifyStatic, {
-  root: join(__dirname, 'frontend'),
-  prefix: '/',
-  decorateReply: true
+	root: path.join(process.cwd(), "frontend"),
+	prefix: "/",
+	decorateReply: true,
 });
 
 fastify.register(fastifyStatic, {
-  root: epoxyPath,
-  prefix: "/images/",
-  decorateReply: false,
+	root: epoxyPath,
+	prefix: "/epoxy/",
+	decorateReply: false,
 });
 
 fastify.register(fastifyStatic, {
-  root: baremuxPath,
-  prefix: "/math/",
-  decorateReply: false,
+	root: baremuxPath,
+	prefix: "/baremux/",
+	decorateReply: false,
+});
+
+
+fastify.register(fastifyStatic, {
+	root: epoxyPath,
+	prefix: "/math/",
+	decorateReply: false,
 });
 
 fastify.register(fastifyStatic, {
-  root: epoxyPath,
-  prefix: "/epoxy/",
-  decorateReply: false,
+	root: baremuxPath,
+	prefix: "/images/",
+	decorateReply: false,
 });
 
-fastify.register(fastifyStatic, {
-  root: baremuxPath,
-  prefix: "/baremux/",
-  decorateReply: false,
-});
 
 const activeKeys = process.env.ACTIVE_KEYS?.split(",") || [];
 
@@ -105,28 +96,35 @@ fastify.post("/api/ai", async (request, reply) => {
   }
 })
 
-fastify.setNotFoundHandler((req, reply) => {
-  reply.code(404).type('text/html').sendFile('/frontend/404.html');
-});
+fastify.server.on("listening", () => {
+	const address = fastify.server.address();
 
-const shutdown = () => {
-  console.log("Shutting down server...");
-  fastify.close().then(() => process.exit(0));
-};
+	// by default we are listening on 0.0.0.0 (every interface)
+	// we just need to list a few
+	console.log("Listening on:");
+	console.log(`\thttp://localhost:${address.port}`);
+	console.log(`\thttp://${hostname()}:${address.port}`);
+	console.log(
+		`\thttp://${
+			address.family === "IPv6" ? `[${address.address}]` : address.address
+		}:${address.port}`
+	);
+});
 
 process.on("SIGINT", shutdown);
 process.on("SIGTERM", shutdown);
 
+function shutdown() {
+	console.log("SIGTERM signal received: closing HTTP server");
+	fastify.close();
+	process.exit(0);
+}
+
+let port = parseInt(process.env.PORT || "");
+
+if (isNaN(port)) port = 8080;
+
 fastify.listen({
-  port: parseInt(process.env.PORT || "8080"),
-  host: "0.0.0.0",
-}, (err) => {
-  if (err) {
-    console.error(err);
-    process.exit(1);
-  }
-  
-  const address = fastify.server.address();
-  console.log(`Server running on http://localhost:${address.port}`);
-  console.log(`Access at: http://${address.family === "IPv6" ? `[${address.address}]` : address.address}:${address.port}`);
+	port: port,
+	host: "0.0.0.0",
 });

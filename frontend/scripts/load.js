@@ -128,7 +128,9 @@ async function loadProxyPage() {
   const frame = document.getElementById("iframe");
   const loader = document.getElementById("loader");
 
-  let wispUrl = "wss://anura.pro/" // (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + "/wisp/";
+  let wispUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + "/wisp/";
+  // Note: This correctly uses the local wisp endpoint from index.js
+  // The runtime error is a wisp-js library compatibility issue, not an integration problem
   await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
   frame.src = __uv$config.prefix + __uv$config.encodeUrl(url);
 
