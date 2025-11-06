@@ -1,7 +1,7 @@
 import { createServer } from "node:http";
 import path, { join } from "node:path";
 import { hostname } from "node:os";
-import { server as wisp } from '@mercuryworkshop/wisp-js/server';
+import { server as wispServer } from '@mercuryworkshop/wisp-js/server';
 import Fastify from "fastify";
 import fastifyStatic from "@fastify/static";
 
@@ -17,7 +17,7 @@ const fastify = Fastify({
 				handler(req, res);
 			})
 			.on("upgrade", (req, socket, head) => {
-				if (req.url.endsWith("/wisp/")) wisp.routeRequest(req, socket, head);
+				if (req.url.endsWith("/wisp/")) wispServer.routeRequest(req, socket, head);
 				else socket.end();
 			});
 	},

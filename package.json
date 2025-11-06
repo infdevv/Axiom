@@ -1,6 +1,7 @@
 {
   "name": "axiom",
   "version": "1.0.0",
+  "type": "module",
   "main": "index.js",
   "dependencies": {
     "@fastify/compress": "^8.1.0",
@@ -8,7 +9,7 @@
     "@fastify/websocket": "^11.2.0",
     "@mercuryworkshop/bare-mux": "^2.1.7",
     "@mercuryworkshop/epoxy-transport": "^2.1.28",
-		"@mercuryworkshop/wisp-js": "^0.3.3",
+		"@mercuryworkshop/wisp-js": "^0.4.0",
     "@vercel/analytics": "^1.5.0",
     "cheerio": "^1.1.2",
     "cors": "^2.8.5",
