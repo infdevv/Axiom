@@ -3,26 +3,22 @@ const { createBareServer } = require('@tomphttp/bare-server-node');
 const { createServer } = require('http');
 const Fastify = require('fastify');
 const fastifyStatic = require('@fastify/static');
+const fastifyCors = require('@fastify/cors'); // Add CORS support
 const { join } = require('path');
-
-// fallback for fetch if Node < 18
-let fetchFn = globalThis.fetch;
-if (!fetchFn) {
-  try {
-    // use undici if available
-    // npm i undici
-    const { fetch } = require('undici');
-    fetchFn = fetch;
-  } catch (err) {
-    console.error('Global fetch not available and undici not installed. Please run `npm i undici` or use Node >= 18.');
-    process.exit(1);
-  }
-}
 
 const bare = createBareServer('/svr/');
 const fastify = Fastify({ logger: true });
 
-// Serve static files (frontend)
+
+fastify.register(fastifyCors, {
+  origin: '*', 
+  methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'key'],
+  credentials: true,
+  maxAge: 86400 
+});
+
+
 fastify.register(fastifyStatic, {
   root: join(__dirname, 'frontend'),
   prefix: '/',
@@ -31,21 +27,24 @@ fastify.register(fastifyStatic, {
     if (filePath && filePath.endsWith('.js')) {
       res.setHeader('Content-Type', 'application/javascript');
     }
+    
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Referrer-Policy', 'no-referrer');
   }
 });
 
-// API: search suggestions (proxy)
+
 fastify.get('/search_complete/*', async (req, reply) => {
-  // wildcard param name is '*' in fastify when using `/*`
+  
   const query = req.params['*'] || '';
   if (!query.trim()) {
     return reply.status(400).send('Search query is missing');
   }
 
   try {
-    // remove stray space after q= and use proper encoding
+    
     const url = `https://google.com/complete/search?client=firefox&hl=en&q=${encodeURIComponent(query)}`;
-    const response = await fetchFn(url);
+    const response = await fetch(url);
     if (!response.ok) {
       fastify.log.warn({ status: response.status }, 'Bad response from google complete');
       return reply.status(502).send('Upstream service error');
@@ -58,7 +57,7 @@ fastify.get('/search_complete/*', async (req, reply) => {
   }
 });
 
-// Simple API key check
+
 const activeKeys = (process.env.ACTIVE_KEYS || '').split(',').filter(Boolean);
 
 fastify.get('/api/check-premium', async (request, reply) => {
@@ -67,13 +66,14 @@ fastify.get('/api/check-premium', async (request, reply) => {
   return reply.send({ success: ok });
 });
 
-// AI forwarder
 fastify.post('/api/ai', async (request, reply) => {
   try {
-    // remove trailing space in URL
-    const response = await fetchFn('https://text.pollinations.ai/openai', {
+    const response = await fetch('https://text.pollinations.ai/openai', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
       body: JSON.stringify(request.body)
     });
 
@@ -103,22 +103,31 @@ fastify.post('/api/ai', async (request, reply) => {
   }
 });
 
-// 404 handler (ensure uses same folder or adjust as needed)
+
 fastify.setNotFoundHandler((req, reply) => {
-  // try to send a 404 page from frontend/404.html if exists
+  
   reply.status(404).sendFile('404.html').catch(() => {
     reply.status(404).send('Not Found');
   });
 });
 
-// Start-up: ensure Fastify ready once, then create the http server that delegates to bare or fastify
+
+fastify.addHook('onRequest', async (request, reply) => {
+  if (request.method === 'OPTIONS') {
+    reply.code(200).send();
+    return true; 
+  }
+  return;
+});
+
+
 fastify.ready().then(() => {
   const server = createServer((req, res) => {
     if (bare.shouldRoute(req)) {
       bare.routeRequest(req, res);
       return;
     }
-    // fastify.server is the underlying http server; emit request
+    
     fastify.server.emit('request', req, res);
   });
 
@@ -126,14 +135,15 @@ fastify.ready().then(() => {
     if (bare.shouldRoute(req)) {
       bare.routeUpgrade(req, socket, head);
     } else {
-      // if you want to support websockets for Fastify routes, implement here
-      socket.end();
+      
+      socket.destroy();
     }
   });
 
   const port = process.env.PORT || 8080;
   server.listen(port, () => {
     console.log(`Server listening on port ${port}`);
+    console.log(`Bare server endpoint: /svr/`);
   });
 
 }).catch(err => {
