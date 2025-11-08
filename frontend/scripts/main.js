@@ -1,6 +1,8 @@
 let zIndexCounter = 0;
 let activeWindows = [];
 let windowOffsetCounter = 0;
+let splitScreenMode = null; 
+let originalWindowStates = new Map(); 
 
 function addWindowFunctionality(windowElement, header) {
   let pos1 = 0,
@@ -18,10 +20,10 @@ function addWindowFunctionality(windowElement, header) {
     pos3 = clientX;
     pos4 = clientY;
 
-    // Disable pointer events on iframe to prevent it from capturing mouse events during drag
-    const iframe = windowElement.querySelector('iframe');
+    
+    const iframe = windowElement.querySelector("iframe");
     if (iframe) {
-      iframe.style.pointerEvents = 'none';
+      iframe.style.pointerEvents = "none";
     }
   };
 
@@ -31,34 +33,46 @@ function addWindowFunctionality(windowElement, header) {
       return;
     }
 
-    // Calculate movement delta
+    
     pos1 = pos3 - pendingX;
     pos2 = pos4 - pendingY;
     pos3 = pendingX;
     pos4 = pendingY;
 
-    // Get current position - force reflow to ensure accurate values
+    
     const currentLeft =
       parseInt(windowElement.style.left) || windowElement.offsetLeft;
     const currentTop =
       parseInt(windowElement.style.top) || windowElement.offsetTop;
 
-    // Calculate new position
+    
     let newLeft = currentLeft - pos1;
     let newTop = currentTop - pos2;
 
     const winWidth = windowElement.offsetWidth;
     const winHeight = windowElement.offsetHeight;
 
-    // Toolbar height at the bottom
+    
     const toolbarHeight = 50;
 
-    // Constrain window to stay completely within document bounds
-    // Don't allow any part to go outside or overlap with toolbar
+    
+    
     const minLeft = 0;
     const maxLeft = window.innerWidth - winWidth;
     const minTop = 0;
     const maxTop = window.innerHeight - toolbarHeight - winHeight;
+
+    
+    const snapThreshold = 30;
+    const windowCenterX = newLeft + winWidth / 2;
+
+    
+    if (
+      newLeft > snapThreshold &&
+      newLeft < window.innerWidth - winWidth - snapThreshold
+    ) {
+      windowElement.classList.remove("near-edge");
+    }
 
     newLeft = Math.max(minLeft, Math.min(newLeft, maxLeft));
     newTop = Math.max(minTop, Math.min(newTop, maxTop));
@@ -77,9 +91,24 @@ function addWindowFunctionality(windowElement, header) {
     pendingX = clientX;
     pendingY = clientY;
 
-    // Use requestAnimationFrame to throttle updates and prevent choppiness
+    
     if (animationFrameId === null) {
       animationFrameId = requestAnimationFrame(updatePosition);
+    }
+
+    
+    const windowLeft = parseInt(windowElement.style.left) || 50;
+    const windowWidth = windowElement.offsetWidth;
+    const snapThreshold = 100;
+
+    windowElement.classList.remove("near-edge");
+
+    
+    if (
+      windowLeft <= snapThreshold ||
+      windowLeft >= window.innerWidth - windowWidth - snapThreshold
+    ) {
+      windowElement.classList.add("near-edge");
     }
   };
 
@@ -92,10 +121,13 @@ function addWindowFunctionality(windowElement, header) {
       animationFrameId = null;
     }
 
-    // Re-enable pointer events on iframe after drag ends
-    const iframe = windowElement.querySelector('iframe');
+    
+    checkForSnap(windowElement);
+
+    
+    const iframe = windowElement.querySelector("iframe");
     if (iframe) {
-      iframe.style.pointerEvents = 'auto';
+      iframe.style.pointerEvents = "auto";
     }
   };
 
@@ -104,7 +136,7 @@ function addWindowFunctionality(windowElement, header) {
       return;
     e.preventDefault();
     startDrag(e.clientX, e.clientY);
-    // Use window instead of document to catch events even when cursor leaves browser
+    
     window.addEventListener("mousemove", onMouseMove, true);
     window.addEventListener("mouseup", onMouseUp, true);
   };
@@ -127,7 +159,10 @@ function addWindowFunctionality(windowElement, header) {
     e.preventDefault();
     const touch = e.touches[0];
     startDrag(touch.clientX, touch.clientY);
-    window.addEventListener("touchmove", onTouchMove, { passive: false, capture: true });
+    window.addEventListener("touchmove", onTouchMove, {
+      passive: false,
+      capture: true,
+    });
     window.addEventListener("touchend", onTouchEnd, { capture: true });
   };
 
@@ -167,7 +202,6 @@ function maximizeWindow(btn) {
   const windowElement = btn.closest(".window");
   const icon = btn.querySelector(".material-symbols-outlined");
 
-
   if (windowElement.classList.contains("maximized")) {
     windowElement.classList.remove("maximized");
     icon.textContent = "crop_square";
@@ -179,7 +213,7 @@ function maximizeWindow(btn) {
 
 function createWindow(name, url, noTitle = false) {
   const windowElement = document.createElement("div");
-  windowElement.className = "window";
+  windowElement.className = "window"; 
 
   if (noTitle) {
     windowElement.classList.add("no-title");
@@ -196,6 +230,8 @@ function createWindow(name, url, noTitle = false) {
       <div class="window-top">
         <span class="window-title">${name}</span>
         <div class="controls">
+          <div class="split-horizontal" onclick="splitWindow(this, 'horizontal')" title="Split Horizontal"><span class="material-symbols-outlined">splitscreen_vertical</span></div>
+          <div class="split-vertical" onclick="splitWindow(this, 'vertical')" title="Split Vertical"><span class="material-symbols-outlined">splitscreen_horizontal</span></div>
           <div class="maximize" onclick="maximizeWindow(this)"><span class="material-symbols-outlined">crop_square</span></div>
           <div class="close" onclick="closeWindow(this)"><span class="material-symbols-outlined">close</span></div>
         </div>
@@ -206,7 +242,7 @@ function createWindow(name, url, noTitle = false) {
 
   document.getElementById("main").appendChild(windowElement);
 
-  // Set initial position - all windows start at the same position
+  
   windowElement.style.left = `50px`;
   windowElement.style.top = `50px`;
 
@@ -223,56 +259,256 @@ function createWindow(name, url, noTitle = false) {
 
   activeWindows.push({ name: name, element: windowElement });
 
+  
+  setTimeout(() => {
+    windowElement.classList.add("opening");
+    
+    setTimeout(() => {
+      windowElement.classList.remove("opening");
+    }, 400);
+  }, 10);
+
   return windowElement;
 }
 
 function closeWindow(btn) {
   const windowElement = btn.closest(".window");
   const index = activeWindows.findIndex((w) => w.element === windowElement);
+
+  
+  windowElement.classList.add("closing");
+
+  
   if (index > -1) {
     activeWindows.splice(index, 1);
   }
-  windowElement.remove();
-  updateActiveWindowsToolbar();
+
+  
+  if (splitScreenMode) {
+    exitSplitScreen();
+  }
+
+  
+  setTimeout(() => {
+    windowElement.remove();
+    updateActiveWindowsToolbar();
+  }, 300); 
 }
 
-function updateItems() {
-  const now = new Date();
-  const hours = now.getHours() % 12;
-  const hoursStr = hours ? hours.toString().padStart(2, "0") : "12";
-  const minutes = now.getMinutes().toString().padStart(2, "0");
-  const ampm = now.getHours() >= 12 ? "PM" : "AM";
-  document.getElementById(
-    "time-counter"
-  ).innerHTML = `${hoursStr}:${minutes} ${ampm}`;
+
+function checkForSnap(windowElement) {
+  const left = parseInt(windowElement.style.left) || 0;
+  const top = parseInt(windowElement.style.top) || 0;
+  const width = windowElement.offsetWidth;
+  const snapThreshold = 50; 
+
+  
+  windowElement.classList.remove("snapped-left", "snapped-right", "near-edge");
+
+  
+  if (
+    windowElement.classList.contains("snapped-left") ||
+    windowElement.classList.contains("snapped-right")
+  ) {
+    if (
+      left > snapThreshold &&
+      left < window.innerWidth - width - snapThreshold
+    ) {
+      restoreSnappedWindow(windowElement);
+      return;
+    }
+  }
+
+  
+  if (left <= snapThreshold) {
+    snapWindowToEdge(windowElement, "left");
+    return;
+  }
+
+  
+  if (left >= window.innerWidth - width - snapThreshold) {
+    snapWindowToEdge(windowElement, "right");
+    return;
+  }
+
+  
+  if (
+    (left <= snapThreshold * 2 && left > snapThreshold) ||
+    (left >= window.innerWidth - width - snapThreshold * 2 &&
+      left < window.innerWidth - width - snapThreshold)
+  ) {
+    windowElement.classList.add("near-edge");
+  }
 }
 
-// Expose functions to global scope for inline onclick handlers
+function snapWindowToEdge(windowElement, edge) {
+  
+  if (!windowElement.dataset.originalState) {
+    windowElement.dataset.originalState = JSON.stringify({
+      left: windowElement.style.left,
+      top: windowElement.style.top,
+      width: windowElement.style.width,
+      height: windowElement.style.height,
+      resize: windowElement.style.resize,
+    });
+  }
+
+  
+  windowElement.classList.remove("snapped-left", "snapped-right");
+
+  if (edge === "left") {
+    windowElement.classList.add("snapped-left");
+  } else if (edge === "right") {
+    windowElement.classList.add("snapped-right");
+  }
+
+  
+  windowElement.classList.remove("near-edge");
+}
+
+function restoreSnappedWindow(windowElement) {
+  
+  if (windowElement.dataset.originalState) {
+    const originalState = JSON.parse(windowElement.dataset.originalState);
+
+    
+    windowElement.classList.remove(
+      "snapped-left",
+      "snapped-right",
+      "near-edge"
+    );
+
+    
+    windowElement.style.left = originalState.left;
+    windowElement.style.top = originalState.top;
+    windowElement.style.width = originalState.width;
+    windowElement.style.height = originalState.height;
+    windowElement.style.resize = originalState.resize;
+
+    
+    delete windowElement.dataset.originalState;
+  }
+}
+
+
+function splitWindow(btn, direction) {
+  const clickedWindow = btn.closest(".window");
+
+  
+  if (splitScreenMode) {
+    exitSplitScreen();
+  }
+
+  
+  if (activeWindows.length !== 2) {
+    alert("Split screen requires exactly 2 windows to be open");
+    return;
+  }
+
+  
+  activeWindows.forEach((windowData, index) => {
+    const window = windowData.element;
+    originalWindowStates.set(window, {
+      left: window.style.left,
+      top: window.style.top,
+      width: window.style.width,
+      height: window.style.height,
+      position: window.style.position,
+      zIndex: window.style.zIndex,
+    });
+  });
+
+  
+  splitScreenMode = direction;
+  document.body.classList.add(
+    `split-screen-active`,
+    `split-screen-${direction}`
+  );
+
+  
+  activeWindows.forEach((windowData) => {
+    const window = windowData.element;
+    const dragHandle =
+      window.querySelector(".drag-handle") ||
+      window.querySelector(".window-top");
+    if (dragHandle) {
+      dragHandle.style.cursor = "default";
+      dragHandle.removeEventListener("mousedown", () => {});
+      dragHandle.removeEventListener("touchstart", () => {});
+    }
+  });
+}
+
+function exitSplitScreen() {
+  if (!splitScreenMode) return;
+
+  
+  document.body.classList.remove(
+    "split-screen-active",
+    `split-screen-${splitScreenMode}`
+  );
+
+  
+  originalWindowStates.forEach((originalState, window) => {
+    if (window.parentNode) {
+      
+      window.style.left = originalState.left;
+      window.style.top = originalState.top;
+      window.style.width = originalState.width;
+      window.style.height = originalState.height;
+      window.style.position = originalState.position;
+      window.style.zIndex = originalState.zIndex;
+    }
+  });
+
+  
+  originalWindowStates.clear();
+  splitScreenMode = null;
+
+  
+  activeWindows.forEach((windowData) => {
+    const window = windowData.element;
+    const header = window.classList.contains("no-title")
+      ? window.querySelector(".drag-handle")
+      : window.querySelector(".window-top");
+    if (header) {
+      addWindowFunctionality(window, header);
+    }
+  });
+}
+
+
 window.closeWindow = closeWindow;
 window.maximizeWindow = maximizeWindow;
 window.minimizeWindow = minimizeWindow;
+window.splitWindow = splitWindow;
+window.exitSplitScreen = exitSplitScreen;
+window.restoreSnappedWindow = restoreSnappedWindow;
+window.snapWindowToEdge = snapWindowToEdge;
+window.checkForSnap = checkForSnap;
 
 document.addEventListener("DOMContentLoaded", function () {
-  let currentBackground = "null"; // it can be null so we just use a string so theres no chance of a match
-  setInterval(function(){
-  if (localStorage.getItem("axiomTheme") != currentBackground) {
-  if (localStorage.getItem("axiomTheme") != null) {
-    document.body.style.setProperty(
-      "background-image",
-      `url(/assets/media/backgrounds/${localStorage.getItem("axiomTheme")}.jpg)`
-    );
-    currentBackground = localStorage.getItem("axiomTheme");
-  } else {
-    document.body.style.setProperty(
-      "background-image",
-      `url(/assets/media/backgrounds/default.jpg)`
-    );
-    currentBackground = "default";
-  }
-  }
-  }, 500)
+  let currentBackground = "null"; 
+  setInterval(function () {
+    if (localStorage.getItem("axiomTheme") != currentBackground) {
+      if (localStorage.getItem("axiomTheme") != null) {
+        document.body.style.setProperty(
+          "background-image",
+          `url(/assets/media/backgrounds/${localStorage.getItem(
+            "axiomTheme"
+          )}.jpg)`
+        );
+        currentBackground = localStorage.getItem("axiomTheme");
+      } else {
+        document.body.style.setProperty(
+          "background-image",
+          `url(/assets/media/backgrounds/default.jpg)`
+        );
+        currentBackground = "default";
+      }
+    }
+  }, 500);
 
-  updateItems();
   const toolbarButtons = document.querySelectorAll(".item[data-name]");
   toolbarButtons.forEach((button) => {
     button.addEventListener("click", function () {
@@ -287,6 +523,13 @@ document.addEventListener("DOMContentLoaded", function () {
 document.onclick = hideMenu;
 document.oncontextmenu = rightClick;
 
+
+document.addEventListener("keydown", function (e) {
+  if (e.key === "Escape" && splitScreenMode) {
+    exitSplitScreen();
+  }
+});
+
 function hideMenu() {
   document.getElementById("contextMenu").style.display = "none";
 }
@@ -299,6 +542,10 @@ function rightClick(e) {
   else {
     let menu = document.getElementById("contextMenu");
 
+    
+    const exitItem = document.getElementById("split-exit-item");
+    exitItem.style.display = splitScreenMode ? "block" : "none";
+
     menu.style.display = "block";
     menu.style.left = e.pageX + "px";
     menu.style.top = e.pageY + "px";
@@ -306,4 +553,3 @@ function rightClick(e) {
 }
 
 
-// Welcome to devlabs!

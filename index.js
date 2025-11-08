@@ -1,58 +1,42 @@
-import { createServer } from "node:http";
-import path, { join } from "node:path";
-import { hostname } from "node:os";
-import { server as wispServer } from '@mercuryworkshop/wisp-js/server';
-import Fastify from "fastify";
-import fastifyStatic from "@fastify/static";
+const { createBareServer } = require('@tomphttp/bare-server-node');
+const { createServer } = require('http');
+const Fastify = require('fastify');
+const fastifyStatic = require('@fastify/static');
+const { join } = require('path');
+const fs = require('fs').promises;
+const path = require('path');
+const bare = createBareServer('/svr/');
+const fastify = Fastify();
 
-import { epoxyPath } from "@mercuryworkshop/epoxy-transport";
-import { baremuxPath } from "@mercuryworkshop/bare-mux/node";
-
-const fastify = Fastify({
-	serverFactory: (handler) => {
-		return createServer()
-			.on("request", (req, res) => {
-				res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
-				res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
-				handler(req, res);
-			})
-			.on("upgrade", (req, socket, head) => {
-				if (req.url.endsWith("/wisp/")) wispServer.routeRequest(req, socket, head);
-				else socket.end();
-			});
-	},
-});
-
-fastify.register(fastifyStatic, {
-	root: path.join(process.cwd(), "frontend"),
-	prefix: "/",
-	decorateReply: true,
-});
-
-fastify.register(fastifyStatic, {
-	root: epoxyPath,
-	prefix: "/epoxy/",
-	decorateReply: false,
-});
-
-fastify.register(fastifyStatic, {
-	root: baremuxPath,
-	prefix: "/baremux/",
-	decorateReply: false,
-});
 
 
 fastify.register(fastifyStatic, {
-	root: epoxyPath,
-	prefix: "/math/",
-	decorateReply: false,
+    root: join(__dirname, 'frontend'),
+    prefix: '/',
+    decorateReply: false,
+    setHeaders: (res, path) => {
+        if (path.endsWith('.js')) {
+            res.setHeader('Content-Type', 'application/javascript');
+        }
+    }
 });
 
-fastify.register(fastifyStatic, {
-	root: baremuxPath,
-	prefix: "/images/",
-	decorateReply: false,
+fastify.get('/search_complete/*', async (req, reply) => {
+    const query = req.params['*'];
+    if (!query) {
+        reply.status(400).send('Search query is missing');
+        return;
+    }
+    try {
+        const response = await fetch(`https://google.com/complete/search?client=firefox&hl=en&q=${encodeURIComponent(query)}`);
+        const suggestions = await response.json();
+        reply.status(200).send(suggestions);
+    } catch (error) {
+        console.error('Error fetching search suggestions:', error);
+        reply.status(500).send('no search results.');
+    }
 });
+
 
 
 const activeKeys = process.env.ACTIVE_KEYS?.split(",") || [];
@@ -96,35 +80,32 @@ fastify.post("/api/ai", async (request, reply) => {
   }
 })
 
-fastify.server.on("listening", () => {
-	const address = fastify.server.address();
 
-	// by default we are listening on 0.0.0.0 (every interface)
-	// we just need to list a few
-	console.log("Listening on:");
-	console.log(`\thttp://localhost:${address.port}`);
-	console.log(`\thttp://${hostname()}:${address.port}`);
-	console.log(
-		`\thttp://${
-			address.family === "IPv6" ? `[${address.address}]` : address.address
-		}:${address.port}`
-	);
+fastify.setNotFoundHandler((req, reply) => {
+    reply.status(404).sendFile('404.html', { root: join(__dirname, 'public') });
 });
 
-process.on("SIGINT", shutdown);
-process.on("SIGTERM", shutdown);
+const server = createServer();
 
-function shutdown() {
-	console.log("SIGTERM signal received: closing HTTP server");
-	fastify.close();
-	process.exit(0);
-}
+server.on('request', (req, res) => {
+    if (bare.shouldRoute(req)) {
+        bare.routeRequest(req, res);
+        return;
+    }
+    fastify.ready(err => {
+        if (err) throw err;
+        fastify.server.emit('request', req, res);
+    });
+});
 
-let port = parseInt(process.env.PORT || "");
+server.on('upgrade', (req, socket, head) => {
+    if (bare.shouldRoute(req, socket, head)) {
+        bare.routeUpgrade(req, socket, head);
+    } else {
+        socket.end();
+    }
+});
 
-if (isNaN(port)) port = 8080;
-
-fastify.listen({
-	port: port,
-	host: "0.0.0.0",
+server.listen(process.env.PORT || 8080, () => {
+    console.log(`Server listening on port ${process.env.PORT || 8080}`);
 });

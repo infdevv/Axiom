@@ -18,13 +18,13 @@
         <div id="toolbar-apps">
 
             <button class="item" data-name="Axiom" id="browser_item" data-url="browser.html" data-no-title="true">
-                <img src="assets/os-assets/logo.png" alt="Axiom">
+                <img src="assets/os-assets/logo-trans.png" style="filter: invert(1);" alt="Axiom">
             </button>
             <button class="item" data-name="VS Code" data-url="load.html?url=https://vscode.dev">
                 <img src="assets/os-assets/vscode.png" alt="VS Code">
             </button>
             <button class="item" data-name="Discord" data-url="load.html?url=https://discord.com/app">
-                <img src="assets/os-assets/discord.jpg" alt="Discord">
+                <img src="assets/os-assets/discord.png" alt="Discord">
             </button>
             <button class="item" data-name="Twitch" data-url="load.html?url=https://twitch.tv">
                 <img src="assets/os-assets/twitch.png" alt="Twitch">
@@ -37,17 +37,14 @@
             </button>
         </div>
 
-        <div id="time" name="tertiary">
-            <span id="time-counter"></span>
-        </div>
     </div>
 
     <div id="contextMenu" class="context-menu" name="secondary" style="display:none">
         <ul>
             <li><a onclick="document.getElementById('browser_item').click()">Open Browser</a></li>
-            <li><a onclick="document.getElementById('terminal_item').click()">Open Browser</a></li>
+            <li><a onclick="document.getElementById('terminal_item').click()">Open Terminal</a></li>
             <li><a onclick="document.getElementById('chatgpt_item').click()">Open ChatGPT</a></li>
-
+            <li id="split-exit-item" style="display:none;"><a onclick="exitSplitScreen()">Exit Split Screen</a></li>
         </ul>
     </div>
     <!-- Google tag (gtag.js) -->
