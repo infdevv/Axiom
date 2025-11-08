@@ -1,414 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 Not Found</title>
+
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    color: white;
+    font-family: Arial, sans-serif;
+  }
+
+  body {
+    background-color: #0d0d0d;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  h1 {
+    font-size: 6rem;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+    opacity: 0.8;
+  }
+
+  a {
+    color: #00bfff;
+    text-decoration: none;
+    font-weight: bold;
+    border: 1px solid #00bfff;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: background 0.3s;
+  }
+
+  a:hover {
+    background-color: #00bfff;
+    color: #0d0d0d;
+  }
+
+  footer {
+    position: absolute;
+    bottom: 10px;
+    font-size: 0.8rem;
+    opacity: 0.5;
+  }
+
+  img {
+    display: none;
+  }
+</style>
+
 <script>
-
 document.addEventListener("keydown", function(event) {
-    if (event.key == "c" || event.key == "g"){ // og g for glitch support
-
-        window.open('about:blank').document.write('<iframe src="main.html" style="border:0; position: fixed; top: 0; left: 0; width: 100%; height: 100%;"></iframe>');
-
-    }
+  if (event.key === "c" || event.key === "g") { // keep original functionality
+    window.open('about:blank').document.write(
+      '<iframe src="main.html" style="border:0; position:fixed; top:0; left:0; width:100%; height:100%;"></iframe>'
+    );
+  }
 });
-
 </script>
-  <style>
-    * {
-        color: white;
-    }
-
-    img {
-        display: none;
-    }
-  </style>
 </head>
+
 <body>
-
-  <header>
-    <h1>LearnHub</h1>
-    <nav>
-      <ul>
-        <li><a href="#" id="target">Axiom</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <div class="container">
-    <section class="hero">
-      <h1>Expand Your Knowledge, Anytime, Anywhere</h1>
-      <p>Access high-quality educational content designed for curious minds.</p>
-    </section>
-
-    <section class="courses">
-      <div class="course-card">
-        <img src="https://picsum.photos/seed/math/600/400" alt="Mathematics Course">
-        <h3>Mathematics Fundamentals</h3>
-        <p>Master core concepts in algebra, calculus, and statistics with real-world applications.</p>
-      </div>
-
-      <div class="course-card">
-        <img src="https://picsum.photos/seed/physics/600/400" alt="Physics Course">
-        <h3>Introduction to Physics</h3>
-        <p>Explore motion, energy, forces, and the laws that govern our physical universe.</p>
-      </div>
-
-      <div class="course-card">
-        <img src="https://picsum.photos/seed/programming/600/400" alt="Programming Course">
-        <h3>Beginner Programming</h3>
-        <p>Learn Python from scratch — build projects, solve problems, and think like a developer.</p>
-      </div>
-      ```python
-
-    print('Hello world!')
-    
-```
-
-```python
-print('Hello world!')
-```
-
-<p>Hello world!</p>
-
-# 2: Variables
-
-### Response:
-
-
-```python
-
-    print(x)
-    print(y)
-
-```
-
-```python
-print(x)
-print(y)
-```
-
-<p>3.</p>
-<p>5.</p>
-
-# 3: Expressions and equations
-
-### Response:
-
-
-```python
-
-    x = 2 * y + 10
-    print('{}: {}'.format(x, y))
-
-```
-
-```python
-x = 2 * y + 10
-print('{}: {}'.format(x, y))
-```
-
-<p>35: 2.</p>
-<p>65: 5.</p>
-
-# 4: Rules of Algebra
-
-### Response:
-
-
-```python
-
-    print('{} + {} = {}'.format(x, y, x + y))
-    
-```
-
-```python
-print('{} + {} = {}'.format(x, y, x + y))
-```
-
-<p>35 + 65 = 100</p>
-
-# 5: Order of operations
-
-### Response:
-
-
-```python
-
-    print(a - b * c / d)
-    
-```
-
-```python
-print(a - b * c / d)
-```
-
-<p>(23914 - 0.675 * (8.89 + 4.01))</p>
-
-# 6: Factoring
-
-### Response:
-
-
-```python
-
-    print(x ** 2 + y)
-    
-```
-
-```python
-print(x ** 2 + y)
-```
-
-<p>(x - 1)(x + 4)</p>
-
-# 7: Absolute value
-
-### Response:
-
-
-```python
-
-    print('|{}: {}|'.format(-3, x))
-    
-```
-
-```python
-print('|{}|'.format(x))
-```
-
-<p>(-3): -2</p>
-
-# 8: Exponents and roots
-
-### Response:
-
-
-```python
-
-    print('{}: {}'.format((10 ** x), x))
-    
-```
-
-```python
-print('{}: {}'.format((10 ** x), x))
-```
-
-<p>(100): 4</p>
-
-# 9: Fractions and decimals
-
-### Response:
-
-
-```python
-
-    print(x / y)
-    
-```
-
-```python
-print(x / y)
-```
-
-<p>(3.8): 0.42</p>
-
-# 10: Squaring and square roots
-
-### Response:
-
-
-```python
-
-    print('{}**2 = {}'.format(x, x ** 2))
-    
-```
-
-```python
-print('{}**2 = {}'.format(x, x ** 2))
-```
-
-<p>(3.8)**2 = (3.8) ** 2</p>
-
-# 11: Solving equations
-
-### Response:
-
-
-```python
-
-    print('{} + {}: {}'.format(x, y, x + y))
-    
-```
-
-```python
-print('{} + {} = {}'.format(x, y, x + y))
-```
-
-<p>(35) + 65 = 100</p>
-
-# 12: Rules for solving equations
-
-### Response:
-
-
-```python
-
-    print('{} - {}: {}'.format(x, y, x - y))
-    
-```
-
-```python
-print('{} - {} = {}'.format(x, y, x - y))
-```
-
-<p>(35) - 65 = 29</p>
-
-# 13: Multiplying and dividing
-
-### Response:
-
-
-```python
-
-    print('{} * {}: {}'.format(x, y, x * y))
-    
-```
-
-```python
-print('{} * {} = {}'.format(x, y, x * y))
-```
-
-<p>(35) * 65 = 2345</p>
-
-# 14: Rules for multiplying and dividing
-
-### Response:
-
-
-```python
-
-    print('{} - {}: {}'.format(x, y, x / y))
-    
-```
-
-```python
-print('{} * {} = {}'.format(x, y, x / y))
-```
-
-<p>(35) * 65 = (35) / 65</p>
-
-# 15: Powers and roots
-
-### Response:
-
-
-```python
-
-    print('{}**2 + {} - {}: {}'.format(x, y, z, x ** 2 + x - z))
-    
-```
-
-```python
-print('{}**2 + {} - {}: {}'.format(x, y, z, x ** 2 + x - z))
-```
-
-<p>35**2 + 65 - (3.8): 10907</p>
-
-# 16: Rules for powers and roots
-
-### Response:
-
-
-```python
-
-    print('{} ** {} = {}'.format(x, y, x ** y))
-    
-```
-
-```python
-print('{} ** {} = {}'.format(x, y, x ** y))
-```
-
-<p>(3.8)**2 = (3.8)**2</p>
-
-# 17: Rules for exponents and roots
-
-### Response:
-
-
-```python
-
-    print('{} ** {}'.format(x, y, x ** y))
-    
-```
-
-```python
-print('{} ** {}'.format(x, y, x ** y))
-```
-
-<p>(3.8)**2 = (3.8)**2</p>
-
-# 18: More about exponents and roots
-
-### Response:
-
-
-```python
-
-    print('{} + {}: {}'.format(x, y, x ** y + x))
-    
-```
-
-```python
-print('{} + {}: {}'.format(x, y, x ** y + x))
-```
-
-<p>(3.8)**2 = (3.8)**2</p>
-
-# 19: Adding and subtracting
-
-### Response:
-
-
-```python
-
-    print('{} - {}: {}'.format(x, y, x ** y + x))
-    
-```
-
-```python
-print('{} - {}: {}'.format(x, y, x ** y + x))
-```
-
-<p>(3.8)**2 = (3.8)**2</p>
-
-# 20: More about adding and subtracting
-
-### Response:
-
-
-```python
-
-    print('{} - {}'.format(x, y))
-    
-```
-
-```python
-print('{} + {}: {}'.format(x, y, x ** y + x))
-```
-
-<p>(3.8)**2 = (3.8)**2</p>
-    </section>
-  </div>
-
-  
+  <h1>404</h1>
+  <p>Oops! The page you’re looking for doesn’t exist.</p>
+  <a href="/">Go Home</a>
 
   <footer>
-    <p>&copy; 2025 LearnHub. All rights reserved.</p>
+    &copy; 2025 Axiom. Press "C". All rights reserved.
   </footer>
 
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-EP8214CHBW"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-EP8214CHBW"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-EP8214CHBW');
 
-  gtag('config', 'G-EP8214CHBW');
-</script>
+    // unregister all service workers
+    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+      registrations.forEach(function(registration) {
+        registration.unregister();
+      });
+    });
+  </script>
+</body>
+</html>
