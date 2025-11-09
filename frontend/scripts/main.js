@@ -230,8 +230,6 @@ function createWindow(name, url, noTitle = false) {
       <div class="window-top">
         <span class="window-title">${name}</span>
         <div class="controls">
-          <div class="split-horizontal" onclick="splitWindow(this, 'horizontal')" title="Split Horizontal"><span class="material-symbols-outlined">splitscreen_vertical</span></div>
-          <div class="split-vertical" onclick="splitWindow(this, 'vertical')" title="Split Vertical"><span class="material-symbols-outlined">splitscreen_horizontal</span></div>
           <div class="maximize" onclick="maximizeWindow(this)"><span class="material-symbols-outlined">crop_square</span></div>
           <div class="close" onclick="closeWindow(this)"><span class="material-symbols-outlined">close</span></div>
         </div>
@@ -281,11 +279,6 @@ function closeWindow(btn) {
   
   if (index > -1) {
     activeWindows.splice(index, 1);
-  }
-
-  
-  if (splitScreenMode) {
-    exitSplitScreen();
   }
 
   
@@ -390,99 +383,9 @@ function restoreSnappedWindow(windowElement) {
   }
 }
 
-
-function splitWindow(btn, direction) {
-  const clickedWindow = btn.closest(".window");
-
-  
-  if (splitScreenMode) {
-    exitSplitScreen();
-  }
-
-  
-  if (activeWindows.length !== 2) {
-    alert("Split screen requires exactly 2 windows to be open");
-    return;
-  }
-
-  
-  activeWindows.forEach((windowData, index) => {
-    const window = windowData.element;
-    originalWindowStates.set(window, {
-      left: window.style.left,
-      top: window.style.top,
-      width: window.style.width,
-      height: window.style.height,
-      position: window.style.position,
-      zIndex: window.style.zIndex,
-    });
-  });
-
-  
-  splitScreenMode = direction;
-  document.body.classList.add(
-    `split-screen-active`,
-    `split-screen-${direction}`
-  );
-
-  
-  activeWindows.forEach((windowData) => {
-    const window = windowData.element;
-    const dragHandle =
-      window.querySelector(".drag-handle") ||
-      window.querySelector(".window-top");
-    if (dragHandle) {
-      dragHandle.style.cursor = "default";
-      dragHandle.removeEventListener("mousedown", () => {});
-      dragHandle.removeEventListener("touchstart", () => {});
-    }
-  });
-}
-
-function exitSplitScreen() {
-  if (!splitScreenMode) return;
-
-  
-  document.body.classList.remove(
-    "split-screen-active",
-    `split-screen-${splitScreenMode}`
-  );
-
-  
-  originalWindowStates.forEach((originalState, window) => {
-    if (window.parentNode) {
-      
-      window.style.left = originalState.left;
-      window.style.top = originalState.top;
-      window.style.width = originalState.width;
-      window.style.height = originalState.height;
-      window.style.position = originalState.position;
-      window.style.zIndex = originalState.zIndex;
-    }
-  });
-
-  
-  originalWindowStates.clear();
-  splitScreenMode = null;
-
-  
-  activeWindows.forEach((windowData) => {
-    const window = windowData.element;
-    const header = window.classList.contains("no-title")
-      ? window.querySelector(".drag-handle")
-      : window.querySelector(".window-top");
-    if (header) {
-      addWindowFunctionality(window, header);
-    }
-  });
-}
-
-
 window.closeWindow = closeWindow;
 window.maximizeWindow = maximizeWindow;
 window.minimizeWindow = minimizeWindow;
-window.splitWindow = splitWindow;
-window.exitSplitScreen = exitSplitScreen;
 window.restoreSnappedWindow = restoreSnappedWindow;
 window.snapWindowToEdge = snapWindowToEdge;
 window.checkForSnap = checkForSnap;
@@ -523,12 +426,6 @@ document.addEventListener("DOMContentLoaded", function () {
 document.onclick = hideMenu;
 document.oncontextmenu = rightClick;
 
-
-document.addEventListener("keydown", function (e) {
-  if (e.key === "Escape" && splitScreenMode) {
-    exitSplitScreen();
-  }
-});
 
 function hideMenu() {
   document.getElementById("contextMenu").style.display = "none";

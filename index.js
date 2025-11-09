@@ -106,7 +106,7 @@ fastify.post('/api/ai', async (request, reply) => {
 
 fastify.setNotFoundHandler((req, reply) => {
   
-  reply.status(404).sendFile('404.html').catch(() => {
+  reply.status(404).sendFile('frontend/features/404.html').catch(() => {
     reply.status(404).send('Not Found');
   });
 });
