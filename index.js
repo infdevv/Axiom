@@ -1,10 +1,14 @@
 // server.js
 const { createBareServer } = require('@tomphttp/bare-server-node');
 const { createServer } = require('http');
+const http = require('http');
 const Fastify = require('fastify');
 const fastifyStatic = require('@fastify/static');
 const fastifyCors = require('@fastify/cors'); // Add CORS support
 const { join } = require('path');
+
+// Fix for "Too many keep-alive connections" error
+http.globalAgent.maxSockets = Infinity;
 
 const bare = createBareServer('/svr/');
 const fastify = Fastify({ logger: true });
@@ -135,10 +139,14 @@ fastify.ready().then(() => {
     if (bare.shouldRoute(req)) {
       bare.routeUpgrade(req, socket, head);
     } else {
-      
+
       socket.destroy();
     }
   });
+
+  // Configure keep-alive timeouts to prevent connection pooling issues
+  server.keepAliveTimeout = 5000;
+  server.headersTimeout = 16000;
 
   const port = process.env.PORT || 8080;
   server.listen(port, () => {
