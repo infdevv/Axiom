@@ -144,16 +144,13 @@ fastify.ready().then(() => {
     }
   });
 
-  // Configure keep-alive timeouts to prevent connection pooling issues
   server.keepAliveTimeout = 5000;
   server.headersTimeout = 16000;
-
-  // Increase server connection limits to prevent "too many keep alive connections" errors
   server.maxConnections = Infinity;
-  server.timeout = 120000; // 2 minutes timeout instead of disabling completely
+  server.timeout = 120000; 
 
   const port = process.env.PORT || 8080;
-  server.listen(port, () => {
+  server.listen({port, host: '0.0.0.0'}, () => {
     console.log(`Server listening on port ${port}`);
     console.log(`Bare server endpoint: /svr/`);
   });
