@@ -1,161 +1,130 @@
-// server.js
-const { createBareServer } = require('@tomphttp/bare-server-node');
-const { createServer } = require('http');
-const http = require('http');
-const Fastify = require('fastify');
-const fastifyStatic = require('@fastify/static');
-const fastifyCors = require('@fastify/cors'); // Add CORS support
-const { join } = require('path');
+import { createServer } from "node:http";
+import path, { join } from "node:path";
+import { hostname } from "node:os";
+import { server as wispServer } from '@mercuryworkshop/wisp-js/server';
+import Fastify from "fastify";
+import fastifyStatic from "@fastify/static";
 
-// Fix for "Too many keep-alive connections" error
-http.globalAgent.maxSockets = Infinity;
+import { epoxyPath } from "@mercuryworkshop/epoxy-transport";
+import { baremuxPath } from "@mercuryworkshop/bare-mux/node";
 
-const bare = createBareServer('/svr/');
-const fastify = Fastify({ logger: true });
+const fastify = Fastify({
+	serverFactory: (handler) => {
+		return createServer()
+			.on("request", (req, res) => {
+				res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+				res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+				handler(req, res);
+			})
+			.on("upgrade", (req, socket, head) => {
+				if (req.url.endsWith("/wisp/")) wispServer.routeRequest(req, socket, head);
+				else socket.end();
+			});
+	},
+});
 
+fastify.register(fastifyStatic, {
+	root: path.join(process.cwd(), "frontend"),
+	prefix: "/",
+	decorateReply: true,
+});
 
-fastify.register(fastifyCors, {
-  origin: '*', 
-  methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'key'],
-  credentials: true,
-  maxAge: 86400 
+fastify.register(fastifyStatic, {
+	root: epoxyPath,
+	prefix: "/epoxy/",
+	decorateReply: false,
+});
+
+fastify.register(fastifyStatic, {
+	root: baremuxPath,
+	prefix: "/baremux/",
+	decorateReply: false,
 });
 
 
 fastify.register(fastifyStatic, {
-  root: join(__dirname, 'frontend'),
-  prefix: '/',
-  decorateReply: false,
-  setHeaders: (res, filePath) => {
-    if (filePath && filePath.endsWith('.js')) {
-      res.setHeader('Content-Type', 'application/javascript');
+	root: epoxyPath,
+	prefix: "/math/",
+	decorateReply: false,
+});
+
+fastify.register(fastifyStatic, {
+	root: baremuxPath,
+	prefix: "/images/",
+	decorateReply: false,
+});
+
+
+const activeKeys = process.env.ACTIVE_KEYS?.split(",") || [];
+
+fastify.get("/api/check-premium", async (request, reply) => {
+    const key = request.headers['key'];
+    if (activeKeys.includes(key)) {
+        reply.send({ success: true });
+    } else {
+        reply.send({ success: false });
     }
-    
-    res.setHeader('X-Content-Type-Options', 'nosniff');
-    res.setHeader('Referrer-Policy', 'no-referrer');
-  }
 });
 
-
-fastify.get('/search_complete/*', async (req, reply) => {
-  
-  const query = req.params['*'] || '';
-  if (!query.trim()) {
-    return reply.status(400).send('Search query is missing');
-  }
-
-  try {
-    
-    const url = `https://google.com/complete/search?client=firefox&hl=en&q=${encodeURIComponent(query)}`;
-    const response = await fetch(url);
-    if (!response.ok) {
-      fastify.log.warn({ status: response.status }, 'Bad response from google complete');
-      return reply.status(502).send('Upstream service error');
-    }
-    const suggestions = await response.json();
-    return reply.status(200).send(suggestions);
-  } catch (error) {
-    fastify.log.error({ err: error }, 'Error fetching search suggestions');
-    return reply.status(500).send('no search results.');
-  }
-});
-
-
-const activeKeys = (process.env.ACTIVE_KEYS || '').split(',').filter(Boolean);
-
-fastify.get('/api/check-premium', async (request, reply) => {
-  const key = request.headers['key'];
-  const ok = activeKeys.includes(key);
-  return reply.send({ success: ok });
-});
-
-fastify.post('/api/ai', async (request, reply) => {
+fastify.post("/api/ai", async (request, reply) => {
   try {
     const response = await fetch('https://text.pollinations.ai/openai', {
       method: 'POST',
-      headers: { 
+      headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
       },
-      body: JSON.stringify(request.body)
+      body: JSON.stringify(request.body),
     });
-
-    if (!response.ok) {
-      const text = await response.text().catch(() => '');
-      fastify.log.warn({ status: response.status, body: text }, 'Upstream AI error');
-      return reply.code(502).send({ error: 'Upstream AI service error' });
-    }
 
     const data = await response.json();
 
     if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-      fastify.log.error({ data }, 'Invalid response from AI service');
       return reply.code(500).send({ error: 'Invalid response from AI service' });
     }
 
-    let content = data.choices[0].message.content || '';
+    const content = data.choices[0].message.content;
 
-    if (content.includes('---')) {
-      content = content.split('---')[0].trim();
-    }
-
-    return reply.send(content);
-  } catch (error) {
-    fastify.log.error({ err: error }, 'Error contacting AI service');
-    return reply.code(500).send({ error: error.message || 'unknown error' });
-  }
-});
-
-
-fastify.setNotFoundHandler((req, reply) => {
-  
-  reply.status(404).sendFile('frontend/features/404.html').catch(() => {
-    reply.status(404).send('Not Found');
-  });
-});
-
-
-fastify.addHook('onRequest', async (request, reply) => {
-  if (request.method === 'OPTIONS') {
-    reply.code(200).send();
-    return true; 
-  }
-  return;
-});
-
-
-fastify.ready().then(() => {
-  const server = createServer((req, res) => {
-    if (bare.shouldRoute(req)) {
-      bare.routeRequest(req, res);
-      return;
-    }
-    
-    fastify.server.emit('request', req, res);
-  });
-
-  server.on('upgrade', (req, socket, head) => {
-    if (bare.shouldRoute(req)) {
-      bare.routeUpgrade(req, socket, head);
+    if (content.includes("---")) {
+      reply.send(content.split("---")[0].trim());
     } else {
-
-      socket.destroy();
+      reply.send(content);
     }
-  });
+  } catch (error) {
+    reply.code(500).send({
+      error: error.message,
+    });
+  }
+})
 
-  server.keepAliveTimeout = 5000;
-  server.headersTimeout = 16000;
-  server.maxConnections = Infinity;
-  server.timeout = 120000; 
+fastify.server.on("listening", () => {
+	const address = fastify.server.address();
 
-  const port = process.env.PORT || 8080;
-  server.listen({port, host: '0.0.0.0'}, () => {
-    console.log(`Server listening on port ${port}`);
-    console.log(`Bare server endpoint: /svr/`);
-  });
+	// by default we are listening on 0.0.0.0 (every interface)
+	// we just need to list a few
+	console.log("Listening on:");
+	console.log(`\thttp://localhost:${address.port}`);
+	console.log(`\thttp://${hostname()}:${address.port}`);
+	console.log(
+		`\thttp://${
+			address.family === "IPv6" ? `[${address.address}]` : address.address
+		}:${address.port}`
+	);
+});
 
-}).catch(err => {
-  console.error('Fastify failed to start:', err);
-  process.exit(1);
+process.on("SIGINT", shutdown);
+process.on("SIGTERM", shutdown);
+
+function shutdown() {
+	console.log("SIGTERM signal received: closing HTTP server");
+	fastify.close();
+	process.exit(0);
+}
+
+let port = parseInt(process.env.PORT || "");
+
+if (isNaN(port)) port = 8080;
+
+fastify.listen({
+	port: port,
+	host: "0.0.0.0",
 });

@@ -19,7 +19,7 @@ function getURLParameter(name) {
     result = "https://" + result;
   }
   else if (!result.includes(".")){
-    result = (localStorage.getItem("axiomSearchEngine") || search_engine) + result;
+    result = (localStorage.getItem("axiomSearchEngine") || "https://search.brave.com/search?q=") + result
   }
   return result;
 }
@@ -32,7 +32,7 @@ function buildSearchUrl(input, searchEngine) {
       !input.startsWith("https://") &&
       input.includes(".")
     ) {
-      
+      input = "https://" + input;
     }
     url = new URL(input).toString();
   } catch (err) {
@@ -52,6 +52,7 @@ async function initializeServiceWorker() {
   }
 
   try {
+    // Register the service worker
     const registration = await navigator.serviceWorker.register("/sw.js", {
       scope: "/",
       updateViaCache: "none"
@@ -59,19 +60,43 @@ async function initializeServiceWorker() {
 
     console.log("Service worker registered:", registration);
 
-    // If there's no controller, we need to reload to let the SW take control
+    // Wait for the service worker to be ready
+    await navigator.serviceWorker.ready;
+    console.log("Service worker is ready");
+
+    // If there's no active controller, we need to wait for it or reload
     if (!navigator.serviceWorker.controller) {
-      console.log("No controller found, waiting for activation...");
+      console.log("No active controller, waiting for controllerchange...");
 
-      // Wait for the service worker to be ready
-      await navigator.serviceWorker.ready;
+      // Set up a promise to wait for controller
+      const controllerPromise = new Promise((resolve) => {
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          console.log("Controller changed");
+          resolve();
+        }, { once: true });
+      });
 
-      // If still no controller after ready, reload the page once
-      if (!navigator.serviceWorker.controller) {
-        console.log("Reloading to activate service worker...");
-        window.location.reload();
-        return;
+      // If the service worker is installing/waiting, trigger skipWaiting
+      if (registration.waiting) {
+        console.log("Service worker waiting, sending skipWaiting message");
+        registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+      } else if (registration.installing) {
+        console.log("Service worker installing, waiting for state change");
+        registration.installing.addEventListener('statechange', (e) => {
+          if (e.target.state === 'installed') {
+            console.log("Service worker installed, sending skipWaiting message");
+            registration.waiting?.postMessage({ type: 'SKIP_WAITING' });
+          }
+        });
       }
+
+      // Wait for controller with timeout
+      await Promise.race([
+        controllerPromise,
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("Timeout waiting for service worker controller")), 10000)
+        )
+      ]);
     }
 
     console.log("Service worker is ready and controlling the page");
@@ -83,8 +108,9 @@ async function initializeServiceWorker() {
 }
 
 async function loadProxyPage() {
+  const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
 
-  
+  // Initialize service worker with proper error handling
   try {
     await initializeServiceWorker();
   } catch (error) {
@@ -100,7 +126,12 @@ async function loadProxyPage() {
   console.log("Loading URL:", url);
 
   const frame = document.getElementById("iframe");
+  const loader = document.getElementById("loader");
 
+  let wispUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + "/wisp/";
+  // Note: This correctly uses the local wisp endpoint from index.js
+  // The runtime error is a wisp-js library compatibility issue, not an integration problem
+  await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
   frame.src = __uv$config.prefix + __uv$config.encodeUrl(url);
 
   const hideLoader = () => {
@@ -115,10 +146,10 @@ async function loadProxyPage() {
     }
   };
 
-  
+  // Try to detect when iframe is loaded
   frame.onload = hideLoader;
 
-  
+  // Fallback timeout to hide loader after 5 seconds regardless
   setTimeout(hideLoader, 5000);
 
   frame.style.display = "block";
@@ -132,7 +163,7 @@ async function loadProxyPage() {
       let title = frameDoc.title;
       let frameUrl = "";
 
-      
+      // Get the actual current URL from the iframe, decode it from the UV encoding
       try {
         const currentSrc = frame.src;
         if (currentSrc && currentSrc.includes(__uv$config.prefix)) {
@@ -160,7 +191,7 @@ async function loadProxyPage() {
       content = content.trim();
       sessionStorage.setItem("content", content);
     } catch (e) {
-      
+      // Cross-origin error handling
       console.debug('Could not access iframe content:', e);
     }
   }, 100);

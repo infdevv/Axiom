@@ -21,6 +21,7 @@ body {
 #toolbar {
     width: 20%;
     left: calc(50% - 10%);
+    min-width: 330px;
     z-index: 500000;
     height: 45px;
       backdrop-filter: blur(3px);
