@@ -41,6 +41,12 @@ fastify.register(fastifyStatic, {
 	decorateReply: false,
 });
 
+// fuckass caddy auth caddy-auth?domain=
+fastify.get("/caddy-auth", async (request, reply) => {
+	// just give a 200
+	reply.status(200);
+	return;
+})
 
 fastify.register(fastifyStatic, {
 	root: epoxyPath,
