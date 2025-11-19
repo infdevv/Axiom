@@ -46,12 +46,7 @@ urlBar.addEventListener("keypress", function (event) {
   if (event.key === "Enter") {
     const query = urlBar.value.trim();
     if (query) {
-      if (query.includes(".") && !query.includes(" ")) {
-        const url = query.startsWith("http") ? query : "https://" + query;
-        window.location.href = url;
-      } else {
         window.location.href = "/load.html?url=" + btoa(query);
-      }
     }
   }
 });
