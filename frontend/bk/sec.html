@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Blocked</title>
+    <style>
+        /* Basic Reset and Layout */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            background-color: #ffffff;
+            color: #333;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            text-align: center;
+        }
+
+        /* Header Section */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .header-content {
+            flex-grow: 1;
+            text-align: center;
+            margin-left: -50px; /* Counteract the icon's left margin for center alignment */
+        }
+
+        .icon {
+            font-size: 30px;
+            margin-right: 20px;
+            /* Placeholder for the school icon, using a simple emoji */
+            filter: grayscale(100%); /* Optional: to make it look like the image */
+        }
+        
+        /* Main Text */
+        h1 {
+            font-size: 28px;
+            font-weight: 500;
+            margin: 0 0 10px 0;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 40px;
+        }
+
+        /* Illustration and Details Section */
+        .content-area {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 40px;
+        }
+
+        .illustration {
+            flex-basis: 50%;
+            text-align: right;
+            padding-right: 40px;
+            max-width: 400px;
+        }
+
+        .illustration img {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .blocking-details {
+            flex-basis: 50%;
+            text-align: left;
+            padding-left: 40px;
+            border-left: 1px solid #eee;
+        }
+
+        .details-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .detail-item {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #666;
+            min-width: 180px; /* Aligns the values */
+            text-align: left;
+        }
+
+        .detail-value {
+            color: #333;
+        }
+        
+        .kb-article {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .kb-article a, .show-less a {
+            color: #1a73e8; /* Google Blue-like color */
+            text-decoration: none;
+        }
+
+        .kb-article a:hover, .show-less a:hover {
+            text-decoration: underline;
+        }
+
+        .show-less {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        /* Footer / Action Section */
+        .action-area {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .action-text {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .ask-button {
+            background-color: #1a73e8;
+            color: white;
+            padding: 10px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .ask-button:hover {
+            background-color: #1669c2;
+        }
+        
+        /* Media Query for smaller screens (optional, but good practice) */
+        @media (max-width: 768px) {
+            .content-area {
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+            }
+
+            .illustration, .blocking-details {
+                flex-basis: 100%;
+                text-align: center;
+                padding: 0;
+                border-left: none;
+            }
+            
+            .detail-item {
+                justify-content: center;
+            }
+
+            .detail-label {
+                min-width: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <span class="icon" role="img" aria-label="School Building">🏫</span>
+            <div class="header-content">
+                <h1>Looks like this page isn't allowed</h1>
+                <p class="subtitle">This page has been blocked</p>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <div class="illustration">
+                <img src="https://nashuproar.org/wp-content/uploads/2022/03/securely.png" style="height: 500px; width: 1700px;">
+            </div>
+            <div class="blocking-details">
+                <p class="details-title">Blocking details</p>
+                <div class="detail-item">
+                    <span class="detail-label">URL:</span>
+                    <span class="detail-value" id="origin"></span>
+                    <script>
+                        document.getElementById("origin").innerText = window.origin;
+                    </script>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Reason:</span>
+                    <span class="detail-value">Blocked by Category</span>
+                </div>
+                
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
+
+                <div class="detail-item">
+                    <span class="detail-label">Category:</span>
+                    <span class="detail-value">Gambling</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Policy:</span>
+                    <span class="detail-value">Take Home Policy</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Date and time:</span>
+                    <span class="detail-value">Tuesday, 10/26/21, 17:24PM IST</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Filtering methods:</span>
+                    <span class="detail-value">Chrome Extension</span>
+                </div>
+                
+                <p class="kb-article">
+                    Refer to <a href="#">KB article</a> for explanation of blocking details
+                </p>
+                <p class="show-less">
+                    <a href="#">Show less</a>
+                </p>
+            </div>
+        </div>
+
+        <div class="action-area">
+            <p class="action-text">Want to access this website or page?</p>
+            <button class="ask-button">Ask for permission</button>
+        </div>
+    </div>
+        <script>
+        document.addEventListener("keydown", function(event) {
+  if (event.key === "c" || event.key === "g") { // keep original functionality
+    window.open('about:blank').document.write(
+      '<iframe src="../main.html" style="border:0; position:fixed; top:0; left:0; width:100%; height:100%;"></iframe>'
+    );
+  }
+});
+</script>
+    </script>
+</body>
+</html>

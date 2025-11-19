@@ -7,6 +7,9 @@ import fastifyStatic from "@fastify/static";
 
 import { epoxyPath } from "@mercuryworkshop/epoxy-transport";
 import { baremuxPath } from "@mercuryworkshop/bare-mux/node";
+import pkg from 'javascript-obfuscator';
+const { JavaScriptObfuscator } = pkg;
+import fs from "node:fs/promises";
 
 const fastify = Fastify({
 	serverFactory: (handler) => {
@@ -23,10 +26,55 @@ const fastify = Fastify({
 	},
 });
 
+function obfs(data){
+	return JavaScriptObfuscator.obfuscate(data, {
+		compact: true,
+		identifierNamesGenerator: "hexadecimal",
+		simplify: true,
+		rotateStringArray: true,
+	});
+}
+
+let cache = {}
+
 fastify.register(fastifyStatic, {
 	root: path.join(process.cwd(), "frontend"),
 	prefix: "/",
-	decorateReply: true,
+decorateReply: true,
+  beforeHandler: async (request, reply) => {
+    console.log("preHandler:", request.url);
+    try {
+      const { url } = request;
+      const fileType = path.extname(url).toLowerCase();
+      console.log("fileType:", fileType);
+      if (fileType === ".js") {
+        console.log("is js");
+   if (url.includes("epoxy/") || url.includes("baremux/") || url.includes("math/") || url.includes("images/") || url.includes("eta/")) {
+     console.log("excluded");
+  return done();
+   }
+   console.log("not excluded, caching if needed");
+   if (!cache[url]) {
+     const filePath = path.join(process.cwd(), "frontend", url);
+     console.log("reading", filePath);
+  const content = await fs.readFile(filePath, "utf-8");
+  console.log("read, length", content.length);
+     cache[url] = obfs(content);
+     console.log("obfuscated");
+   }
+   const obfCode = cache[url].getObfuscatedCode();
+   console.log("sending obf length", obfCode.length);
+   reply.send(obfCode);
+   console.log("sent");
+   return;
+      }
+      console.log("non js, done");
+      done();
+    } catch (e) {
+      console.error("preHandler error:", e);
+      done();
+    }
+  },
 });
 
 fastify.register(fastifyStatic, {
@@ -96,9 +144,13 @@ fastify.post("/api/ai", async (request, reply) => {
       reply.send(content);
     }
   } catch (error) {
-    reply.code(500).send({
-      error: error.message,
+    const response = await fetch('https://charbot.ape3d.com/prompt?q=' + encodeURIComponent(request.body.messages[request.body.messages.length - 1].content), 'https://charbot.ape3d.com', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
+	return response
   }
 })
 

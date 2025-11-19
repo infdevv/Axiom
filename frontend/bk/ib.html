@@ -1,0 +1,224 @@
+<!-- yes this is skidded, i'm not wasting time on recreating the iboss page -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Restricted</title>
+    <style>
+        /* Basic Reset and Layout */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8; /* Light gray background */
+            color: #333;
+            margin: 0;
+            padding: 0;
+            line-height: 1.5;
+        }
+
+        /* Top Bar - Black Header */
+        .top-bar {
+            background-color: #333;
+            color: white;
+            padding: 8px 20px;
+            font-size: 14px;
+            text-align: left;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        /* iBoss Logo */
+        .logo-area {
+            margin-bottom: 40px;
+        }
+
+        .logo-area img {
+            max-width: 150px;
+            height: auto;
+        }
+
+        /* Content Section - Warning Sign and Details */
+        .content-area {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 0;
+        }
+
+        .warning-sign {
+            flex-basis: 40%;
+            text-align: right;
+            padding-right: 50px;
+        }
+
+        .warning-sign img {
+            width: 180px;
+            height: auto;
+        }
+
+        .block-details {
+            flex-basis: 60%;
+            text-align: left;
+            padding-left: 50px;
+            border-left: 1px solid #ddd;
+        }
+
+        /* Blocked Page Title */
+        .block-details h2 {
+            font-size: 28px;
+            font-weight: normal;
+            margin: 0 0 10px 0;
+        }
+
+        /* Blocked URL */
+        .block-details a {
+            color: #cc0000; /* Green color for the URL */
+            font-size: 16px;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 20px;
+        }
+
+        .block-details a:hover {
+            text-decoration: underline;
+        }
+
+        /* Restriction Message */
+        .restriction-message {
+            margin-bottom: 30px;
+            font-size: 16px;
+            color: #555;
+        }
+
+        /* Detail List */
+        .detail-item {
+            display: flex;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .detail-label {
+            font-weight: bold;
+            color: #333;
+            min-width: 100px; /* Aligns the values */
+            text-align: left;
+            margin-right: 5px;
+        }
+
+        .detail-value {
+            color: #555;
+        }
+        
+        /* Footer - Secured by iBoss */
+        .footer-secure {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            background-color: #e0f2e0; /* Light green background */
+            color: #008000; /* Green text */
+            font-size: 12px;
+            padding: 5px 15px;
+            border-top-left-radius: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .footer-secure::before {
+            content: "✓";
+            margin-right: 5px;
+            font-weight: bold;
+        }
+
+        /* Mobile Adjustments (optional) */
+        @media (max-width: 700px) {
+            .content-area {
+                flex-direction: column;
+                padding: 10px 0;
+            }
+
+            .warning-sign, .block-details {
+                flex-basis: 100%;
+                padding: 0;
+                border-left: none;
+                text-align: center;
+            }
+
+            .warning-sign {
+                margin-bottom: 20px;
+            }
+            
+            .block-details h2, .block-details a, .restriction-message, .detail-item {
+                text-align: center;
+            }
+            
+            .detail-item {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        Currently logged into IP Address 192.168.1.20
+    </div>
+
+    <div class="container">
+        <div class="logo-area">
+            <img src="https://www.sweetwaterschools.org/wp-content/uploads/blogs.dir/28/files/2020/08/360173LOGO.jpg" alt="iBoss Cybersecurity Logo">
+        </div>
+
+        <div class="content-area">
+            <div class="warning-sign">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWzpoEuCLLRP9R96haJ9gVIRnYt9I63CuqYMqkRIScyuoXnvyc3Y-2zspjorQajgo3jvA" alt="Warning Triangle Sign">
+            </div>
+            <div class="block-details">
+                <h2>Page Blocked</h2>
+                <a href="#">spotify.com/</a>
+                <p class="restriction-message">Access to the requested site has been restricted due to its contents.</p>
+
+                <div class="detail-item">
+                    <span class="detail-label">Description:</span>
+                    <span class="detail-value">Parked domains</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Group Number:</span>
+                    <span class="detail-value">1</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Group Name:</span>
+                    <span class="detail-value">Default/Student</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Ip Address:</span>
+                    <span class="detail-value">192.168.1.20</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Username:</span>
+                    <span class="detail-value">acelabs</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer-secure">
+        secured by iBoss
+    </div>
+
+    <script>
+        document.addEventListener("keydown", function(event) {
+  if (event.key === "c" || event.key === "g") { // keep original functionality
+    window.open('about:blank').document.write(
+      '<iframe src="../main.html" style="border:0; position:fixed; top:0; left:0; width:100%; height:100%;"></iframe>'
+    );
+  }
+});
+</script>
+    </script>
+</body>
+</html>

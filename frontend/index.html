@@ -1,101 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>404 Not Found</title>
+<span style="color: white;">Delving into the Nuances of Systemic Interconnectedness
 
-<style>
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    color: white;
-    font-family: Arial, sans-serif;
-  }
+The modern world presents a complex tapestry of interwoven systems, each influencing and being influenced by countless others. Understanding this systemic interconnectedness is no longer a luxury, but a fundamental necessity for effective problem-solving and strategic planning across diverse fields.  Traditional linear thinking, which isolates individual components, often fails to capture the dynamic feedback loops and emergent properties that characterize real-world phenomena. Instead, we must embrace holistic approaches that acknowledge the intricate web of relationships between economic, social, environmental, and political forces. This necessitates a shift in analytical paradigms, favoring methodologies like network analysis, system dynamics modeling, and complexity science to better comprehend the underlying mechanisms driving change.
 
-  body {
-    background-color: #0d0d0d;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-  }
+A crucial aspect of navigating these complex systems is recognizing the inherent uncertainty and non-linearity involved.  Predictive models predicated on simple cause-and-effect relationships are frequently inadequate when dealing with feedback loops, tipping points, and unforeseen contingencies.  Instead of striving for precise prediction, a more pragmatic approach focuses on building resilience and adaptability within systems. This involves fostering redundancy, diversifying resources, and cultivating adaptive capacity – the ability to learn from experience and adjust strategies in response to evolving circumstances. Furthermore, embracing iterative experimentation and agile methodologies allows for continuous refinement and course correction, minimizing risk and maximizing learning opportunities.
 
-  h1 {
-    font-size: 6rem;
-    margin-bottom: 1rem;
-  }
+Beyond technical approaches, a deeper understanding of human behavior is paramount. Cognitive biases, social norms, and power structures significantly shape the dynamics of any system.  Ignoring these psychological and sociological dimensions can lead to unintended consequences and ultimately undermine desired outcomes.  Effective intervention requires careful consideration of stakeholder perspectives, participatory decision-making processes, and strategies designed to address systemic inequalities. This necessitates a commitment to inclusive governance, equitable resource allocation, and the empowerment of marginalized communities – all vital for fostering sustainable and just systems.
 
-  p {
-    font-size: 1.25rem;
-    margin-bottom: 2rem;
-    opacity: 0.8;
-  }
+Furthermore, the role of information and communication within these interconnected systems cannot be overstated.  The rapid proliferation of data, coupled with the rise of digital technologies, has created both unprecedented opportunities and significant challenges.  While access to information can enhance transparency and accountability, it also presents risks related to misinformation, manipulation, and algorithmic bias. Developing critical thinking skills, promoting media literacy, and establishing robust ethical frameworks for data governance are essential for navigating this evolving information landscape responsibly. This demands a multi-disciplinary approach, integrating insights from computer science, sociology, and political science.
 
-  a {
-    color: #00bfff;
-    text-decoration: none;
-    font-weight: bold;
-    border: 1px solid #00bfff;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    transition: background 0.3s;
-  }
-
-  a:hover {
-    background-color: #00bfff;
-    color: #0d0d0d;
-  }
-
-  footer {
-    position: absolute;
-    bottom: 10px;
-    font-size: 0.8rem;
-    opacity: 0.5;
-  }
-
-  img {
-    display: none;
-  }
-</style>
+In conclusion, grappling with the complexities of interconnected systems requires a paradigm shift in how we think, analyze, and act.  It necessitates embracing uncertainty, prioritizing resilience, and fostering inclusivity. By cultivating systemic thinking skills and investing in robust analytical frameworks, we can move beyond simplistic solutions and towards more sustainable, equitable, and adaptable futures. This journey demands ongoing learning, collaborative innovation, and a unwavering commitment to understanding the intricate dynamics that shape our world.</span>
 
 <script>
-document.addEventListener("keydown", function(event) {
-  if (event.key === "c" || event.key === "g") { // keep original functionality
-    window.open('about:blank').document.write(
-      '<iframe src="main.html" style="border:0; position:fixed; top:0; left:0; width:100%; height:100%;"></iframe>'
-    );
+  // determine what blkr the student is
+  let checks = {
+    "ls": "chrome-extension://adkcpkpghahmbopkjchobieckeoaoeem/icon-128.png",
+    "gog": "chrome-extension://haldlgldplgnggkjaafhelgiaglafanh/youtube_injection.js",
+    "sec1": "chrome-extension://hkobaiihndnbfhbkmjjfbdimfbdcppdh/notfound.html",
+    "sec2": "chrome-extension://jfbecfmiegcjddenjhlbhlikcbfmnafd/notfound.html",
+    "sec3": "chrome-extension://ckecmkbnoanpgplccmnoikfmpcdladkc/fonts/Metropolis.css",
+    "sec4": "chrome-extension://joflmkccibkooplaeoinecjbmdebglab/fonts/Metropolis.css",
+    "sec5": "chrome-extension://iheobagjkfklnlikgihanlhcddjoihkg/fonts/Metropolis.css",
+    "ib": "chrome-extension://kmffehbidlalibfeklaefnckpidbodff/restricted.html",
   }
-});
+
+  if (localStorage.getItem("blkr")){
+    window.location = localStorage.getItem("blkr");
+  }
+  else {
+    for (let i in Object.keys(checks)){
+      // see if we get a 404
+      fetch(checks[Object.keys(checks)[i]]).then(res => {
+        if (res.status == 200){
+          if (Object.keys(checks)[i].includes("sec")){
+            window.location = "/bk/sec.html";
+          }
+          localStorage.setItem("blkr", checks[Object.keys(checks)[i]]);
+          window.location = "/bk/" + checks[Object.keys(checks)[i]] + ".html";
+        }
+      })
+    }
+    // implies all checks failed
+
+    window.location = "/bk/default.html";
+  }
 </script>
-</head>
-
-<body>
-  <h1>404</h1>
-  <p>Oops! The page you’re looking for doesn’t exist.</p>
-  <a href="/">Go Home</a>
-
-  <footer>
-    &copy; 2025 Axiom. Press "C". All rights reserved.
-  </footer>
-
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-EP8214CHBW"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-EP8214CHBW');
-
-    // unregister all service workers
-    navigator.serviceWorker.getRegistrations().then(function(registrations) {
-      registrations.forEach(function(registration) {
-        registration.unregister();
-      });
-    });
-  </script>
-</body>
-</html>

@@ -74,7 +74,7 @@
   </style>
 </head>
 
-<body name="primary">
+<body>
   <center>
     <div class="container">
 
@@ -93,7 +93,8 @@
     const isPremium = sessionStorage.getItem("premium")
     let content = sessionStorage.getItem("content")
     if (isPremium == "false") {
-      content = "No content provided. If the user asks why, tell them to get Axiom Premium."
+      // Yes, I'm aware that this is clientside, some idiot thought it was security issue, well i think that if you need to keep a system prompt private, you are doing shady shit.
+      content = "No content provided. If the user asks why you cannot read webpages, tell them to get Axiom Premium."
     }
     let chat = [
       {

@@ -126,11 +126,9 @@ async function loadProxyPage() {
   console.log("Loading URL:", url);
 
   const frame = document.getElementById("iframe");
-  const loader = document.getElementById("loader");
+  const loader = document.getsElementById("loader");
 
-  let wispUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + "/wisp/";
-  // Note: This correctly uses the local wisp endpoint from index.js
-  // The runtime error is a wisp-js library compatibility issue, not an integration problem
+  let wispUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + "anura.pro" // window.location.host + "/wisp/";
   await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
   frame.src = __uv$config.prefix + __uv$config.encodeUrl(url);
 
@@ -162,8 +160,6 @@ async function loadProxyPage() {
 
       let title = frameDoc.title;
       let frameUrl = "";
-
-      // Get the actual current URL from the iframe, decode it from the UV encoding
       try {
         const currentSrc = frame.src;
         if (currentSrc && currentSrc.includes(__uv$config.prefix)) {
@@ -183,6 +179,8 @@ async function loadProxyPage() {
       }
 
       let content = frameDoc.body.innerHTML;
+      if (content !== sessionStorage.getItem("content")) {
+       
       content = content.replace(/<[^>]+>/g, '');
       content = content.replace(/&nbsp;/g, ' ');
       content = content.replace(/\t/g, ' ');
@@ -190,6 +188,8 @@ async function loadProxyPage() {
       content = content.replace(/\n\s*\n/g, '\n');
       content = content.trim();
       sessionStorage.setItem("content", content);
+       
+      }
     } catch (e) {
       // Cross-origin error handling
       console.debug('Could not access iframe content:', e);
