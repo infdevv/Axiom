@@ -127,8 +127,8 @@ async function loadProxyPage() {
 
   const frame = document.getElementById("iframe");
   const loader = document.getsElementById("loader");
-
-  let wispUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + "anura.pro" // window.location.host + "/wisp/";
+//(window.location.protocol === 'https:' ? 'wss://' : 'ws://') +
+  let wispUrl =  "wss://anura.pro/" // window.location.host + "/wisp/";
   await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
   frame.src = __uv$config.prefix + __uv$config.encodeUrl(url);
 
