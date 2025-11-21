@@ -11,37 +11,43 @@ Furthermore, the role of information and communication within these interconnect
 In conclusion, grappling with the complexities of interconnected systems requires a paradigm shift in how we think, analyze, and act.  It necessitates embracing uncertainty, prioritizing resilience, and fostering inclusivity. By cultivating systemic thinking skills and investing in robust analytical frameworks, we can move beyond simplistic solutions and towards more sustainable, equitable, and adaptable futures. This journey demands ongoing learning, collaborative innovation, and a unwavering commitment to understanding the intricate dynamics that shape our world.</span>
 
 <script>
-  
-    window.location = "/bk/default.html";
-  // determine what blkr the student is
-  let checks = {
-    "ls": "chrome-extension://adkcpkpghahmbopkjchobieckeoaoeem/icon-128.png",
-    "gog": "chrome-extension://haldlgldplgnggkjaafhelgiaglafanh/youtube_injection.js",
-    "sec1": "chrome-extension://hkobaiihndnbfhbkmjjfbdimfbdcppdh/notfound.html",
-    "sec2": "chrome-extension://jfbecfmiegcjddenjhlbhlikcbfmnafd/notfound.html",
-    "sec3": "chrome-extension://ckecmkbnoanpgplccmnoikfmpcdladkc/fonts/Metropolis.css",
-    "sec4": "chrome-extension://joflmkccibkooplaeoinecjbmdebglab/fonts/Metropolis.css",
-    "sec5": "chrome-extension://iheobagjkfklnlikgihanlhcddjoihkg/fonts/Metropolis.css",
-    "ib": "chrome-extension://kmffehbidlalibfeklaefnckpidbodff/restricted.html",
-  }
+  if (localStorage.getItem("blkr")) {
+    window.location = "/bk/" + localStorage.getItem("blkr") + ".html";
+  } else {
+    let checks = {
+      "ls": "chrome-extension://adkcpkpghahmbopkjchobieckeoaoeem/icon-128.png",
+      "gog": "chrome-extension://haldlgldplgnggkjaafhelgiaglafanh/youtube_injection.js",
+      "sec1": "chrome-extension://hkobaiihndnbfhbkmjjfbdimfbdcppdh/notfound.html",
+      "sec2": "chrome-extension://jfbecfmiegcjddenjhlbhlikcbfmnafd/notfound.html",
+      "sec3": "chrome-extension://ckecmkbnoanpgplccmnoikfmpcdladkc/fonts/Metropolis.css",
+      "sec4": "chrome-extension://joflmkccibkooplaeoinecjbmdebglab/fonts/Metropolis.css",
+      "sec5": "chrome-extension://iheobagjkfklnlikgihanlhcddjoihkg/fonts/Metropolis.css",
+      "ib": "chrome-extension://kmffehbidlalibfeklaefnckpidbodff/restricted.html",
+    };
 
-  if (localStorage.getItem("blkr")){
-    window.location = localStorage.getItem("blkr");
-  }
-  else {
-    for (let i in Object.keys(checks)){
-      // see if we get a 404
-      fetch(checks[Object.keys(checks)[i]]).then(res => {
-        if (res.status == 200){
-          if (Object.keys(checks)[i].includes("sec")){
-            window.location = "/bk/sec.html";
+    let found = false;
+
+    for (let key in checks) {
+      fetch(checks[key])
+        .then(res => {
+          if (!found && res.status == 200) {
+            found = true;
+            localStorage.setItem("blkr", key);
+            
+            if (key.includes("sec")) {
+              window.location = "/bk/sec.html";
+            } else {
+              window.location = "/bk/" + key + ".html";
+            }
           }
-          localStorage.setItem("blkr", checks[Object.keys(checks)[i]]);
-          window.location = "/bk/" + checks[Object.keys(checks)[i]] + ".html";
-        }
-      })
+        })
+        .catch(() => {}); 
     }
-    // implies all checks failed
 
+    setTimeout(() => {
+      if (!found) {
+        window.location = "/bk/default.html";
+      }
+    }, 1000);
   }
 </script>
