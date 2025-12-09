@@ -64,6 +64,12 @@ document.addEventListener('DOMContentLoaded', async function() {
  let url = ""
  const urlParams = new URLSearchParams(window.location.search);
  url = atob(urlParams.get("url")) || "";
+ if (url.includes("exexex")){
+	// get ip, its required for frogiee's bypass
+	fetch("/api/ip").then(res => res.json()).then(res => {
+		url = url.replace("exexex", (res.ip).split(".")[0]);
+	});
+ }
  const tabId = urlParams.get('tabId');
 
  scramjet.init();

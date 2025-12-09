@@ -1,7 +1,4 @@
-/*
-Theme Variables - These will be dynamically updated by themeManager.js
-Default fallback values (dark theme)
-*/
+
 :root {
     --theme-primary: #84828F;
     --theme-secondary: #6A687A;
@@ -54,7 +51,6 @@ body {
     cursor: pointer;
 }
 
-/* Theme-aware utility classes */
 .theme-primary { color: var(--theme-primary); }
 .theme-secondary { color: var(--theme-secondary); }
 .theme-tertiary { color: var(--theme-tertiary); }
@@ -67,7 +63,6 @@ body {
 .bg-theme-quaternary { background-color: var(--theme-quaternary); }
 .bg-theme-quinary { background-color: var(--theme-quinary); }
 
-/* Main page specific styling - background changes with theme */
 body.main-page {
     background-color: var(--theme-tertiary);
     transition: background-color 0.3s ease;

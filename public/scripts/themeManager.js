@@ -1,4 +1,4 @@
-// Theme Manager System
+
 (function() {
     'use strict';
     
@@ -23,7 +23,6 @@
                 this.isInitialized = true;
                 console.log('Theme manager loaded with themes:', Object.keys(this.themes));
 
-                // Listen for theme changes in localStorage
                 window.addEventListener('storage', (e) => {
                     if (e.key === 'axiomTheme') {
                         this.setTheme(e.newValue);
@@ -64,21 +63,43 @@
             console.log(`Applied theme: ${themeName}`);
         }
 
+        hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : null;
+        }
+
+        getLuminance(hex) {
+            const rgb = this.hexToRgb(hex);
+            if (!rgb) return 0;
+            const [r, g, b] = rgb.split(', ').map(Number);
+            return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+        }
+
         applyTheme(theme) {
             const root = document.documentElement;
-            
+
             root.style.setProperty('--theme-primary', theme.primary);
             root.style.setProperty('--theme-secondary', theme.secondary);
             root.style.setProperty('--theme-tertiary', theme.tertiary);
             root.style.setProperty('--theme-quaternary', theme.quaternary);
             root.style.setProperty('--theme-quinary', theme.quinary);
             root.style.setProperty('--theme-border', theme.border);
-            
-            root.style.setProperty('--text-color', '#E0E1DD');
+
+            root.style.setProperty('--theme-primary-rgb', this.hexToRgb(theme.primary));
+            root.style.setProperty('--theme-secondary-rgb', this.hexToRgb(theme.secondary));
+            root.style.setProperty('--theme-tertiary-rgb', this.hexToRgb(theme.tertiary));
+            root.style.setProperty('--theme-quaternary-rgb', this.hexToRgb(theme.quaternary));
+            root.style.setProperty('--theme-quinary-rgb', this.hexToRgb(theme.quinary));
+            root.style.setProperty('--theme-border-rgb', this.hexToRgb(theme.border));
+
+            const bgLuminance = this.getLuminance(theme.tertiary);
+            const textColor = bgLuminance < 0.5 ? theme.primary : theme.quinary;
+            root.style.setProperty('--text-color', textColor);
+            root.style.setProperty('--tab-text-color', theme.quinary);
             root.style.setProperty('--accent-color', theme.primary);
             root.style.setProperty('--primary-bg', theme.tertiary);
             root.style.setProperty('--secondary-bg', theme.quaternary);
-            
+
             this.applyMainPageBackground(theme);
         }
 

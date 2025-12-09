@@ -92,6 +92,11 @@ fastify.post("/ai", async function(request, reply){
   }
 })
 
+fastify.get("/api/ip", async function(request, reply){
+  // return requestor's ip
+  reply.send({ ip: request.ip });
+})
+
 
 fastify.setNotFoundHandler((req, reply) => {
   // theres not even a page lol

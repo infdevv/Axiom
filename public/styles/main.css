@@ -83,7 +83,7 @@ E0E1DD
     height: 24px;
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
-    /* Hey frogiee, copying code thats the same instead of rewriting it isn't the same as using chatgpt? */
+    /* i put this here so you can learn that copying code thats the same instead of rewriting it isn't the same as using chatgpt? */
     /* hard to understand, ik. but you like to say with full confidence that non-chatgpt'd code is chatgpt. */
              background-color: rgb(27, 38, 59, 0.3);
         backdrop-filter: blur(5px);
@@ -106,7 +106,7 @@ E0E1DD
 .tab {
     display: flex;
     padding: 8px;
-    background-color: rgb(27, 38, 59, 0.5);
+    background-color: rgba(205, 208, 212, 0.5);
     backdrop-filter: blur(5px);
     width: 150px;
     border-radius: 4px;
@@ -116,7 +116,7 @@ E0E1DD
 }
 
 .tab.active {
-    background-color: rgb(27, 38, 59, 0.1);
+    background-color: rgba(66, 66, 66, 0.5);
 }
 
 #controls-button {
@@ -152,4 +152,9 @@ E0E1DD
 
 .x-button {
     cursor: pointer;
+    color: var(--tab-text-color);
+}
+
+.tab-name {
+    color: var(--tab-text-color);
 }

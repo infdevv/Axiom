@@ -6,6 +6,18 @@
         "app_img": "./assets/gapp-images/amanda-the-adventurer.webp"
     },
     {
+        "app_name": "Roblox (NowGG.fun)",
+        "app_url": "https://exexex.ip.nowgg.fun/apps/a/19900/b.html",
+        "app_img": "./assets/gapp-images/roblox.webp",
+        "type": "game"
+    },
+    {
+        "app_name": "Precision Client",
+        "app_url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/precision-client/index.html",
+        "app_img": "./assets/gapp-images/precision.webp",
+        "type": "game"
+    },
+    {
         "app_name": "Andy's Apple Farm",
         "app_url": "https://cdn.axiomsontop.shop/andys-apple-farm",
         "type": "game",
@@ -179,7 +191,6 @@
         "type": "game",
         "app_img": "./assets/gapp-images/yume-nikki.webp"
     },
-     
     {
         "app_name": "Mr. Mine",
         "app_url": "https://www.coolmathgames.com/0-mr-mine/play",
@@ -1417,12 +1428,6 @@
         "type": "game"
     },
     {
-        "app_name": "Saul Run",
-        "app_url": "https://complex-ify.itch.io/saul-goodman",
-        "app_img": "./assets/gapp-images/saulrun.webp",
-        "type": "game"
-    },
-    {
         "app_name": "Monkey Mart",
         "app_url": "/e/2/monkey-mart/index.html",
         "app_img": "./assets/gapp-images/mm.webp",
@@ -1468,12 +1473,6 @@
         "app_name": "Helix Jump",
         "app_url": "https://helix-jump.game-files.crazygames.com/helix-jump/1/index.html",
         "app_img": "./assets/gapp-images/helixjump.webp",
-        "type": "game"
-    },
-    {
-        "app_name": "Minecraft 1.8 (Eaglercraft)",
-        "app_url": "/e/2/eag18/offline.html",
-        "app_img": "./assets/gapp-images/mc.webp",
         "type": "game"
     },
     {
@@ -1741,18 +1740,6 @@
         "type": "game"
     },
     {
-        "app_name": "Roblox (Now.GG)",
-        "app_url": "https://now.gg/iframe/snippet?app_pkg=com.roblox.client&partner=interstellar",
-        "app_img": "./assets/gapp-images/roblox.webp",
-        "type": "game"
-    },
-    {
-        "app_name": "Precision Client",
-        "app_url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/precision-client/index.html",
-        "app_img": "./assets/gapp-images/precision.webp",
-        "type": "game"
-    },
-    {
         "app_name": "Drift Hunters",
         "app_url": "https://webglmath.github.io/drift-hunters/",
         "app_img": "./assets/gapp-images/drift-hunters.webp",
@@ -1853,198 +1840,5 @@
         "app_url": "https://stumble-guys.io/stumble-guys.embed",
         "app_img": "./assets/gapp-images/stumble-guys.webp",
         "type": "game"
-    },
-    {
-        "app_name": "Windows 96",
-        "app_url": "https://windows96.net",
-        "app_img": "./assets/gapp-images/windows96.webp",
-        "type": "game"
-    },
-    {
-        "app_name": "Hole.IO",
-        "app_url": "https://hole-io.com/",
-        "app_img": "./assets/gapp-images/hole.webp",
-        "type": "game"
-    },
-    {
-        "app_name": "Counter Strike 1.6",
-        "app_url": "https://play-cs.com/en/servers",
-        "app_img": "./assets/gapp-images/cs16.webp",
-        "type": "game"
-    },
-    {
-        "app_name": "Roblox (NowGG.me) [Working]",
-        "app_url": "https://nowgg.me/apps/roblox-corporation/5349/roblox.html",
-        "app_img": "./assets/gapp-images/shuttle.webp",
-        "type": "game"
-    },
-    {
-        "app_name": "Twitch Tetris",
-        "app_url": "https://www.rossipotti.de/ausgabe28/tetris/controls.html",
-        "app_img": "./assets/gapp-images/na.webp",
-        "type": "game"
-    },
-    {
-        "app_name": "Smash Bros 64",
-        "app_url": "https://emulatorgames.online/games/n64/super-smash-bros",
-        "app_img": "./assets/gapp-images/super-smash-bros-64.webp",
-        "type": "game"
-    },
-    {
-        "app_name": "Tube Jumpers",
-        "app_url": "https://unblocked76.github.io/tube-jumpers/",
-        "app_img": "./assets/gapp-images/tubejumpers.webp",
-        "type": "game"
-    },
-    {
-        "app_name": "FNAF 2 (Scratch)",
-        "app_url": "https://scratch.mit.edu/projects/469219637/embed/",
-        "app_img": "./assets/gapp-images/FNAF2.webp",
-        "type": "game"
-    },
-    {
-        "app_name": "GBA Games 2",
-        "app_url": "https://cattn.github.io/gba/",
-        "app_img": "./assets/gapp-images/gba.webp",
-        "type": "game"
-    },
-    {
-        "app_name": "Riddle School 4",
-        "app_url": "https://riddle-school-4.game-files.crazygames.com/ruffle/riddleschool4.html",
-        "app_img": "./assets/gapp-images/rs4.webp",
-        "type": "game"
-    },
-    {
-        "app_name": "The Simpsons",
-        "app_url": "https://static.arcadespot.com/retroemulator.php?system=nds&game=2017/11/the-simpsons-game.zip",
-        "app_img": "./assets/gapp-images/the-simpsons-game.webp",
-        "type": "game"
-    },
-    {
-        "app_name": "Doge Miner",
-        "app_url": "/e/1/DogeMiner/index.html",
-        "app_img": "./assets/gapp-images/doge-miner-1.webp",
-        "type": "game"
-    },
-    {
-        "app_name": "Ace Attorney",
-        "app_url": "https://f.kbhgames.com/r/gba/?r=ace-attorney",
-        "app_img": "./assets/gapp-images/aa.webp",
-        "type": "game"
-    },
-    {
-        "app_name": "Bloons TD Battles",
-        "app_url": "https://now.gg/iframe/snippet?app_pkg=com.ninjakiwi.bloonstdbattles&partner=interstellar",
-        "app_img": "./assets/gapp-images/bloonstd.webp",
-        "type": "game"
-    },
-    {
-        "app_name": "Celeste PICO-8",
-        "app_url": "https://exok.com/minigames/celeste.html",
-        "app_img": "./assets/gapp-images/celeste.webp",
-        "type": "game"
-    },
-    {
-        "app_name": "Red Ball 4 Vol. 2",
-        "app_url": "https://www.algebrashelper.com/read-ball-4v2",
-        "app_img": "./assets/gapp-images/redball4vol2.webp",
-        "type": "game"
-    },
-    {
-        "app_name": "Sandboxels",
-        "app_url": "https://v6p9d9t4.ssl.hwcdn.net/html/5808591/index.html",
-        "app_img": "./assets/gapp-images/sandboxels.webp",
-        "type": "game"
-    },
-    {
-        "app_name": "Deal or No Deal",
-        "app_url": "https://f.kbhgames.com/RS/game.php?r=//f.kbhgames.com/2018/swf/dondeal2.swf&w=640&h=480&warnsupport=true",
-        "app_img": "./assets/gapp-images/deal-or-no-deal.webp",
-        "type": "game"
-    },
-    {
-        "app_name": "Wrassling",
-        "app_url": "https://games.poki.com/458768/wrassling",
-        "app_img": "./assets/gapp-images/wrassling.webp",
-        "type": "game"
-    },
-    {
-        "app_name": "Duck Life 4",
-        "app_url": "/e/ducklife4/index.html",
-        "app_img": "./assets/gapp-images/dl4.webp",
-        "type": "game"
-    },
-    {
-        "app_name": "Red Ball 4 Vol. 3",
-        "app_url": "https://www.algebrashelper.com/red-ball-4v3",
-        "app_img": "./assets/gapp-images/redball4vol3.webp",
-        "type": "game"
-    },
-    {
-        "app_name": "Papa's Sushiria",
-        "app_url": "https://files.crazygames.com/ruffle/papassushiria.html",
-        "app_img": "./assets/gapp-images/papassushiria.webp",
-        "type": "game"
-    },
-    {
-        "app_name": "Playstation 2 Emulator",
-        "app_url": "https://playjs.purei.org/",
-        "app_img": "./assets/gapp-images/PS2.webp",
-        "type": "game"
-    },
-    {
-        "app_name": "Pokemon Heart Gold",
-        "app_url": "https://static.arcadespot.com/retroemulator.php?system=nds&game=2017/10/pokemon-heartgold-version1.zip",
-        "app_img": "./assets/gapp-images/heartgold.webp",
-        "type": "game"
-    },
-    {
-        "app_name": "Wings!",
-        "app_url": "https://wings.io/",
-        "app_img": "./assets/gapp-images/wingsio.webp",
-        "type": "game"
-    },
-    {
-        "app_name": "Riddle School 2",
-        "app_url": "https://f.silvergames.com/ruffle/player.php?id=8564",
-        "app_img": "./assets/gapp-images/rs2.webp",
-        "type": "game"
-    },
-    {
-        "app_name": "Fallout 2",
-        "app_url": "https://jonasz-o.itch.io/fallout2remake3d",
-        "app_img": "./assets/gapp-images/fallout2.webp",
-        "type": "game"
-    },
-    {
-        "app_name": "Jacksmith",
-        "app_url": "https://www.coolmathgames.com/0-jacksmith/play",
-        "app_img": "./assets/gapp-images/jacksmith.webp",
-        "type": "game"
-    },
-    {
-        "app_name": "Shell Shockers",
-        "app_url": "https://shellshock.io/",
-        "app_img": "./assets/gapp-images/shell-shockers.webp",
-        "type": "game"
-    },
-    {
-        "app_name": "Deadshot",
-        "app_url": "https://deadshot.io",
-        "app_img": "./assets/gapp-images/deadshot.webp",
-        "type": "game"
-    },
-    {
-        "app_name": "Basketball Stars",
-        "app_url": "https://html5.gamedistribution.com/69d78d071f704fa183d75b4114ae40ec/",
-        "app_img": "./assets/gapp-images/basketball-stars.webp",
-        "type": "game"
-    },
-    {
-        "app_name": "CSGO Parkour",
-        "app_url": "https://yandex.com/games/app/203069?flags={%22adv_sticky_banner_disabled%22:true}",
-        "app_img": "./assets/gapp-images/csgoparkour.webp",
-        "type": "game"
     }
-
 ]
