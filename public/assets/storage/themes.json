@@ -5,7 +5,11 @@
         "tertiary": "#415A77",
         "quaternary": "#778DA9",
         "quinary": "#1B263B",
-        "border": "#0D1B2A"
+        "border": "#0D1B2A",
+        "text": "#fff",
+        "inactiveTabBg": "#fff",
+        "activeTabBg": "#fff",
+        "tabText": "#fff"
     },
     "space": {
         "primary": "#E0E1DD",
@@ -13,7 +17,11 @@
         "tertiary": "#1B263B",
         "quaternary": "#415A77",
         "quinary": "#0D1B2A",
-        "border": "#0D1B2A"
+        "border": "#0D1B2A",
+        "text": "#E0E1DD",
+        "inactiveTabBg": "#778DA9",
+        "activeTabBg": "#415A77",
+        "tabText": "#0D1B2A"
     },
     "forest": {
         "primary": "#4B6B47",
@@ -21,7 +29,11 @@
         "tertiary": "#8AAE84",
         "quaternary": "#A5C5A0",
         "quinary": "#2F4D2B",
-        "border": "#2F4D2B"
+        "border": "#2F4D2B",
+        "text": "#2F4D2B",
+        "inactiveTabBg": "#A5C5A0",
+        "activeTabBg": "#6F8F6A",
+        "tabText": "#2F4D2B"
     },
     "orang": {
         "primary": "#FF8C61",
@@ -29,7 +41,11 @@
         "tertiary": "#FFCB77",
         "quaternary": "#FFE196",
         "quinary": "#D95D39",
-        "border": "#D95D39"
+        "border": "#D95D39",
+        "text": "#D95D39",
+        "inactiveTabBg": "#FFE196",
+        "activeTabBg": "#FF8C61",
+        "tabText": "#D95D39"
     },
     "h2o": {
         "primary": "#3A86FF",
@@ -37,7 +53,11 @@
         "tertiary": "#2558A3",
         "quaternary": "#1C447A",
         "quinary": "#16345C",
-        "border": "#16345C"
+        "border": "#16345C",
+        "text": "#3A86FF",
+        "inactiveTabBg": "#2E6DCC",
+        "activeTabBg": "#2558A3",
+        "tabText": "#16345C"
     },
     "pastel": {
         "primary": "#F7C5CC",
@@ -45,6 +65,10 @@
         "tertiary": "#ECD5E3",
         "quaternary": "#DDE5ED",
         "quinary": "#CDE7BE",
-        "border": "#CDE7BE"
+        "border": "#CDE7BE",
+        "text": "#333333",
+        "inactiveTabBg": "#FDE2E4",
+        "activeTabBg": "#ECD5E3",
+        "tabText": "#444444"
     }
 }

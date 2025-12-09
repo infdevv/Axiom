@@ -203,7 +203,12 @@ center {
 
     </div>
     </center>
+    <script src="./scripts/themeManager.js"></script>
     <script>
+        themeManager.load().then(() => {
+            console.log('Theme loaded in start.html');
+        }).catch(console.error);
+
         function updateTime(){
             let date = new Date().getHours()
             let minutes = new Date().getMinutes()
@@ -218,7 +223,7 @@ center {
             document.getElementById("time").innerText = date
         }
         setInterval(function(){
-updateTime()
+ updateTime()
         }, 1000 * 60)
         updateTime()
     </script>

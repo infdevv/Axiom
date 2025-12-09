@@ -39,7 +39,11 @@
                         tertiary: "#1B263B",
                         quaternary: "#415A77",
                         quinary: "#0D1B2A",
-                        border: "#0D1B2A"
+                        border: "#0D1B2A",
+                        text: "#E0E1DD",
+                        inactiveTabBg: "#778DA9",
+                        activeTabBg: "#415A77",
+                        tabText: "#0D1B2A"
                     }
                 };
                 this.setTheme('space');
@@ -49,6 +53,7 @@
         }
 
         setTheme(themeName) {
+            const originalTheme = themeName;
             if (!this.themes[themeName]) {
                 console.warn(`Theme '${themeName}' not found, using default`);
                 themeName = 'space';
@@ -56,10 +61,12 @@
 
             this.currentTheme = themeName;
             this.applyTheme(this.themes[themeName]);
-            localStorage.setItem('axiomTheme', themeName);
-            
+            if (this.themes[originalTheme]) {
+                localStorage.setItem('axiomTheme', themeName);
+            }
+
             this.updateThemeSelectionUI(themeName);
-            
+
             console.log(`Applied theme: ${themeName}`);
         }
 
@@ -92,10 +99,13 @@
             root.style.setProperty('--theme-quinary-rgb', this.hexToRgb(theme.quinary));
             root.style.setProperty('--theme-border-rgb', this.hexToRgb(theme.border));
 
-            const bgLuminance = this.getLuminance(theme.tertiary);
-            const textColor = bgLuminance < 0.5 ? theme.primary : theme.quinary;
-            root.style.setProperty('--text-color', textColor);
-            root.style.setProperty('--tab-text-color', theme.quinary);
+            root.style.setProperty('--text-color', theme.text);
+            root.style.setProperty('--inactive-tab-bg', theme.inactiveTabBg);
+            root.style.setProperty('--active-tab-bg', theme.activeTabBg);
+            root.style.setProperty('--tab-text-color', theme.tabText);
+
+            root.style.setProperty('--inactive-tab-bg-rgb', this.hexToRgb(theme.inactiveTabBg));
+            root.style.setProperty('--active-tab-bg-rgb', this.hexToRgb(theme.activeTabBg));
             root.style.setProperty('--accent-color', theme.primary);
             root.style.setProperty('--primary-bg', theme.tertiary);
             root.style.setProperty('--secondary-bg', theme.quaternary);
