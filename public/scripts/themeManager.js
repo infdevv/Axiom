@@ -1,4 +1,3 @@
-
 (function() {
     'use strict';
     
@@ -39,7 +38,7 @@
                         tertiary: "#1B263B",
                         quaternary: "#415A77",
                         quinary: "#0D1B2A",
-                        border: "#0D1B2A",
+                        border: "#547aa3ff",
                         text: "#E0E1DD",
                         inactiveTabBg: "#778DA9",
                         activeTabBg: "#415A77",
@@ -171,3 +170,4 @@
     
     window.themeManagerClass = themeManager;
 })();
+console.log("Themes loaded...")

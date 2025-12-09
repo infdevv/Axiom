@@ -1,16 +1,4 @@
 {
-    "default": {
-        "primary": "#E0E1DD",
-        "secondary": "#778DA9",
-        "tertiary": "#415A77",
-        "quaternary": "#778DA9",
-        "quinary": "#1B263B",
-        "border": "#0D1B2A",
-        "text": "#fff",
-        "inactiveTabBg": "#fff",
-        "activeTabBg": "#fff",
-        "tabText": "#fff"
-    },
     "space": {
         "primary": "#E0E1DD",
         "secondary": "#778DA9",
@@ -22,6 +10,18 @@
         "inactiveTabBg": "#778DA9",
         "activeTabBg": "#415A77",
         "tabText": "#0D1B2A"
+    },
+        "kinda blue": {
+        "primary": "#E0E1DD",
+        "secondary": "#778DA9",
+        "tertiary": "#415A77",
+        "quaternary": "#778DA9",
+        "quinary": "#1B263B",
+        "border": "#0D1B2A",
+        "text": "#fff",
+        "inactiveTabBg": "#fff",
+        "activeTabBg": "#fff",
+        "tabText": "#fff"
     },
     "forest": {
         "primary": "#4B6B47",
@@ -47,7 +47,7 @@
         "activeTabBg": "#FF8C61",
         "tabText": "#D95D39"
     },
-    "h2o": {
+    "fishstick": {
         "primary": "#3A86FF",
         "secondary": "#2E6DCC",
         "tertiary": "#2558A3",
@@ -59,7 +59,7 @@
         "activeTabBg": "#2558A3",
         "tabText": "#16345C"
     },
-    "pastel": {
+    "pipper": {
         "primary": "#F7C5CC",
         "secondary": "#FDE2E4",
         "tertiary": "#ECD5E3",
