@@ -101,7 +101,22 @@
             root.style.setProperty('--text-color', theme.text);
             root.style.setProperty('--inactive-tab-bg', theme.inactiveTabBg);
             root.style.setProperty('--active-tab-bg', theme.activeTabBg);
-            root.style.setProperty('--tab-text-color', theme.tabText);
+
+            // Set tab text color to the darkest color in the theme for contrast
+            const colors = [theme.primary, theme.secondary, theme.tertiary, theme.quaternary, theme.quinary, theme.border];
+            let darkestColor = theme.primary;
+            let minLum = this.getLuminance(theme.primary);
+            for (const color of colors) {
+                const lum = this.getLuminance(color);
+                if (lum < minLum) {
+                    minLum = lum;
+                    darkestColor = color;
+                }
+            }
+            if (minLum > 0.5) {
+                darkestColor = "#000000"; // Fallback to black if no dark color
+            }
+            root.style.setProperty('--tab-text-color', darkestColor);
 
             root.style.setProperty('--inactive-tab-bg-rgb', this.hexToRgb(theme.inactiveTabBg));
             root.style.setProperty('--active-tab-bg-rgb', this.hexToRgb(theme.activeTabBg));

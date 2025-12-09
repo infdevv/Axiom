@@ -152,9 +152,9 @@ E0E1DD
 
 .x-button {
     cursor: pointer;
-    color: var(--tab-text-color);
+    color: var(--text-color);
 }
 
 .tab-name {
-    color: var(--tab-text-color);
+    color: var(--text-color);
 }
