@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Axiom A.I</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
+    <style>
+        :root {
+            --bg-secondary: #1B263B;
+            --bg-tertiary: #415A77;
+            --text-primary: #E0E1DD;
+            --text-secondary: #778DA9;
+            --accent: #415A77;
+        }
+
+
+        * {
+            color: white;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .chat-container {
+            padding: 20px;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+
+        .chat-container::-webkit-scrollbar {
+            width: 6px;
+            background-color: var(--bg-secondary);
+        }
+
+        .chat-container::-webkit-scrollbar-thumb {
+            background-color: var(--text-secondary);
+            border-radius: 3px;
+        }
+
+        .default-text {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 60vh;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .default-text h1 {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .default-text p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .chat {
+            padding: 16px;
+            margin: 12px 0;
+            border-radius: 12px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .chat.outgoing {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--bg-tertiary);
+        }
+
+        .chat.incoming {
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--bg-secondary);
+        }
+
+        .chat-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .chat-details {
+            flex: 1;
+        }
+
+        .chat-details p {
+            margin: 0;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        .typing-animation {
+            display: flex;
+            gap: 4px;
+            padding: 8px 0;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: var(--text-primary);
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .typing-container {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            padding: 20px;
+            background-color: var(--bg-primary);
+        }
+
+        .typing-content {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+        }
+
+        .typing-textarea {
+            flex: 1;
+            position: relative;
+        }
+
+        .typing-textarea textarea {
+            width: 100%;
+            min-height: 50px;
+            max-height: 10px;
+            padding: 12px 16px;
+            border: 1px solid var(--bg-tertiary);
+            border-radius: 8px;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            resize: none;
+            outline: none;
+            font-size: 16px;
+        }
+
+        .typing-textarea textarea::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .send-btn {
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 8px;
+            background-color: var(--accent);
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+
+        .send-btn:hover {
+            background-color: var(--bg-tertiary);
+        }
+
+        @media (max-width: 600px) {
+            .chat-container {
+                padding: 10px;
+            }
+
+            .default-text h1 {
+                font-size: 2rem;
+            }
+
+            .typing-container {
+                padding: 15px;
+            }
+
+            .typing-textarea textarea {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="default-text">
+            <h1>Axiom AI</h1>
+            <p>Start a chat with our humanized AI!</p>
+        </div>
+    </div>
+
+    <div class="typing-container">
+        <div class="typing-content">
+            <div class="typing-textarea">
+                <textarea id="chat-input" placeholder="Type your message..." required></textarea>
+            </div>
+            <button id="send-btn" class="send-btn">
+                <span class="material-symbols-rounded">send</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const chatInput = document.querySelector("#chat-input");
+        const sendButton = document.querySelector("#send-btn");
+        const chatContainer = document.querySelector(".chat-container");
+
+        let messages = [];
+
+        const createChatElement = (content, className) => {
+            const chatDiv = document.createElement("div");
+            chatDiv.classList.add("chat", className);
+            chatDiv.innerHTML = content;
+            return chatDiv;
+        };
+
+        const showTypingAnimation = () => {
+            const html = `<div class="chat-content">
+                            <div class="chat-details">
+                                <div class="typing-animation">
+                                    <div class="typing-dot"></div>
+                                    <div class="typing-dot"></div>
+                                    <div class="typing-dot"></div>
+                                </div>
+                            </div>
+                        </div>`;
+            const incomingChatDiv = createChatElement(html, "incoming");
+            chatContainer.appendChild(incomingChatDiv);
+            chatContainer.scrollTo(0, chatContainer.scrollHeight);
+            return incomingChatDiv;
+        };
+
+        const getChatResponse = async (incomingChatDiv) => {
+            const pElement = document.createElement("p");
+            incomingChatDiv.querySelector(".chat-details").appendChild(pElement);
+
+            try {
+                const response = await fetch("../../ai", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        messages: messages,
+                        stream: true
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let accumulatedContent = "";
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    const chunk = decoder.decode(value);
+                    const lines = chunk.split('\n');
+
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            try {
+                                const data = JSON.parse(line.slice(6));
+                                if (data.choices && data.choices[0]?.delta?.content) {
+                                    accumulatedContent += data.choices[0].delta.content;
+                                    pElement.textContent = accumulatedContent;
+                                    chatContainer.scrollTo(0, chatContainer.scrollHeight);
+                                }
+                            } catch (e) {
+                           }
+                        }
+                    }
+                }
+
+                messages.push({
+                    content: accumulatedContent,
+                    role: "assistant",
+                });
+
+            } catch (error) {
+                console.error("Error:", error);
+                pElement.textContent = "Oops! Something went wrong while retrieving the response. Please try again.";
+                pElement.style.color = "#ff6b6b";
+            }
+
+            incomingChatDiv.querySelector(".typing-animation")?.remove();
+        };
+
+        const handleOutgoingChat = () => {
+            const userText = chatInput.value.trim();
+            if (!userText) return;
+
+            chatInput.value = "";
+
+            messages.push({
+                content: userText,
+                role: "user",
+            });
+
+            const html = `<div class="chat-content">
+                            <div class="chat-details">
+                                <p>${userText}</p>
+                            </div>
+                        </div>`;
+
+            const outgoingChatDiv = createChatElement(html, "outgoing");
+            chatContainer.querySelector(".default-text")?.remove();
+            chatContainer.appendChild(outgoingChatDiv);
+            chatContainer.scrollTo(0, chatContainer.scrollHeight);
+
+           setTimeout(() => {
+                const incomingChatDiv = showTypingAnimation();
+                getChatResponse(incomingChatDiv);
+            }, 500);
+        };
+
+        sendButton.addEventListener("click", handleOutgoingChat);
+
+        chatInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleOutgoingChat();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,284 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Axiom Settings</title>
+    <link rel="stylesheet" href="styles/settings.css">
+    <style>
+        :root {
+  --primary-bg: #121212;
+  --secondary-bg: #141414;
+  --border-radius: 8px;
+  --transition: all 0.3s ease;
+}
+
+* {
+    color: white;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+button, .reset-btn, .set-btn, .toggle-btn {
+    padding: 12px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius);
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: var(--text-color);
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+button:hover, .reset-btn:hover, .set-btn:hover, .toggle-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    opacity: 0.9;
+}
+
+body {
+  font-family: "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
+  background: transparent;
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: var(--text-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+
+
+.settings-container {
+  width: 100%;
+  max-width: 600px;
+  padding: 40px;
+  border-radius: var(--border-radius);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+h2 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.setting {
+  width: 100%;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.theme-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.theme-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 25px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: var(--text-color);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.theme-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.2);
+    opacity: 0.9;
+}
+
+.theme-button.active {
+    border-color: var(--accent-color);
+    opacity: 1;
+    box-shadow: 0 0 15px rgba(76, 175, 80, 0.3);
+}
+
+.color-preview {
+    width: 80px;
+    height: 60px;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+
+a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: var(--transition);
+    font-weight: 500;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: #66BB6A;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .settings-container {
+    padding: 20px;
+    margin: 10px;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  .theme-container {
+    gap: 10px;
+  }
+
+  .theme-button {
+    padding: 10px 15px;
+    font-size: 12px;
+  }
+}
+
+input {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: var(--text-color);
+    padding: 12px;
+    border-radius: var(--border-radius);
+    margin: 10px 0;
+    width: 100%;
+    max-width: 300px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 16px;
+    font-weight: 400;
+    font-family: inherit;
+    outline: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: var(--transition);
+}
+
+input:focus {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+    border-color: rgba(76, 175, 80, 0.5);
+    opacity: 0.9;
+}
+
+.premium-input-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 400px;
+}
+    </style>
+</head>
+<body>
+    <div class="settings-container">
+
+        <h2>Settings</h2>
+
+        <div class="setting">
+            <h4>Pick Theme</h4>
+            <div id="theme-container" class="theme-container"></div>
+        </div>
+
+        <div class="setting">
+            <button class="reset-btn" onclick="localStorage.clear()">Reset Everything</button>
+        </div>
+        <div style="display: none;">
+
+            <h4>Premium Key (Get in the Discord)</h4>
+            <div class="premium-input-group">
+                <p id="status" name="textSecondary">Unregistered</p>
+                <input type="text" id="premiumKey" value="Put your key here!">
+                <button class="set-btn" onclick="setPremiumKey(document.getElementById('premiumKey').value)">Set</button>
+            </div>
+            </div>
+    
+
+ </div>
+
+    <script src="scripts/settings.js"></script>
+    <script src="scripts/themeManager.js"></script>
+    <script src="scripts/global.js" type="module"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                await themeManager.load();
+            } catch (error) {
+                console.error('Failed to initialize theme system:', error);
+            }
+        });
+
+        function populateThemeButtons() {
+            const container = document.getElementById('theme-container');
+            if (!container || !themeManager.themes) return;
+
+            container.innerHTML = '';
+
+            Object.keys(themeManager.themes).forEach(themeName => {
+                const themeColors = themeManager.themes[themeName];
+                const button = document.createElement('div');
+                button.className = 'theme-button';
+                button.dataset.theme = themeName;
+                button.onclick = () => themeManager.setTheme(themeName);
+                
+                const preview = document.createElement('div');
+                preview.className = 'color-preview';
+                preview.style.background = `linear-gradient(45deg, ${themeColors.primary}, ${themeColors.secondary}, ${themeColors.tertiary})`;
+                preview.style.border = `1px solid ${themeColors.border}`;
+                
+                const label = document.createElement('span');
+                label.textContent = themeName.charAt(0).toUpperCase() + themeName.slice(1);
+                
+                button.appendChild(preview);
+                button.appendChild(label);
+                container.appendChild(button);
+            });
+
+            themeManager.updateThemeSelectionUI(themeManager.getCurrentTheme());
+        }
+// unfinished
+       // function setPremiumKey(key) {
+       ///     localStorage.setItem('premiumKey', key);
+       //     document.getElementById('status').textContent = 'Registered';
+       //     alert('Premium key set successfully!');
+       // }
+    </script>
+</body>
+</html>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EP8214CHBW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-EP8214CHBW');
+</script>

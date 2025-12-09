@@ -1,0 +1,50 @@
+{
+    "default": {
+        "primary": "#E0E1DD",
+        "secondary": "#778DA9",
+        "tertiary": "#415A77",
+        "quaternary": "#778DA9",
+        "quinary": "#1B263B",
+        "border": "#0D1B2A"
+    },
+    "space": {
+        "primary": "#E0E1DD",
+        "secondary": "#778DA9",
+        "tertiary": "#1B263B",
+        "quaternary": "#415A77",
+        "quinary": "#0D1B2A",
+        "border": "#0D1B2A"
+    },
+    "forest": {
+        "primary": "#4B6B47",
+        "secondary": "#6F8F6A",
+        "tertiary": "#8AAE84",
+        "quaternary": "#A5C5A0",
+        "quinary": "#2F4D2B",
+        "border": "#2F4D2B"
+    },
+    "orang": {
+        "primary": "#FF8C61",
+        "secondary": "#FF6F59",
+        "tertiary": "#FFCB77",
+        "quaternary": "#FFE196",
+        "quinary": "#D95D39",
+        "border": "#D95D39"
+    },
+    "h2o": {
+        "primary": "#3A86FF",
+        "secondary": "#2E6DCC",
+        "tertiary": "#2558A3",
+        "quaternary": "#1C447A",
+        "quinary": "#16345C",
+        "border": "#16345C"
+    },
+    "pastel": {
+        "primary": "#F7C5CC",
+        "secondary": "#FDE2E4",
+        "tertiary": "#ECD5E3",
+        "quaternary": "#DDE5ED",
+        "quinary": "#CDE7BE",
+        "border": "#CDE7BE"
+    }
+}

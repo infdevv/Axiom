@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Tab</title>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <style>
+        /*
+color pallet:
+0D1B2A
+1B263B
+415A77
+778DA9
+E0E1DD
+*/
+@import url(https://fonts.googleapis.com/css?family=Inter:100,200,300,regular,500,600,700,800,900,100italic,200italic,300italic,italic,500italic,600italic,700italic,800italic,900italic);
+
+body {
+    font-family: inter;
+    background-color: transparent;
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    min-height: 100vh;
+    margin: 0; 
+}
+
+* {
+    color: #E0E1DD;
+}
+
+.logo {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+#time {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.main_button{
+    padding: 14px;
+    border: none;
+    box-shadow: 1px 1px 1px 1px rgba(7,7,7,0.2);
+    border-radius: 4px;
+    background-color: #1B263B;
+    cursor: pointer;
+}
+
+.main_button_type2 {
+    padding: 14px;
+    border-style: solid;
+    border-width: 3px;
+    border-color: #1B263B;
+    border-radius: 4px;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.logo {
+    font-size: 60px;
+    padding: 0px;
+}
+
+.search-bar {
+    position: relative;
+    width: 400px;
+    margin: 0 auto;
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #E0E1DD;
+    pointer-events: none;
+    z-index: 1;
+}
+
+input {
+    width: 100%;
+    background-color: rgb(27, 38, 59, 0.6);
+    padding: 14px 14px 14px 0;
+    border: 2px solid #415A77;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    animation: shrink .3s;
+    font-size: 16px;
+    outline: none;
+}
+
+input:focus {
+    border-color: #778DA9;
+    background-color: rgb(27, 38, 59, 0.9);
+    box-shadow: 0 0 10px rgba(119, 141, 169, 0.5);
+}
+
+.shortcuts {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    margin-top: 15px;
+    gap: 9px;
+}
+
+.shortcut {
+    display: block;
+    border-style: solid;
+    border-width: 3px;
+    border-radius: 7px;
+    width: min-content;
+    border-color: #1B263B;
+    width: 60px;
+    height: min-content;
+    justify-content: center;
+    align-items: center;
+}
+
+.shortcut:hover {
+    transform: scale(1.05);
+    background-color: rgb(27, 38, 59, 0.2);
+    backdrop-filter: blur(5px);
+    transition: transform 0.1s ease-in-out;
+}
+
+.shortcut {
+    display: block;
+    border-style: solid;
+    border-width: 3px;
+    border-radius: 7px;
+    width: min-content;
+    border-color: #1B263B;
+    padding: 12px;
+    width: 60px;
+    height: 50px;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s ease-in-out;
+}
+center {
+    position: absolute;
+    top: 40%; /* Positioned 40% from the top */
+    left: 50%; /* Positioned 50% from the left */
+    transform: translate(-50%, -50%); /* Shifted back by half its own width/height */
+    text-align: center;
+}
+    </style>
+</head>
+<body>
+    <br>
+    <br>
+    <center>
+    <p class="logo">Axiom</p>
+    <p id="time"></p>
+    <div class="shortcuts">
+
+
+        <div class="shortcut" onclick="window.location='./gapps.html'">
+            <span class="material-symbols-outlined" style="font-size: 24px">
+                stadia_controller
+            </span>
+            <br>
+            <span>Games</span>
+        </div>
+
+        <div class="shortcut" onclick="window.location='./apps.html'">
+            <span class="material-symbols-outlined" style="font-size: 24px">
+                menu
+            </span>
+            <br>
+            <span>Apps</span>
+        </div>
+
+        <div class="shortcut" onclick="window.location='./settings.html'">
+            <span class="material-symbols-outlined" style="font-size: 24px">
+                settings
+            </span>
+            <br>
+            <span>Settings</span>
+        </div>
+
+        <div style="display: none;" class="shortcut" onclick="window.location='./assets/extras/bot.html'">
+            <span class="material-symbols-outlined" style="font-size: 24px">
+                smart_toy
+            </span>
+            <br>
+            <span>AI </span>
+        </div>
+        <br>
+        <script
+  async="async"
+  data-cfasync="false"
+  src="//pl28211181.effectivegatecpm.com/8f49348c2e9182abb7a57d3f59b422d5/invoke.js"
+></script>
+<div id="container-8f49348c2e9182abb7a57d3f59b422d5"></div>
+
+
+    </div>
+    </center>
+    <script>
+        function updateTime(){
+            let date = new Date().getHours()
+            let minutes = new Date().getMinutes()
+            let ampm = date >= 12 ? " PM" : " AM"
+            let beautifulMorning = date >= 12 ? " evening" : " morning"
+            date = date % 12 || 12
+
+            minutes = minutes.toString().padStart(2, '0')
+
+            date = "Good " + beautifulMorning + ". It currently is " + (date < 12 ? date + ":" + minutes + ampm : 12  + ":" + minutes + ampm)
+
+            document.getElementById("time").innerText = date
+        }
+        setInterval(function(){
+updateTime()
+        }, 1000 * 60)
+        updateTime()
+    </script>
+</body>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EP8214CHBW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-EP8214CHBW');
+</script>
+</html>
