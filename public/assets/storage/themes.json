@@ -11,18 +11,6 @@
         "activeTabBg": "#415A77",
         "tabText": "#0D1B2A"
     },
-        "kinda blue": {
-        "primary": "#E0E1DD",
-        "secondary": "#778DA9",
-        "tertiary": "#415A77",
-        "quaternary": "#778DA9",
-        "quinary": "#1B263B",
-        "border": "#0D1B2A",
-        "text": "#fff",
-        "inactiveTabBg": "#fff",
-        "activeTabBg": "#fff",
-        "tabText": "#fff"
-    },
     "forest": {
         "primary": "#4B6B47",
         "secondary": "#6F8F6A",
