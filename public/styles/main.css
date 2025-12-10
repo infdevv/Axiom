@@ -133,14 +133,13 @@ E0E1DD
     margin-left: auto;
     gap: 89px;
 }
-
 #frames {
-    height: calc(100vh - 88px);
-    margin-top: 5px;
+    height: calc(100vh - 50px);
+    margin-top: 15px;
 }
 
 #frames iframe {
-    height: 100%;
+    height: calc(100% - 15px);
     width: 100%;
     border: none;
     border-radius: 8px;

@@ -378,7 +378,6 @@
 
         const extractTitleFromUrl = (url) => {
             try {
-                console.log('Extracting title from URL:', url);
                 
                 if (url.startsWith('http')) {
                     const parsedUrl = new URL(url);
@@ -389,12 +388,10 @@
                         const pathTitle = path.split('/').pop();
                         if (pathTitle && !pathTitle.includes('.')) {
                             const result = hostname + ' - ' + decodeURIComponent(pathTitle);
-                            console.log('Extracted title with path:', result);
                             return result;
                         }
                     }
                     
-                    console.log('Extracted hostname as title:', hostname);
                     return hostname;
                 }
                 
@@ -404,7 +401,6 @@
                 return result;
                 
             } catch (e) {
-                console.log('URL parsing failed, using Browse:', e.message);
                 return 'Browse';
             }
         };
@@ -465,10 +461,8 @@
             
             const searchBar = document.getElementById("search-bar");
             
-            // Set initial search bar value
             if (searchBar) {
                 searchBar.value = "axiom://start";
-                console.log('Set initial search bar value to axiom://start');
             }
             
             searchBar.addEventListener("focus", () => { axiom.state.isTyping = true; searchBar.select(); });

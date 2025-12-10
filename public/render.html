@@ -84,6 +84,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
  await connection.setTransport("/epoxy/index.mjs", [{
   wisp: "wss://anura.pro/" //(location.protocol === "https:" ? "wss" : "ws") + "://" + location.host + "/wisp/"
+  // temp thing
  }]);
  
  const frame = scramjet.createFrame();
