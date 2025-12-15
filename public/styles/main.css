@@ -6,11 +6,14 @@ default color pallet:
 778DA9
 E0E1DD
 */
-@import url(https://fonts.googleapis.com/css?family=Inter:100,200,300,regular,500,600,700,800,900,100italic,200italic,300italic,italic,500italic,600italic,700italic,800italic,900italic);
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300..800;1,300..800&display=swap');
 
+body {
+    overflow: hidden;
+}
 
 * {
-    font-family: inter;
+    font-family: 'Roboto';
 }
 
 #tabs {
@@ -18,7 +21,7 @@ E0E1DD
     margin-left: 0px;
     gap: 8px;
     display: flex;
-    height: 30px;
+    height: 25px;
     align-items: center;
 }
 
@@ -71,7 +74,8 @@ E0E1DD
     padding-right: 46px;
     padding-left: 10px; 
     width: 100%;
-    background-color: rgb(27, 38, 59, 0.3);
+    background-color:  rgba(var(--inactive-tab-bg-rgb), 0.5);
+    color: var(--text-color);
     backdrop-filter: blur(5px);
 }
 
@@ -85,7 +89,7 @@ E0E1DD
     border-bottom-left-radius: 4px;
     /* i put this here so you can learn that copying code thats the same instead of rewriting it isn't the same as using chatgpt? */
     /* hard to understand, ik. but you like to say with full confidence that non-chatgpt'd code is chatgpt. */
-             background-color: rgb(27, 38, 59, 0.3);
+             background-color:  rgba(var(--inactive-tab-bg-rgb), 0.5);
         backdrop-filter: blur(5px);
     display: flex;
     align-items: center;
@@ -98,14 +102,14 @@ E0E1DD
 #controls {
     margin-top: 5px;
     height: 30px;
-    display: none;
+    display: flex;
     width: calc(100% - 0px);
     margin-left: 0px;
 }
 
 .tab {
     display: flex;
-    padding: 8px;
+    padding: 5px;
     background-color: rgba(var(--inactive-tab-bg-rgb), 0.5);
     backdrop-filter: blur(5px);
     width: 150px;
@@ -113,6 +117,7 @@ E0E1DD
     justify-content: space-between;
     cursor: pointer;
     align-items: center;
+    user-select: none;
 }
 
 .tab.active {
@@ -134,15 +139,20 @@ E0E1DD
     gap: 89px;
 }
 #frames {
-    height: calc(100vh - 50px);
-    margin-top: 15px;
+    height: calc(100vh - 0px);
 }
 
 #frames iframe {
-    height: calc(100% - 15px);
+    height: calc(100% - 35px);
+    margin-top: 5px;
     width: 100%;
     border: none;
+    overflow: auto;
     border-radius: 8px;
+}
+
+#frames iframe::-webkit-scrollbar {
+    display: none;
 }
 
 #favi {
@@ -156,4 +166,12 @@ E0E1DD
 
 .tab-name {
     color: var(--text-color);
+}
+
+.new-tab-btn {
+    user-select: none;
+}
+
+.material-symbols-outlined {
+    user-select: none;
 }

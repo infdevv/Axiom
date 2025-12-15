@@ -1,0 +1,135 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300..800;1,300..800&display=swap');
+body {
+    font-family: 'Roboto';
+    background-color: transparent;
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    min-height: 100vh;
+    margin: 0; 
+}
+
+* {
+    color: var(--text-color);
+    user-select: none;
+}
+
+.logo {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+#time {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.main_button{
+    padding: 14px;
+    border: none;
+    box-shadow: 1px 1px 1px 1px rgba(7,7,7,0.2);
+    border-radius: 4px;
+    background-color: var(--theme-tertiary);
+    cursor: pointer;
+}
+
+.main_button_type2 {
+    padding: 14px;
+    border-style: solid;
+    border-width: 3px;
+    border-color: var(--theme-tertiary);
+    border-radius: 4px;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.logo {
+    font-size: 60px;
+    padding: 0px;
+}
+
+.search-bar {
+    position: relative;
+    width: 400px;
+    margin: 0 auto;
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: var(--text-color);
+    pointer-events: none;
+    z-index: 1;
+}
+
+input {
+    width: 100%;
+    background-color: rgba(var(--theme-tertiary-rgb), 0.6);
+    padding: 10px;
+    display: none;
+    border: 2px solid var(--theme-quaternary);
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    animation: shrink .3s;
+    font-size: 16px;
+    outline: none;
+}
+
+input:focus {
+    border-color: var(--theme-secondary);
+    background-color: rgba(var(--theme-tertiary-rgb), 0.9);
+    box-shadow: 0 0 10px rgba(var(--theme-secondary-rgb), 0.5);
+}
+
+.shortcuts {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    margin-top: 15px;
+    gap: 9px;
+}
+
+.shortcut {
+    display: block;
+    border-style: solid;
+    border-width: 3px;
+    border-radius: 7px;
+    width: min-content;
+    border-color: var(--theme-border);
+    width: 60px;
+    height: min-content;
+    justify-content: center;
+    align-items: center;
+}
+
+.shortcut:hover {
+    transform: scale(1.05);
+    background-color: rgba(var(--theme-tertiary-rgb), 0.2);
+    backdrop-filter: blur(5px);
+    transition: transform 0.1s ease-in-out;
+}
+
+.shortcut {
+    display: block;
+    border-style: solid;
+    border-width: 3px;
+    border-radius: 7px;
+    width: min-content;
+    border-color: var(--theme-border);
+    padding: 12px;
+    width: 60px;
+    height: 50px;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s ease-in-out;
+}
+center {
+    position: absolute;
+    top: 40%;
+    left: 50%; 
+    transform: translate(-50%, -50%);
+    text-align: center;
+}

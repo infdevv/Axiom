@@ -5,6 +5,7 @@ import Fastify from "fastify";
 import fastifyStatic from "@fastify/static";
 import path from "node:path";
 import { fileURLToPath } from "url";
+import dotenv from "dotenv";
 
 import { scramjetPath } from "@mercuryworkshop/scramjet/path";
 import { epoxyPath } from "@mercuryworkshop/epoxy-transport";
@@ -12,14 +13,31 @@ import { baremuxPath } from "@mercuryworkshop/bare-mux/node";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const premium_keys = dotenv.config().parsed.PREMIUM_KEYS.split(",");
 const publicPath = path.join(__dirname, "public");
 
 logging.set_level(logging.NONE);
+
+
+
+let dnsProxies = ["1.1.1.3", "1.0.0.3"];
+try {
+  const response = await fetch("https://api.example.com/proxies");
+  if (response.ok) {
+    const data = await response.json();
+    if (Array.isArray(data) && data.length > 0) {
+      dnsProxies = data;
+    }
+  }
+} catch (error) {
+  console.log("Failed to load new proxies, using default:", error.message);
+}
+
 Object.assign(wisp.options, {
   allow_udp_streams: false,
   // jarvis prevent the great goonathon
   hostname_blacklist: [/pornhub\.com/,/xvideos\.com/,/rule34\.xxx/],
-  dns_servers: ["1.1.1.3", "1.0.0.3"]
+  dns_servers: dnsProxies
 });
 
 const fastify = Fastify({
@@ -60,6 +78,16 @@ fastify.register(fastifyStatic, {
 	prefix: "/baremux/",
 	decorateReply: false,
 });
+
+fastify.get("/api/check-premium", async function(req, res) {
+  const key = req.headers.key;
+  if (premium_keys.includes(key)) {
+    res.send({ success: true });
+  }
+  else {
+    res.send({ success: false });
+  }
+})
 
 fastify.post("/ai", async function(request, reply){
   try {

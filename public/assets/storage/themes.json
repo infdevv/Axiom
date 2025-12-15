@@ -1,38 +1,38 @@
 {
     "space": {
-        "primary": "#E0E1DD",
-        "secondary": "#778DA9",
-        "tertiary": "#1B263B",
-        "quaternary": "#415A77",
-        "quinary": "#0D1B2A",
-        "border": "#0D1B2A",
-        "text": "#E0E1DD",
-        "inactiveTabBg": "#778DA9",
-        "activeTabBg": "#415A77",
-        "tabText": "#0D1B2A"
+        "primary": "#000000",
+        "secondary": "#131313",
+        "tertiary": "#000000",
+        "quaternary": "#1F1F1F",
+        "quinary": "#2C2C2C",
+        "border": "#2C2C2C",
+        "text": "#fff",
+        "inactiveTabBg": "#141414",
+        "activeTabBg": "#2F2F2F",
+        "tabText": "#2F2F2F"
     },
     "forest": {
-        "primary": "#4B6B47",
-        "secondary": "#6F8F6A",
-        "tertiary": "#8AAE84",
-        "quaternary": "#A5C5A0",
+        "primary": "#A5C5A0",
+        "secondary": "#8AAE84",
+        "tertiary": "#6F8F6A",
+        "quaternary": "#4B6B47",
         "quinary": "#2F4D2B",
         "border": "#2F4D2B",
         "text": "#2F4D2B",
         "inactiveTabBg": "#A5C5A0",
-        "activeTabBg": "#6F8F6A",
+        "activeTabBg": "#8AAE84",
         "tabText": "#2F4D2B"
     },
     "orang": {
-        "primary": "#FF8C61",
-        "secondary": "#FF6F59",
-        "tertiary": "#FFCB77",
-        "quaternary": "#FFE196",
+        "primary": "#FFE196",
+        "secondary": "#FFCB77",
+        "tertiary": "#FF8C61",
+        "quaternary": "#FF6F59",
         "quinary": "#D95D39",
         "border": "#D95D39",
         "text": "#D95D39",
         "inactiveTabBg": "#FFE196",
-        "activeTabBg": "#FF8C61",
+        "activeTabBg": "#FFCB77",
         "tabText": "#D95D39"
     },
     "fishstick": {
@@ -42,21 +42,21 @@
         "quaternary": "#1C447A",
         "quinary": "#16345C",
         "border": "#16345C",
-        "text": "#3A86FF",
+        "text": "#FFFFFF",
         "inactiveTabBg": "#2E6DCC",
         "activeTabBg": "#2558A3",
-        "tabText": "#16345C"
+        "tabText": "#FFFFFF"
     },
     "pipper": {
-        "primary": "#F7C5CC",
-        "secondary": "#FDE2E4",
+        "primary": "#FDE2E4",
+        "secondary": "#F7C5CC",
         "tertiary": "#ECD5E3",
         "quaternary": "#DDE5ED",
         "quinary": "#CDE7BE",
         "border": "#CDE7BE",
         "text": "#333333",
         "inactiveTabBg": "#FDE2E4",
-        "activeTabBg": "#ECD5E3",
-        "tabText": "#444444"
+        "activeTabBg": "#F7C5CC",
+        "tabText": "#333333"
     }
-} 
+}

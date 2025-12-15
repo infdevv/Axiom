@@ -108,7 +108,53 @@ async function setPremiumKey(key) {
     }) 
 }
 
-if (localStorage.getItem("premiumKey")){
-    document.getElementById("premiumKey").value = localStorage.getItem("premiumKey")
-    document.getElementById("status").textContent = "Premium activated!";
-}
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                await themeManager.load();
+            } catch (error) {
+                console.error('Failed to initialize theme system:', error);
+            }
+        });
+
+        function populateThemeButtons() {
+            const container = document.getElementById('theme-container');
+            if (!container || !themeManager.themes) return;
+
+            container.innerHTML = '';
+
+            Object.keys(themeManager.themes).forEach(themeName => {
+                const themeColors = themeManager.themes[themeName];
+                const button = document.createElement('div');
+                button.className = 'theme-button';
+                button.dataset.theme = themeName;
+                button.onclick = () => themeManager.setTheme(themeName);
+                
+                const preview = document.createElement('div');
+                preview.className = 'color-preview';
+                preview.style.background = `linear-gradient(45deg, ${themeColors.primary}, ${themeColors.secondary}, ${themeColors.tertiary})`;
+                preview.style.border = `1px solid ${themeColors.border}`;
+                
+                const label = document.createElement('span');
+                label.textContent = themeName.charAt(0).toUpperCase() + themeName.slice(1);
+                
+                button.appendChild(preview);
+                button.appendChild(label);
+                container.appendChild(button);
+            });
+
+            themeManager.updateThemeSelectionUI(themeManager.getCurrentTheme());
+        }
+
+        async function setPremiumKey(key) {
+            await fetch("/api/check-premium", {method: "GET", headers: {key: key}}).then(res => res.json()).then(res => {
+                if (!res.success){
+                    alert("Invalid Key");
+                    return;
+                }
+                else {
+                    localStorage.setItem("premiumKey", key);
+                    location.reload();
+                }
+            })
+        }

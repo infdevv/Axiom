@@ -1,10 +1,14 @@
-@import url(https://fonts.googleapis.com/css?family=Inter:100,200,300,regular,500,600,700,800,900,100italic,200italic,300italic,italic,500italic,600italic,700italic,800italic,900italic);
+@import url(https://fonts.googleapis.com/css?family=Roboto:100,200,300,regular,500,600,700,800,900,100italic,200italic,300italic,italic,500italic,600italic,700italic,800italic,900italic);
 
 
 body {
-    font-family: inter;
+    font-family: 'Roboto';
     background-color: transparent;
         overflow-x: hidden;
+}
+
+body::-webkit-scrollbar {
+    display: none;
 }
 
 .app img {
@@ -23,6 +27,16 @@ body {
 #time {
     margin-top: 0;
     padding-top: 0;
+}
+
+.division {
+    margin: auto;
+    display: flex;
+    gap: 10px;
+    transition: all 0.3s ease;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
 }
 
 .division h3 {
@@ -69,7 +83,8 @@ body {
 
 input {
     width:60%;
-    background-color: rgb(27, 38, 59, 0.6);
+    background-color: rgba(var(--theme-quaternary-rgb), 0.3);
+    color: var(--text-color);
     padding: 14px;
     border: none;
     border-radius: 4px;
@@ -81,7 +96,7 @@ input {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
-    justify-content: flex-start;
+    justify-content: center;
     margin-top: 20px;
     width: 100%;
     overflow-y: auto;

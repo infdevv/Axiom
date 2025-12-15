@@ -161,7 +161,7 @@
     },
     {
         "app_name": "Discord",
-        "app_url": "https://discord.com",
+        "app_url": "https://discord.com/login",
         "type": "social",
         "app_img": "./assets/app-images/discord.webp"
     },

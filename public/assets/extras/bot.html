@@ -8,11 +8,12 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
     <style>
         :root {
-            --bg-secondary: #1B263B;
-            --bg-tertiary: #415A77;
-            --text-primary: #E0E1DD;
-            --text-secondary: #778DA9;
-            --accent: #415A77;
+            --bg-primary: var(--primary-bg);
+            --bg-secondary: var(--secondary-bg);
+            --bg-tertiary: var(--theme-quinary);
+            --text-primary: var(--text-color);
+            --text-secondary: var(--theme-secondary);
+            --accent: var(--accent-color);
         }
 
 
@@ -97,7 +98,7 @@
             flex: 1;
         }
 
-        .chat-details p {
+        .chat-details > * {
             margin: 0;
             line-height: 1.6;
             color: var(--text-primary);
@@ -131,7 +132,7 @@
 
         .typing-container {
             position: fixed;
-            bottom: 0;
+            bottom: 15px;
             width: 100%;
             padding: 20px;
             background-color: var(--bg-primary);
@@ -203,13 +204,33 @@
                 font-size: 14px;
             }
         }
+
+        .think-section {
+            margin: 10px 0;
+            border: 1px solid var(--bg-tertiary);
+            border-radius: 4px;
+            padding: 8px;
+        }
+
+        .think-section summary {
+            cursor: pointer;
+            font-weight: bold;
+            color: var(--text-secondary);
+        }
+
+        .think-section div {
+            margin-top: 8px;
+            color: var(--text-primary);
+        }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.js"></script>
+    <script src="../../scripts/themeManager.js"></script>
 </head>
 <body>
     <div class="chat-container">
         <div class="default-text">
             <h1>Axiom AI</h1>
-            <p>Start a chat with our humanized AI!</p>
+            <p>Start a chat with our AI!</p>
         </div>
     </div>
 
@@ -228,8 +249,25 @@
         const chatInput = document.querySelector("#chat-input");
         const sendButton = document.querySelector("#send-btn");
         const chatContainer = document.querySelector(".chat-container");
+        const isThinking = localStorage.getItem("premiumKey") !== null
 
-        let messages = [];
+        // Yes, these are client side, no its not some sort of fucking issue. If you think system prompts need to be hidden then you need grass
+        let system_prompt = `
+        You are AxiomAI, a helpful assistant.
+        `
+
+        // sys prompt pulled from https://huggingface.co/datasets/interstellarninja/toolace_sequential_tool_use_reasoning
+        let thinking_prompt = `
+        You are a deep thinking AI called AxiomAI, you may use extremely long chains of thought to deeply consider the problem and deliberate with yourself via systematic reasoning processes to help come to a correct solution prior to answering. You should enclose your thoughts and internal monologue inside <think> </think> tags, and then provide your solution or response to the problem. Always include a final response outside of the XML tags.
+        `
+
+        let messages = [
+            {
+                role: "system",
+                content: (isThinking ? thinking_prompt : system_prompt),
+            },
+        ];
+
 
         const createChatElement = (content, className) => {
             const chatDiv = document.createElement("div");
@@ -255,16 +293,20 @@
         };
 
         const getChatResponse = async (incomingChatDiv) => {
-            const pElement = document.createElement("p");
+            const pElement = document.createElement("div");
             incomingChatDiv.querySelector(".chat-details").appendChild(pElement);
 
+            let retryCount = 0;
+            const maxRetries = 1;
+            const attemptFetch = async () => {
             try {
-                const response = await fetch("../../ai", {
+                const response = await fetch("https://text.pollinations.ai/openai", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
+                        model: "gpt-5-nano",
                         messages: messages,
                         stream: true
                     })
@@ -291,7 +333,7 @@
                                 const data = JSON.parse(line.slice(6));
                                 if (data.choices && data.choices[0]?.delta?.content) {
                                     accumulatedContent += data.choices[0].delta.content;
-                                    pElement.textContent = accumulatedContent;
+                                    pElement.innerHTML = marked.parse(accumulatedContent.replace(/<think>(.*?)<\/think>/gs, '<details class="think-section"><summary>Thinking</summary><div>$1</div></details>'), { sanitize: false });
                                     chatContainer.scrollTo(0, chatContainer.scrollHeight);
                                 }
                             } catch (e) {
@@ -305,11 +347,19 @@
                     role: "assistant",
                 });
 
-            } catch (error) {
-                console.error("Error:", error);
-                pElement.textContent = "Oops! Something went wrong while retrieving the response. Please try again.";
-                pElement.style.color = "#ff6b6b";
-            }
+                } catch (error) {
+                    console.error("Error:", error);
+                    if (retryCount < maxRetries) {
+                        retryCount++;
+                        return attemptFetch();
+                    } else {
+                        pElement.textContent = "Something went wrong... join the Discord to debug";
+                        pElement.style.color = "#ff6b6b";
+                    }
+                }
+            };
+
+            await attemptFetch();
 
             incomingChatDiv.querySelector(".typing-animation")?.remove();
         };
@@ -327,7 +377,7 @@
 
             const html = `<div class="chat-content">
                             <div class="chat-details">
-                                <p>${userText}</p>
+                                <div>${userText}</div>
                             </div>
                         </div>`;
 
@@ -351,5 +401,13 @@
             }
         });
     </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EP8214CHBW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-EP8214CHBW');
+</script>
 </body>
 </html>
