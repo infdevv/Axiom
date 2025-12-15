@@ -13,7 +13,12 @@ import { baremuxPath } from "@mercuryworkshop/bare-mux/node";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const premium_keys = dotenv.config().parsed.PREMIUM_KEYS.split(",");
+let premium_keys
+try {
+  premium_keys = dotenv.config().parsed.PREMIUM_KEYS.split(",");
+} catch (e) {
+  premium_keys = [];
+}
 const publicPath = path.join(__dirname, "public");
 
 logging.set_level(logging.NONE);
