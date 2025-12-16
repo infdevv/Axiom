@@ -17,8 +17,9 @@ let premium_keys
 try {
   premium_keys = dotenv.config().parsed.PREMIUM_KEYS.split(",");
 } catch (e) {
-  premium_keys = [];
+  premium_keys = ["defu"];
 }
+console.log("Premium keys:", premium_keys);
 const publicPath = path.join(__dirname, "public");
 
 logging.set_level(logging.NONE);
