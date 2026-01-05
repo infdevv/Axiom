@@ -59,25 +59,25 @@ function updateDocumentTitle() {
         ? scramjetFrame.frame.contentDocument.title
         : "";
 
-      // Get the current URL from the scramjet frame
+      
       const currentUrl = scramjetFrame.url || "";
 
-      // Update search bar if URL changed and user isn't typing
+      
       if (currentUrl && currentUrl !== lastKnownUrl && !typing) {
         lastKnownUrl = currentUrl;
         document.getElementById("search").value = currentUrl;
 
-        // Update browser URL bar
+        
         const newBrowserUrl = `render.html?url=${btoa(currentUrl)}`;
         if (window.location.search !== `?url=${btoa(currentUrl)}`) {
           history.replaceState(null, "", newBrowserUrl);
         }
       }
 
-      // Update document title
+      
       if (frameTitle && document.title !== frameTitle) {
         if (premium) {
-          // save content to localstorage
+          
           sessionStorage.setItem("axiomAICon", cleanContent(scramjetFrame.frame.contentDocument.innerHTML));
         }
         document.title = frameTitle;
@@ -155,7 +155,7 @@ async function registerSW() {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-  // Wait for BareMux to be available
+
   while (typeof BareMux === "undefined") {
     await new Promise((resolve) => setTimeout(resolve, 100));
   }
@@ -177,11 +177,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("Failed to register service worker:", err);
   }
 
-  const wispUrl =
+  const wispUrl = "wss://anura.pro/" /*
     (location.protocol === "https:" ? "wss" : "ws") +
     "://" +
     location.host +
-    "/wisp/";
+    "/wisp/"; */
 
   await connection.setTransport("/epoxy/index.mjs", [
     {
