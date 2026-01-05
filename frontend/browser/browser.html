@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Axiom Browser</title>
+    <link rel="icon" href="assets/favicon.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@200" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="styles/browser.css">
+    <style>
+        :root {
+            --toolbar-height: 44px;
+        }
+
+        #tabs {
+            padding: 8px 12px 0 12px;
+            height: var(--toolbar-height);
+        }
+
+        .tab {
+            padding: calc(var(--padding-base) * 1.4) calc(var(--padding-base) * 2);
+            height: 32px;
+            min-width: 120px;
+            max-width: 220px;
+        }
+
+        .tab p {
+            font-size: 0.9rem;
+        }
+
+        .tab-icon {
+            width: 16px;
+            height: 16px;
+        }
+
+        #create_tab,
+        .create_tab {
+            height: 32px;
+            width: 32px;
+            font-size: 1.3rem;
+        }
+
+        #frames {
+            height: calc(100% - var(--toolbar-height));
+            margin-top: var(--toolbar-height);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="tabs">
+        <div id="tabs2" style="display: flex; height: 100%; align-items: center;"></div>
+        <div id="create_tab" onclick="createTab('New Tab', './start.html')">
+            <i class="material-symbols-outlined">add</i>
+        </div>
+    </div>
+
+    <div id="frames">
+    </div>
+    <script src="scripts/premium.js"></script>
+    <script src="scripts/themes.js"></script>
+    <script src="scripts/browser.js"></script>
+    <script src="../scripts/analytics.js"></script>
+</body>
+
+</html>

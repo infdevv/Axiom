@@ -1,0 +1,147 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap");
+
+:root {
+  --bg-color: #121212;
+  --window-bg: #1e1e1e;
+  --window-header: #252525;
+  --text-color: #ffffff;
+  --accent-color: #3b82f6;
+  --border-radius: 4px;
+  --searchbar-height: 35px;
+  --box-shadow-normal: 0 4px 30px rgba(0, 0, 0, 0.1);
+  --box-shadow-hover: 0 4px 30px rgba(0, 0, 0, 0.2);
+  --transition-duration: 0.3s;
+}
+
+* {
+  box-sizing: border-box;
+  user-select: none;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  color: var(--text-color);
+  background-color: transparent;
+}
+
+/* Searchbar / Browser Controls */
+#searchbar {
+  height: var(--searchbar-height);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 10px;
+}
+
+#searchbar .material-symbols-outlined {
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--text-color);
+  opacity: 0.7;
+  transition: all 0.2s;
+  padding: 3px;
+  border-radius: 4px;
+}
+
+#searchbar .material-symbols-outlined:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+#search {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--border-radius);
+  padding: 4px 8px;
+  color: var(--text-color);
+  font-family: "Inter", sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+  transition: all 0.2s;
+  user-select: text;
+}
+
+#search:focus {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--accent-color);
+}
+
+#search::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Tabs */
+#tabs {
+  display: none;
+}
+
+/* Frames */
+#frames {
+  position: relative;
+  width: 100%;
+  height: calc(100% - var(--searchbar-height));
+}
+
+iframe {
+  display: none;
+  border: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+}
+
+iframe.active {
+  display: block;
+}
+
+/* Autocomplete suggestions */
+.resultBox {
+  position: absolute;
+  top: calc(var(--searchbar-height) + 5px);
+  left: 20px;
+  right: 20px;
+  background: rgba(17, 17, 17, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--border-radius);
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.resultBox li {
+  padding: 12px 15px;
+  cursor: pointer;
+  color: var(--text-color);
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background 0.2s;
+}
+
+.resultBox li:hover {
+  background: rgba(59, 130, 246, 0.2);
+}
+
+.resultBox li:last-child {
+  border-bottom: none;
+}

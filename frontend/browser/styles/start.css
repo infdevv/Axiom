@@ -1,0 +1,88 @@
+@import url(https://fonts.googleapis.com/css?family=Inter:100,200,300,regular,500,600,700,800,900,100italic,200italic,300italic,italic,500italic,600italic,700italic,800italic,900italic);
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    font-family: "Inter";
+    color: var(--text-color, white);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+h3 {
+    font-size: 55px;
+    font-weight: 100;
+    margin: 0;
+    color: var(--text-color, rgb(255, 255, 255));
+}
+
+.search-container {
+    position: relative;
+    display: inline-block;
+    width: 60%;
+}
+
+.search-input {
+    border: none;
+    border-radius: 20px;
+    box-sizing: border-box;
+    color: var(--text-color, var(--primary-button-text-color));
+    font-size: .875em;
+    margin: 0;
+    transition: box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+    background-color: var(--surface-alpha, rgba(15, 15, 15, .5));
+    padding: 15px 15px 15px 50px;
+    width: 100%;
+    border: 1px solid var(--theme-border, transparent);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--accent-color, #3b82f6);
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-color, var(--primary-button-text-color));
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+#shortcuts {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.shortcut {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 8px;
+    border-radius: 4px;
+    width: 60px;
+    background-color: var(--surface-alpha, rgba(15, 15, 15, .5));
+    user-select: none;
+    border: 1px solid var(--theme-border, transparent);
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.shortcut:hover {
+    background-color: var(--accent-alpha, rgba(59, 130, 246, 0.3));
+    border-color: var(--accent-color, #3b82f6);
+    color: var(--text-color, white);
+}

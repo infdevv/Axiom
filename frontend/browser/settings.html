@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <title>Settings</title>
+    <style>
+        @import url(https://fonts.googleapis.com/css?family=Inter:100,200,300,regular,500,600,700,800,900,100italic,200italic,300italic,italic,500italic,600italic,700italic,800italic,900italic);
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+        }
+
+        body {
+            font-family: "Inter";
+            color: var(--text-color, white);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 20px;
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+
+        h3 {
+            font-size: 55px;
+            font-weight: 100;
+            margin: 0;
+            color: var(--text-color, rgb(255, 255, 255));
+        }
+
+        h4 {
+            margin: 5px 0;
+            font-weight: 500;
+        }
+
+        #shortcuts {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+        }
+
+        .container {
+            width: 60%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: var(--surface-alpha, rgba(15, 15, 15, .5));
+            border: 1px solid var(--theme-border, transparent);
+            user-select: none;
+        }
+
+        .container input {
+            border: 1px solid var(--theme-border, transparent);
+            box-sizing: border-box;
+            color: var(--text-color, var(--primary-button-text-color));
+            font-size: .875em;
+            margin: 0;
+            border-radius: 4px;
+            transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+            background-color: var(--bg-color-alpha, rgba(44, 42, 42, 0.8));
+            padding: 15px 15px 15px 10px;
+            width: 70%;
+        }
+
+        .container input:focus {
+            outline: none;
+            border-color: var(--accent-color, #3b82f6);
+        }
+
+        .container button {
+            border: 1px solid var(--theme-border, transparent);
+            border-radius: 4px;
+            box-sizing: border-box;
+            color: var(--text-color, var(--primary-button-text-color));
+            font-size: .875em;
+            margin: 0;
+            transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+            background-color: var(--bg-color-alpha, rgba(44, 42, 42, 0.8));
+            padding: 10px 10px 10px 10px;
+            width: 30%;
+            cursor: pointer;
+        }
+
+        .container button:hover {
+            background-color: var(--accent-alpha, rgba(59, 130, 246, 0.3));
+            border-color: var(--accent-color, #3b82f6);
+        }
+
+        .theme {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            background-color: var(--bg-color-alpha, rgba(15, 15, 15, .9));
+            border: 1px solid var(--theme-border, transparent);
+            align-items: center;
+            justify-content: center;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s, border-color 0.2s;
+        }
+
+        .theme:hover {
+            transform: scale(1.05);
+            border-color: var(--accent-color, #3b82f6);
+        }
+
+        .theme.locked {
+            opacity: 0.7;
+        }
+
+        .theme.locked:hover {
+            transform: scale(1.02);
+        }
+
+        .on {
+            background-color: var(--accent-alpha, rgba(59, 130, 246, 0.2));
+            border-color: var(--accent-color, #3b82f6);
+        }
+
+        .sample {
+            background-color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lock-icon {
+            font-size: 16px;
+            position: absolute;
+        }
+
+        .lock-icon .material-symbols-outlined {
+            font-size: 18px;
+        }
+
+        button .material-symbols-outlined {
+            font-size: 18px;
+            vertical-align: middle;
+            margin-right: 4px;
+        }
+
+        .delete-btn .material-symbols-outlined {
+            margin-right: 0;
+        }
+
+        .theme-container {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .premium-divider {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px 0;
+        }
+
+        .premium-badge {
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .premium-required {
+            color: #888;
+            font-size: 12px;
+            font-style: italic;
+        }
+
+        .hint {
+            color: #666;
+            font-size: 11px;
+            margin: 5px 0;
+        }
+
+        .upload-btn, .clear-btn {
+            width: auto !important;
+            padding: 10px 20px !important;
+            margin: 5px;
+        }
+
+        .clear-btn {
+            background-color: rgba(100, 42, 42, 0.8) !important;
+        }
+
+        .session-controls {
+            display: flex;
+            gap: 10px;
+            width: 90%;
+            margin: 10px 0;
+        }
+
+        .session-controls input {
+            flex: 1;
+            width: auto !important;
+        }
+
+        .session-controls button {
+            width: auto !important;
+            white-space: nowrap;
+        }
+
+        .sessions-list {
+            width: 90%;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .session-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background-color: var(--bg-color-alpha, rgba(30, 30, 30, 0.8));
+            border: 1px solid var(--theme-border, transparent);
+            border-radius: 6px;
+        }
+
+        .session-name {
+            font-weight: 500;
+            flex: 1;
+            color: var(--text-color, white);
+        }
+
+        .session-info {
+            color: var(--theme-tab-text, #888);
+            font-size: 12px;
+        }
+
+        .session-item button {
+            width: auto !important;
+            padding: 5px 12px !important;
+            font-size: 12px;
+        }
+
+        .delete-btn {
+            background-color: rgba(150, 50, 50, 0.8) !important;
+            width: 30px !important;
+            padding: 5px !important;
+        }
+
+        .delete-btn:hover {
+            background-color: rgba(180, 60, 60, 0.9) !important;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h4>Themes</h4>
+        <div class="theme-container">
+
+        </div>
+    </div>
+
+    <div class="container" id="wallpaper-section">
+        <h4>Custom Wallpaper</h4>
+        <p class="hint">Loading...</p>
+    </div>
+
+    <div class="container" id="tab-sessions-section">
+        <h4>Tab Sessions</h4>
+        <p class="hint">Loading...</p>
+    </div>
+
+    <div class="container">
+        <h4>Premium</h4>
+        <input placeholder="Premium Key" id="input">
+        <button onclick="activatePremium()">Activate</button>
+        <br>
+        <span id="info">Learn about Premium in the Axiom Discord</span>
+    </div>
+
+    <script src="scripts/premium.js"></script>
+    <script src="scripts/themes.js"></script>
+    <script src="scripts/settings.js"></script>
+    <script src="../scripts/analytics.js"></script>
+
+</body>
+</html>

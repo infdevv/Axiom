@@ -1,0 +1,180 @@
+[
+    {
+        "app_name": "ChatGPT",
+        "app_url": "https://chatgpt.com",
+        "type": "misc",
+        "app_img": "./assets/app-images/chatgpt.webp"
+    },
+    {
+        "app_name": "Spotify",
+        "app_url": "https://spotify.com",
+        "type": "media",
+        "app_img": "./assets/app-images/spotify.webp"
+    },
+    {
+        "app_name": "YouTube",
+        "app_url": "https://youtube.com",
+        "type": "media",
+        "app_img": "./assets/app-images/youtube.webp"
+    },
+    {
+        "app_name": "Netflix",
+        "app_url": "https://netflix.com",
+        "type": "media",
+        "app_img": "./assets/app-images/netflix.webp"
+    },
+    {
+        "app_name": "Disney+",
+        "app_url": "https://disneyplus.com",
+        "type": "media",
+        "app_img": "./assets/app-images/disneyplus.webp"
+    },
+    {
+        "app_name": "Hulu",
+        "app_url": "https://hulu.com",
+        "type": "media",
+        "app_img": "./assets/app-images/hulu.webp"
+    },
+    {
+        "app_name": "Amazon Prime Video",
+        "app_url": "https://primevideo.com",
+        "type": "media",
+        "app_img": "./assets/app-images/primevideo.webp"
+    },
+    {
+        "app_name": "Apple Music",
+        "app_url": "https://music.apple.com",
+        "type": "media",
+        "app_img": "./assets/app-images/applemusic.webp"
+    },
+    {
+        "app_name": "SoundCloud",
+        "app_url": "https://soundcloud.com",
+        "type": "media",
+        "app_img": "./assets/app-images/soundcloud.webp"
+    },
+    {
+        "app_name": "Twitch",
+        "app_url": "https://twitch.tv",
+        "type": "media",
+        "app_img": "./assets/app-images/twitch.webp"
+    },
+    {
+        "app_name": "HBO Max",
+        "app_url": "https://max.com",
+        "type": "media",
+        "app_img": "./assets/app-images/max.webp"
+    },
+    {
+        "app_name": "Crunchyroll",
+        "app_url": "https://crunchyroll.com",
+        "type": "media",
+        "app_img": "./assets/app-images/crunchyroll.webp"
+    },
+    {
+        "app_name": "Pandora",
+        "app_url": "https://pandora.com",
+        "type": "media",
+        "app_img": "./assets/app-images/pandora.webp"
+    },
+    {
+        "app_name": "Vimeo",
+        "app_url": "https://vimeo.com",
+        "type": "media",
+        "app_img": "./assets/app-images/vimeo.webp"
+    },
+
+ {
+        "app_name": "Roblox (Site)",
+        "app_url": "https://roblox.com",
+        "type": "misc",
+        "app_img": "./assets/app-images/roblox.webp"
+    },
+    {
+        "app_name": "Wikipedia",
+        "app_url": "https://wikipedia.org",
+        "type": "misc",
+        "app_img": "./assets/app-images/wikipedia.webp"
+    },
+    {
+        "app_name": "Google",
+        "app_url": "https://google.com",
+        "type": "misc",
+        "app_img": "./assets/app-images/google.webp"
+    },
+    {
+        "app_name": "Amazon",
+        "app_url": "https://amazon.com",
+        "type": "misc",
+        "app_img": "./assets/app-images/amazon.webp"
+    },
+    {
+        "app_name": "eBay",
+        "app_url": "https://ebay.com",
+        "type": "misc",
+        "app_img": "./assets/app-images/ebay.webp"
+    },
+    {
+        "app_name": "Steam",
+        "app_url": "https://store.steampowered.com",
+        "type": "misc",
+        "app_img": "./assets/app-images/steam.webp"
+    },
+    {
+        "app_name": "Epic Games",
+        "app_url": "https://epicgames.com",
+        "type": "misc",
+        "app_img": "./assets/app-images/epicgames.webp"
+    },
+    {
+        "app_name": "Itch.io",
+        "app_url": "https://itch.io",
+        "type": "misc",
+        "app_img": "./assets/app-images/itchio.webp"
+    },
+
+    {
+        "app_name": "X",
+        "app_url": "https://x.com",
+        "type": "social",
+        "app_img": "./assets/app-images/x.webp"
+    },
+
+
+    {
+        "app_name": "TikTok",
+        "app_url": "https://tiktok.com",
+        "type": "social",
+        "app_img": "./assets/app-images/tiktok.webp"
+    },
+    {
+        "app_name": "Snapchat",
+        "app_url": "https://snapchat.com",
+        "type": "social",
+        "app_img": "./assets/app-images/snapchat.webp"
+    },
+    {
+        "app_name": "Reddit",
+        "app_url": "https://reddit.com",
+        "type": "social",
+        "app_img": "./assets/app-images/reddit.webp"
+    },
+    {
+        "app_name": "Discord",
+        "app_url": "https://discord.com/login",
+        "type": "social",
+        "app_img": "./assets/app-images/discord.webp"
+    },
+    {
+        "app_name": "Messenger",
+        "app_url": "https://messenger.com",
+        "type": "social",
+        "app_img": "./assets/app-images/messenger.webp"
+    },
+    {
+        "app_name": "WhatsApp",
+        "app_url": "https://whatsapp.com",
+        "type": "social",
+        "app_img": "./assets/app-images/whatsapp.webp"
+    }
+]

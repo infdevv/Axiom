@@ -1,0 +1,70 @@
+<head>
+    <meta name="description" content="Learn about geology in a fun way!">
+    <meta name="keywords" content="School, Science, STEM">
+    <meta name="author" content="AxiomEdu">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+</head>
+
+<style>
+    @import url(https://fonts.googleapis.com/css?family=Inter:100,200,300,regular,500,600,700,800,900,100italic,200italic,300italic,italic,500italic,600italic,700italic,800italic,900italic);
+
+    body {
+        background-color: black;
+        color: white;
+        font-family: "Inter";
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    button {
+        background-color: #3b82f6;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        border-radius: 15px;
+        cursor: pointer;
+    }
+</style>
+
+<center>
+    <h2>Welcome to Axiom!</h2>
+    <h3>Next time when you visit, there will be a <span style="color: #3b82f6;">fake error page</span>.</h3>
+    <h3>Press <span style="color: #3b82f6;">C</span> on that page to get to the Axiom OS.</h3>
+    <h3>Alternatively, you can press <span style="color: #3b82f6;">X</span> to go directly to the Axiom OS Browser.</h3>
+    <h3>For now though, you can press this button</h3>
+    <button onclick="cloak()">Continue</button>
+</center>
+
+<script>
+
+    
+    function cloak() {
+      tab = window.open("about:blank", target="_blank")
+      tab.document.write(`
+      <html>
+      <head>
+      </head>
+      <body>
+        <iframe src="main.html" style="border:none; height: 100%; width: 100%; position: fixed; left: 0px; top: 0px;">
+      </body>
+      `)
+      tab.document.close()
+    }
+    
+    if (localStorage.getItem("firstTime") != null) {
+        window.location.href = "ck.html"
+    }
+    else {
+        localStorage.setItem("firstTime", "true")
+    }
+
+</script>
