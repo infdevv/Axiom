@@ -152,7 +152,7 @@ window.themeManager = {
             root.style.setProperty('--accent-alpha', this.hexToRgba(themeData.quaternary, 0.25));
         }
 
-        if (window === window.top) {
+        if (location.pathname.includes('main.html') || sessionStorage.getItem('isMainPage') !== 'true') {
             const hasCustomWallpaper = localStorage.getItem("axiomUseCustomWallpaper") === "true" &&
                                        localStorage.getItem("axiomCustomWallpaper") !== null;
 
@@ -217,6 +217,10 @@ window.themeManager = {
         return luminance < 0.5;
     }
 };
+
+if (localStorage.getItem("axiomTheme") === null) {
+    localStorage.setItem("axiomTheme", "Default");
+}
 
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => themeManager.init());

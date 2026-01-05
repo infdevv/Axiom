@@ -26,6 +26,13 @@
     <script src="./browser/scripts/themes.js"></script>
     <script src="./scripts/os/osEssensials.js"></script>
     <script>
+        window.addEventListener('load', () => {
+            sessionStorage.setItem('isMainPage', 'true');
+        });
+        window.addEventListener('unload', () => {
+            sessionStorage.removeItem('isMainPage');
+        });
+
         // Listen for wallpaper changes from settings iframe
         window.addEventListener('message', (event) => {
             if (event.data.type === 'wallpaperChanged') {

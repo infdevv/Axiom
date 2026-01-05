@@ -30,7 +30,7 @@
         "quaternary": "#4B6B47",
         "quinary": "#2F4D2B",
         "border": "#2F4D2B",
-        "text": "#2F4D2B",
+        "text": "#fff",
         "inactiveTabBg": "#A5C5A0",
         "activeTabBg": "#8AAE84",
         "tabText": "#2F4D2B"
@@ -86,7 +86,7 @@
         "tabText": "#ffffff",
         "premium": true
     },
-    "Aurora": {
+    "Purple With Extra Steps": {
         "primary": "#1a1a2e",
         "secondary": "#0f3460",
         "tertiary": "#16537e",
@@ -99,7 +99,7 @@
         "tabText": "#e0e0e0",
         "premium": true
     },
-    "Cyberpunk": {
+    "Purple With More Steps": {
         "primary": "#0d0221",
         "secondary": "#190535",
         "tertiary": "#2a0845",
