@@ -86,7 +86,7 @@
         "tabText": "#ffffff",
         "premium": true
     },
-    "Purple With Extra Steps": {
+    "Blu": {
         "primary": "#1a1a2e",
         "secondary": "#0f3460",
         "tertiary": "#16537e",
@@ -99,7 +99,7 @@
         "tabText": "#e0e0e0",
         "premium": true
     },
-    "Purple With More Steps": {
+    "Purp": {
         "primary": "#0d0221",
         "secondary": "#190535",
         "tertiary": "#2a0845",
@@ -110,6 +110,32 @@
         "inactiveTabBg": "#190535",
         "activeTabBg": "#2a0845",
         "tabText": "#00ffff",
+        "premium": true
+    },
+    "Fem+boy": {
+        "primary": "#ffc0cb",
+        "secondary": "#007acc",
+        "tertiary": "#0099cc",
+        "quaternary": "#00bfff",
+        "quinary": "#ff69b4",
+        "border": "#0099cc",
+        "text": "#ffffff",
+        "inactiveTabBg": "#007acc",
+        "activeTabBg": "#0099cc",
+        "tabText": "#ffffff",
+        "premium": true
+    },
+    "Cursed Zenith": {
+        "primary": "#000000",
+        "secondary": "#ff0000",
+        "tertiary": "#000000",
+        "quaternary": "#ff0000",
+        "quinary": "#000000",
+        "border": "#000000",
+        "text": "#ffffff",
+        "inactiveTabBg": "#000000",
+        "activeTabBg": "#ff0000",
+        "tabText": "#ffffff",
         "premium": true
     }
 }
