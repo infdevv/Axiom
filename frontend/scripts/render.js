@@ -50,7 +50,10 @@ function cleanContent(htmlString){
     .trim();
 }
 
-let lastKnownUrl = "";
+let lastKnownUrl = "";                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   let wisp_end = ["wss://anura.pro/wisp/", "wss://gointospace.app/wisp/"];
+let current_wisp_index = parseInt(sessionStorage.getItem("wisp_index")) || 0;
+let current_wisp = wisp_end[current_wisp_index];
+let fallback_count = parseInt(sessionStorage.getItem("fallback_count")) || 0;
 
 function updateDocumentTitle() {
   if (scramjetFrame && scramjetFrame.frame) {
@@ -58,6 +61,22 @@ function updateDocumentTitle() {
       const frameTitle = scramjetFrame.frame.contentDocument
         ? scramjetFrame.frame.contentDocument.title
         : "";
+
+      if (frameTitle == "Scramjet") { // error page
+        // cycle to next wisp if not tried all
+        if (fallback_count < wisp_end.length) {
+          current_wisp_index = (current_wisp_index + 1) % wisp_end.length;
+          sessionStorage.setItem("wisp_index", current_wisp_index);
+          current_wisp = wisp_end[current_wisp_index];
+          fallback_count++;
+          sessionStorage.setItem("fallback_count", fallback_count);
+          location.reload();
+        }
+      } else if (frameTitle) {
+        // successful load, reset fallback count
+        fallback_count = 0;
+        sessionStorage.setItem("fallback_count", fallback_count);
+      }
 
       
       const currentUrl = scramjetFrame.url || "";
@@ -177,7 +196,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("Failed to register service worker:", err);
   }
 
-  const wispUrl = "wss://anura.pro/" /*
+  const wispUrl = current_wisp; /*
     (location.protocol === "https:" ? "wss" : "ws") +
     "://" +
     location.host +
