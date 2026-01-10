@@ -7,9 +7,17 @@ let initialX, initialY;
 let initialLeft, initialTop;
 let initialWidth, initialHeight;
 
-// Snapping state
-let snapState = null; // 'left', 'right', 'top', 'bottom', or null
-let windowPreSnapState = null; // Store original position/size before snap
+let snapState = null;
+let windowPreSnapState = null;
+
+// Dragging optimization
+let dragData = { x: 0, y: 0 };
+let updatePending = false;
+let maxDragX, maxDragY;
+
+// Resizing optimization
+let resizeData = { width: 0, height: 0 };
+let resizeUpdatePending = false;
 
 function initWindow(win) {
   const header = win.querySelector(".window-header");
@@ -52,27 +60,32 @@ function startDrag(e, win) {
   initialX = e.clientX - rect.left;
   initialY = e.clientY - rect.top;
 
-  // If window is currently snapped, restore to minimum size
-  if (snapState) {
-    const minWidth = 500;  // Match min-width from CSS
-    const minHeight = 500; // Match min-height from CSS
+  // Compute max bounds for dragging
+  const desktop = document.getElementById("desktop");
+  const desktopRect = desktop.getBoundingClientRect();
+  maxDragX = desktopRect.width - rect.width;
+  maxDragY = desktopRect.height - rect.height;
 
-    // Center the window under the cursor
+  if (snapState) {
+    const minWidth = 500;
+    const minHeight = 500;
+
+
     currentWindow.style.width = minWidth + "px";
     currentWindow.style.height = minHeight + "px";
 
-    // Adjust position so window stays under cursor
-    const newX = e.clientX - (minWidth / 2);
-    const newY = e.clientY - 20; // Keep cursor near top of window
+
+    const newX = e.clientX - minWidth / 2;
+    const newY = e.clientY - 20;
 
     currentWindow.style.left = newX + "px";
     currentWindow.style.top = newY + "px";
 
-    // Update initialX/Y for the new window size
+
     initialX = minWidth / 2;
     initialY = 20;
 
-    // Clear snap state
+
     snapState = null;
     windowPreSnapState = null;
   }
@@ -86,24 +99,23 @@ function onDrag(e) {
 
   e.preventDefault();
 
-  let newX = e.clientX - initialX;
-  let newY = e.clientY - initialY;
+  dragData.x = e.clientX - initialX;
+  dragData.y = e.clientY - initialY;
 
-  const desktop = document.getElementById("desktop");
-  const desktopRect = desktop.getBoundingClientRect();
-  const windowRect = currentWindow.getBoundingClientRect();
+  if (!updatePending) {
+    updatePending = true;
+    requestAnimationFrame(updateDragPosition);
+  }
+}
 
-  // Boundary constraints
-  const maxX = desktopRect.width - windowRect.width;
-  const maxY = desktopRect.height - windowRect.height;
+function updateDragPosition() {
+  let newX = Math.max(0, Math.min(dragData.x, maxDragX));
+  let newY = Math.max(0, Math.min(dragData.y, maxDragY));
 
-  // Apply boundary constraints
-  newX = Math.max(0, Math.min(newX, maxX));
-  newY = Math.max(0, Math.min(newY, maxY));
-
-  // Update position freely during drag
   currentWindow.style.left = newX + "px";
   currentWindow.style.top = newY + "px";
+
+  updatePending = false;
 }
 
 function stopDrag() {
@@ -112,47 +124,53 @@ function stopDrag() {
     const desktopRect = desktop.getBoundingClientRect();
     const windowRect = currentWindow.getBoundingClientRect();
 
-    // Snap distance threshold
+    
     const snapDistance = 20;
 
     let newSnapState = null;
     const currentX = parseFloat(currentWindow.style.left);
     const currentY = parseFloat(currentWindow.style.top);
 
-    // Determine snap zone
+    
     if (currentX < snapDistance) {
-      newSnapState = 'left';
-    } else if (desktopRect.width - (currentX + windowRect.width) < snapDistance) {
-      newSnapState = 'right';
+      newSnapState = "left";
+    } else if (
+      desktopRect.width - (currentX + windowRect.width) <
+      snapDistance
+    ) {
+      newSnapState = "right";
     }
 
     if (currentY < snapDistance && !newSnapState) {
-      newSnapState = 'top';
-    } else if (desktopRect.height - (currentY + windowRect.height) < snapDistance && !newSnapState) {
-      newSnapState = 'bottom';
+      newSnapState = "top";
+    } else if (
+      desktopRect.height - (currentY + windowRect.height) < snapDistance &&
+      !newSnapState
+    ) {
+      newSnapState = "bottom";
     }
 
-    // Apply snap if in snap zone
+    
     if (newSnapState) {
       const halfWidth = desktopRect.width / 2;
       const halfHeight = desktopRect.height / 2;
 
-      if (newSnapState === 'left') {
+      if (newSnapState === "left") {
         currentWindow.style.left = "0px";
         currentWindow.style.top = "0px";
         currentWindow.style.width = halfWidth + "px";
         currentWindow.style.height = desktopRect.height + "px";
-      } else if (newSnapState === 'right') {
+      } else if (newSnapState === "right") {
         currentWindow.style.left = halfWidth + "px";
         currentWindow.style.top = "0px";
         currentWindow.style.width = halfWidth + "px";
         currentWindow.style.height = desktopRect.height + "px";
-      } else if (newSnapState === 'top') {
+      } else if (newSnapState === "top") {
         currentWindow.style.left = "0px";
         currentWindow.style.top = "0px";
         currentWindow.style.width = desktopRect.width + "px";
         currentWindow.style.height = halfHeight + "px";
-      } else if (newSnapState === 'bottom') {
+      } else if (newSnapState === "bottom") {
         currentWindow.style.left = "0px";
         currentWindow.style.top = halfHeight + "px";
         currentWindow.style.width = desktopRect.width + "px";
@@ -165,6 +183,7 @@ function stopDrag() {
 
   isDragging = false;
   currentWindow = null;
+  updatePending = false;
   document.removeEventListener("mousemove", onDrag);
   document.removeEventListener("mouseup", stopDrag);
 }
@@ -180,6 +199,10 @@ function startResize(e, win) {
   initialWidth = rect.width;
   initialHeight = rect.height;
 
+  // Min sizes
+  const minWidth = 200;
+  const minHeight = 150;
+
   document.addEventListener("mousemove", onResize);
   document.addEventListener("mouseup", stopResize);
 }
@@ -187,19 +210,29 @@ function startResize(e, win) {
 function onResize(e) {
   if (!isResizing || !currentWindow) return;
 
-  const widthChange = e.clientX - initialX;
-  const heightChange = e.clientY - initialY;
+  const minWidth = 200;
+  const minHeight = 150;
 
-  const newWidth = Math.max(200, initialWidth + widthChange);
-  const newHeight = Math.max(150, initialHeight + heightChange);
+  resizeData.width = Math.max(minWidth, initialWidth + (e.clientX - initialX));
+  resizeData.height = Math.max(minHeight, initialHeight + (e.clientY - initialY));
 
-  currentWindow.style.width = newWidth + "px";
-  currentWindow.style.height = newHeight + "px";
+  if (!resizeUpdatePending) {
+    resizeUpdatePending = true;
+    requestAnimationFrame(updateResize);
+  }
+}
+
+function updateResize() {
+  currentWindow.style.width = resizeData.width + "px";
+  currentWindow.style.height = resizeData.height + "px";
+
+  resizeUpdatePending = false;
 }
 
 function stopResize() {
   isResizing = false;
   currentWindow = null;
+  resizeUpdatePending = false;
   document.removeEventListener("mousemove", onResize);
   document.removeEventListener("mouseup", stopResize);
 }
@@ -236,19 +269,17 @@ function maximizeWindow(btn) {
   const win = btn.closest(".window");
   const taskbar = document.getElementById("taskbar");
   if (win.classList.contains("maximized")) {
-    
     win.style.left = win.dataset.originalLeft || "200px";
     win.style.top = win.dataset.originalTop || "200px";
     win.style.width = win.dataset.originalWidth || "300px";
     win.style.height = win.dataset.originalHeight || "200px";
     win.classList.remove("maximized");
   } else {
-    
     win.dataset.originalLeft = win.style.left;
     win.dataset.originalTop = win.style.top;
     win.dataset.originalWidth = win.style.width;
     win.dataset.originalHeight = win.style.height;
-    
+
     win.style.left = "0px";
     win.style.top = "0px";
     win.style.width = "100vw";
@@ -259,8 +290,6 @@ function maximizeWindow(btn) {
     taskbar.style.borderTopRightRadius = "0px";
   }
 }
-
-
 
 function createWindow(name, content) {
   const new_window = document.createElement("div");
@@ -320,35 +349,35 @@ function createWindow(name, content) {
 
 document.getElementById("browser").addEventListener("click", () => {
   createWindow(
-  "Axiom Browser",
-  "<iframe style='width: 100%; height: 100%; border: none; border-radius: 5px;' src='./browser/browser.html'></iframe>"
-);
-})
+    "Axiom Browser",
+    "<iframe style='width: 100%; height: 100%; border: none; border-radius: 5px;' src='./browser/browser.html'></iframe>"
+  );
+});
 
 document.getElementById("games").addEventListener("click", () => {
   createWindow(
-  "Games",
-  "<iframe style='width: 100%; height: 100%; border: none; border-radius: 5px;' src='./browser/gapps.html'></iframe>"
-);
-})
+    "Games",
+    "<iframe style='width: 100%; height: 100%; border: none; border-radius: 5px;' src='./browser/gapps.html'></iframe>"
+  );
+});
 
 document.getElementById("ai").addEventListener("click", () => {
   createWindow(
-  "AI Chat",
-  "<iframe style='width: 100%; height: 100%; border: none; border-radius: 5px;' src='./browser/ai.html'></iframe>"
-);
-})
+    "AI Chat",
+    "<iframe style='width: 100%; height: 100%; border: none; border-radius: 5px;' src='./browser/ai.html'></iframe>"
+  );
+});
 
 document.getElementById("settings").addEventListener("click", () => {
   createWindow(
-  "Settings",
-  "<iframe style='width: 100%; height: 100%; border: none; border-radius: 5px;' src='./browser/settings.html'></iframe>"
-);
-})
+    "Settings",
+    "<iframe style='width: 100%; height: 100%; border: none; border-radius: 5px;' src='./browser/settings.html'></iframe>"
+  );
+});
 
-setInterval(function(){
+setInterval(function () {
   if (sessionStorage.getItem("axiomReload") === "true") {
     sessionStorage.removeItem("axiomReload");
     location.reload();
   }
-},50)
+}, 50);

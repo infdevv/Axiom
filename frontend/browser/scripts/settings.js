@@ -106,11 +106,10 @@ function initWallpaperUpload() {
 
     try {
       await window.premium.wallpaper.upload(file);
-      // Notify parent window to update wallpaper
       if (window.parent && window.parent !== window) {
         window.parent.postMessage({ type: 'wallpaperChanged' }, '*');
       }
-      initWallpaperUpload(); // Refresh UI
+      initWallpaperUpload(); 
       alert("Wallpaper set successfully!");
     } catch (err) {
       alert("Error: " + err);
@@ -180,7 +179,6 @@ function saveCurrentSession() {
     return;
   }
 
-  // Access browser's tab functions through parent
   if (window.parent && window.parent.premium) {
     window.parent.premium.tabs.save(name);
     alert("Session saved!");
