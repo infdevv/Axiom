@@ -129,7 +129,6 @@ function removeTab(id) {
     tab.parentNode.removeChild(tab);
     if (frame) {
       frame.parentNode.removeChild(frame);
-      // check if there are any tabs left
       var tabs = document.getElementsByClassName("tab");
       if (tabs.length === 0) {
         // press it

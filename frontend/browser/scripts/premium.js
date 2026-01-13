@@ -29,7 +29,6 @@ window.premium = {
         return false;
     },
 
-    // Tab Session Management
     tabs: {
         save: function(sessionName) {
             if (!window.premium.checkSync()) {
@@ -76,7 +75,6 @@ window.premium = {
                 return false;
             }
 
-            // Clear existing tabs
             const existingTabs = document.querySelectorAll("#tabs2 .tab");
             existingTabs.forEach(tab => {
                 if (typeof removeTab === "function") {
@@ -84,7 +82,6 @@ window.premium = {
                 }
             });
 
-            // Restore tabs
             session.tabs.forEach(tabInfo => {
                 if (typeof createTab === "function") {
                     createTab(tabInfo.title, tabInfo.url);
@@ -111,7 +108,6 @@ window.premium = {
         }
     },
 
-    // Custom Wallpaper Management
     wallpaper: {
         set: function(imageDataUrl) {
             if (!window.premium.checkSync()) {
@@ -142,7 +138,6 @@ window.premium = {
         clear: function() {
             localStorage.removeItem("axiomCustomWallpaper");
             localStorage.removeItem("axiomUseCustomWallpaper");
-            // Re-apply theme wallpaper
             if (window.themeManager) {
                 window.themeManager.applyTheme();
             }
@@ -166,7 +161,6 @@ window.premium = {
                     return;
                 }
 
-                // Max 5MB
                 if (file.size > 5 * 1024 * 1024) {
                     reject("Image must be under 5MB");
                     return;
@@ -184,7 +178,6 @@ window.premium = {
         }
     },
 
-    // Check if a theme is premium-only
     isThemePremium: function(themeName) {
         if (!window.themeManager || !window.themeManager.themes) {
             return false;
@@ -193,7 +186,6 @@ window.premium = {
         return theme && theme.premium === true;
     },
 
-    // Check if user can use a specific theme
     canUseTheme: function(themeName) {
         if (!this.isThemePremium(themeName)) {
             return true;
@@ -202,7 +194,6 @@ window.premium = {
     }
 };
 
-// Apply custom wallpaper on load if set
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
         if (window.premium.wallpaper.hasCustom() && window.premium.checkSync()) {

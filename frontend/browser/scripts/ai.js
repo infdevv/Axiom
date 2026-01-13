@@ -10,7 +10,6 @@ let sys_prompt_prem = `
 You are a deep thinking AI called AxiomAI, you may use extremely long chains of thought to deeply consider the problem and deliberate with yourself via systematic reasoning processes to help come to a correct solution prior to answering. You should enclose your thoughts and internal monologue inside <think> </think> tags, and then provide your solution or response to the problem. Always include a final response outside of the XML tags.
 `;
 
-// Get webpage content from sessionStorage (saved by render.js for premium users)
 function getWebpageContext() {
   const content = sessionStorage.getItem("axiomAICon");
   if (content && content.trim()) {
@@ -33,14 +32,12 @@ function parseThinkTags(content) {
   let thinkContent = '';
   let mainContent = content;
 
-  // Extract all think blocks
   const matches = content.match(thinkRegex);
   if (matches) {
     matches.forEach(match => {
       const innerContent = match.replace(/<\/?think>/gi, '');
       thinkContent += innerContent + '\n';
     });
-    // Remove think tags from main content
     mainContent = content.replace(thinkRegex, '').trim();
   }
 
@@ -76,7 +73,6 @@ async function sendMessage() {
   const message = document.getElementById("input").value;
   if (!message.trim()) return;
 
-  // Refresh system prompt with latest webpage content
   history[0] = { role: "system", content: buildSystemPrompt() };
 
   addMessage(message, "user");
