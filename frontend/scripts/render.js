@@ -177,7 +177,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("Failed to register service worker:", err);
   }
 
-  const wispUrl = "wss://anura.pro/" /*
+  const wispUrl = "wss://gointospace.app/wisp/" /*
     (location.protocol === "https:" ? "wss" : "ws") +
     "://" +
     location.host +
